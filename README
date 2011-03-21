@@ -1,0 +1,5 @@
+Koto Player is an open source application for webOS. It is licensed under GPLv3.
+
+Feel free to contribute! http://kotoplayer.uservoice.com has a list of requested features. Email kotoplayer at gmail.com if you have any questions!
+
+To use the "services" in this app, you need your own api keys. See "com.tibfib.app.api_keys SAMPLE.js" for a sample of what api keys you would need. Just add your keys and remove " SAMPLE".

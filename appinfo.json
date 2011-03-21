@@ -1,23 +1,23 @@
 {
-	"id": "com.tibfib.app.koto.lite",
+	"id": "com.tibfib.app.koto",
 	"version": "0.6.4",
 	"vendor": "Will Honey (Tibfib)",
 	"type": "web",
 	"main": "index.html",
 	"theme":"dark",
 	"noWindow": true,
-	"title": "Koto Player Lite",
+	"title": "Koto Player",
 	"icon": "icon.png",
 	"splashBackground": "images/splash-background.png",
 	"keywords": ["music player", "mp3", "media"],
 	"universalSearch":{
 		"dbsearch" : {
 			"displayName":"Koto Player",
-			"url":"com.tibfib.app.koto.lite",
+			"url":"com.tibfib.app.koto",
 			"launchParam":"justTypeTap",
 			"launchParamDbField":"id",
 			"displayFields":["display","secondary"],
-			"dbQuery":{"from":"com.tibfib.app.koto.lite.data:1","where":[{"prop":"searchKey","op":"?","val":"", "collate": "primary"}], "orderBy": "orderKey", "limit":40} 
+			"dbQuery":{"from":"com.tibfib.app.koto.data:1","where":[{"prop":"searchKey","op":"?","val":"", "collate": "primary"}], "orderBy": "orderKey", "limit":40} 
 		}                                                
 	}
 }

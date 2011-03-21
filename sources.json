@@ -1,0 +1,88 @@
+[
+    {"source": "app/helpers/com.tibfib.app.koto.api_keys.js"},
+    {"source": "app/models/asyncWrappers.js"},
+    {"source": "app/models/metrix.js"},
+    {"source": "app/models/xTwitter/oAuth.js"},
+    {"source": "app/models/xTwitter/sha1.js"},
+    {"source": "app/models/xTwitter/xTwitter.js"},
+    {"source": "app/helpers/utilities.js"},
+    {"source": "app/assistants/app-assistant.js"},
+    {"source": "app/helpers/music-player.js"},
+    {"source": "app/helpers/scene.js"},
+    {"source": "app/helpers/lyrics.js"},
+    {"source": "app/helpers/google.js"},
+    {"source": "app/helpers/lastfm.js"},
+    {"source": "app/widgets/widget_panel.js"},
+    {"source": "app/widgets/widget_alphaScroller.js"},
+    {"source": "app/widgets/widget_songDetails.js"},
+    {"source": "app/widgets/widget_addToPlaylist.js"},
+    {"source": "app/widgets/widget_lyrics.js"},
+    {"source": "app/widgets/widget_albumArt.js"},
+    {"source": "app/widgets/widget_extra.js"},
+    {"source": "app/widgets/widget_filterfieldCustom.js"},
+    {"source": "app/assistants/stage-assistant.js"},
+    {
+        "scenes": "main",
+        "source": "app/assistants/main-assistant.js"
+    },
+    {
+        "scenes": "list",
+        "source": "app/assistants/list-assistant.js"
+    },
+    {
+        "scenes": "prefs",
+        "source": "app/assistants/prefs-assistant.js"
+    },
+    {
+        "scenes": "view",
+        "source": "app/assistants/view-assistant.js"
+    },
+    {
+        "scenes": "play",
+        "source": "app/assistants/play-assistant.js"
+    },
+    {
+        "scenes": "help",
+        "source": "app/assistants/help-assistant.js"
+    },
+    {
+        "scenes": "startup",
+        "source": "app/assistants/startup-assistant.js"
+    },
+    {
+        "scenes": "about",
+        "source": "app/assistants/about-assistant.js"
+    },
+    {
+        "scenes": "dashboard",
+        "source": "app/assistants/dashboard-assistant.js"
+    },
+    {
+        "scenes": "content",
+        "source": "app/assistants/content-assistant.js"
+    },
+    {
+        "scenes": "cache",
+        "source": "app/assistants/cache-assistant.js"
+    },
+    {
+        "scenes": "search",
+        "source": "app/assistants/search-assistant.js"
+    },
+    {
+        "scenes": "playground",
+        "source": "app/assistants/playground-assistant.js"
+    },
+    {
+        "scenes": "error",
+        "source": "app/assistants/error-assistant.js"
+    },
+    {
+        "scenes": "artist-view",
+        "source": "app/assistants/artist-view-assistant.js"
+    },
+    {
+        "scenes": "handleLaunch",
+        "source": "app/assistants/handleLaunch-assistant.js"
+    }
+]

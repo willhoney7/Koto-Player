@@ -1,0 +1,825 @@
+/* 
+ * Every Scene CSS
+ */
+body.palm-default { /*background */
+	background: url(../images/background.png) top left no-repeat;
+	z-index: -1;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+body.palm-default.pre3 {
+	background: url(../images/background-pre3.png) top left no-repeat;
+}
+
+.palm-scrim { background-repeat: no-repeat; background-size: 100%; }
+
+dt {
+	font-weight: bold;
+}
+dd {
+	margin-left: 0px;
+	margin-bottom: 20px;
+}
+.palm-dark .palm-info-text,
+.palm-dark .palm-body-text,
+.palm-dark .palm-group-title,
+.palm-dark .label,
+.palm-dark .white,
+.palm-dark .title {
+  color: white !important;
+  text-decoration: none !important;
+}
+.palm-dark a {
+  color: #white;
+  font-weight: bold;
+}
+.palm-dark ul {
+	padding: 0px 20px;
+}
+.description {
+	font-size: 15px;
+	margin: 5px;
+	padding-bottom: 5px;
+}
+/*
+ * Lists
+ */
+.scene-fade {
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    z-index: 9999;
+    -webkit-palm-mouse-target: ignore;
+}
+
+.scene-fade.top {
+    top: 0px;
+    background: url(../images/list/scene-scroll-fade-top.png) repeat-x center bottom;
+}
+
+.scene-fade.bottom {
+    bottom: 0px;
+    background: url(../images/list/scene-scroll-fade-bottom.png) repeat-x center bottom;
+}
+.alpha-scroller {
+	position: fixed; 
+	right: 5px; 
+	bottom: 50px; 
+	top: 50px; 
+}
+
+#alphaScrollerWidget {
+	background-color: rgba(255, 255, 255, .2); 
+	-webkit-border-radius: 13px;
+	/*overflow: hidden;*/
+}
+
+.alpha-scroller .alpha-items{
+	padding: 2px 0px 10px 0px;
+	font-size: 17px;
+	text-align: center; 
+	-webkit-border-radius: 13px;
+}
+.alpha-scroller .alpha-items div:active {
+	font-weight: bold;
+	text-decoration: underline;
+}
+.alphaScroller-fade-top {
+	position: fixed;
+	z-index: 10000;
+	width: 26px;
+	height: 21px;
+	-webkit-border-radius: 13px 13px 0px 0px;
+	background: url(../images/list/alphaScroller-fade-top.png) top center repeat-x;
+	-webkit-palm-mouse-target: ignore;
+}
+
+.alphaScroller-fade-bottom {
+	position: fixed;
+	bottom: 40px;
+	z-index: 10000;
+	width: 26px;
+	height: 21px;
+	-webkit-border-radius: 0px 0px 13px 13px;
+	background: url(../images/list/alphaScroller-fade-bottom.png) top center repeat-x;
+	-webkit-palm-mouse-target: ignore;
+}
+
+
+.palm-divider.alpha {
+	background: url(../images/list/alpha-divider.png) center left no-repeat;
+	height: 24px;
+	margin: 2px 0;
+}
+.palm-row .icon{
+	height: 40px;
+	position: relative; /* hack, so the drawer doesn't get squished */
+	top: 5px;
+}
+
+.name{
+	padding: 1px 0px 0px 14px;
+}
+.info {
+	padding: 0px 14px;
+	font-size: 14px;
+}
+.noTruncate .truncating-text {
+  overflow: visible !important;
+  white-space: normal !important;
+  text-overflow: none !important;
+} 
+.noTruncate .info {
+	padding-bottom: 6px;
+}
+.innerList {
+	background: url(../images/list/innerList-background.png) center repeat;
+}
+.innerList-item {
+	padding-left: 10px;
+}
+
+.drawer { /*adds padding to drawer to make it look better*/
+	padding-top: 6px;
+}
+
+.popup {
+	background: url(../images/list/popup-indicator.png) center center no-repeat;
+	margin-right: 4px;
+	width: 24px;
+	height: 18px;
+}
+
+.content-list .popup {
+	margin-right: 30px;
+}
+
+.filter-field-container-height {
+    height: 96px;
+	margin-bottom: -50px;
+}
+/* Albums list items */
+.album-list-item {
+	display: inline-block; 
+	padding: 10px 15px 0px 15px; 
+	width: 100%; 
+	margin-bottom: -6px;
+}
+.album-list-item .album-art-list-item {
+	float: left; 
+	padding-right: 10px;
+}
+.album-list-item .text {
+	float: left; 
+	padding-top: 6px; 
+	width: 80px; 
+	height: 80px
+}
+.album-list-item .text .truncating-text{
+	width: 175px;
+}
+.pre3 .album-list-item .text,
+.pre3 .album-list-item .text .truncating-text {
+	width: 335px;
+}
+
+.album-list-item .text .truncating-text.artist{
+	font-size: 16px;
+}
+.album-list-item .text .truncating-text.tracks{
+	font-size: 14px; 
+	text-transform: uppercase;
+}
+.album-list-item  .popup{
+	float: right !important; 
+	height: 80px !important;
+	position: relative;
+	right: 20px;
+}
+.rating {
+	height: 35px;
+	clear: left;
+	padding: 5px 0px;
+}
+.rating .button {
+	text-align: center;
+	position: relative;
+	bottom: 3px;
+}
+.star {
+	height: 32px;
+	width: 32px;
+	background: url(../images/play/menu-icon-star.png) top left no-repeat;
+	float: left;
+}
+.star.outline {
+	background: url(../images/play/menu-icon-star-outline.png) top left no-repeat;	
+}
+/*
+ * Header
+ */
+ 
+.header-selector {
+	position:relative;
+	float:right;
+	margin: 8px -16px 0px 0px;
+	font-size: 25px;
+	text-transform: uppercase;
+	font-weight: bold;
+	height:35px;
+	line-height: 21px;
+	border-width: 0px 16px 0px 16px;
+	-webkit-border-image: url(../images/list/header-selector.png) 0 18 0 18 stretch stretch;
+	-webkit-box-sizing: border-box;	
+}
+.header-selector:active	{-webkit-border-image: url(../images/list/header-selector-pressed.png) 0 18 0 18 stretch stretch;}
+
+/* Arrow Selector*/
+.header-selector-container  {
+	position:relative;
+	float:right;
+	margin: 8px -16px 0px 0px;
+	font-size: 14px;
+	text-transform: uppercase;
+	font-weight: bold;
+	height:35px;
+	line-height: 33px;
+	border-width: 0px 22px 0px 16px;
+	-webkit-border-image: url(../images/search/header-selector.png) 0 22 0 16 stretch stretch;
+	-webkit-box-sizing: border-box;	
+}
+.header-selector-container:active {
+	-webkit-border-image: url(../images/search/header-selector-press.png) 0 22 0 16 stretch stretch;
+}
+
+.header-selector-arrow  {
+	margin-left:-5px;
+	padding-right: 2px;
+	background: transparent;
+	display:inline-block;
+	min-width: 12px;
+	max-width: 80px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.header-down-arrow .down-arrow{
+	background: transparent;
+	float:right;
+	display:inline-block;
+	background: url(../images/header-arrow-down.png) right center no-repeat;
+	height:36px;
+	margin-right:-5px;
+	width:10px;
+}
+
+/*
+ * Details Panel
+ */
+.my-menu-panel {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  bottom: -43px;
+  height: 150px;
+  left: 0px;
+  right: 0px;
+  z-index: 10000;
+  border-width: 24px 24px 24px 24px;
+  -webkit-border-image: url(../images/list/palm-menu-panel-dark.png) 24 24 24 24 repeat stretch;
+  -webkit-box-sizing: border-box;
+  -webkit-transition: all 200ms ease-in;
+}
+.my-menu-panel-wrapper {
+  margin: -14px -16px -8px -16px;
+  max-height: 258px;
+}
+.my-menu-panel-wrapper .songInfo {
+	max-width: 252px;
+	overflow: scroll;
+	white-space: nowrap;
+}
+.pre3 .my-menu-panel-wrapper .songInfo {
+	max-width: 412px;
+}
+.my-menu-panel .time {
+	float: right;
+	position: relative;
+	padding: 0px;
+	margin-top: 5px;
+}
+.my-menu-panel .currentDuration {
+	top: 7px;
+}
+.my-menu-panel .totalDuration {
+	bottom: 3px;
+}
+
+.marquee {
+	white-space: nowrap; overflow: hidden;
+	overflow-x:-webkit-marquee;
+	-webkit-marquee-direction: backwards;
+	-webkit-marquee-style: scroll;
+	-webkit-marquee-speed: fast;
+	-webkit-marquee-increment: small;
+	-webkit-marquee-repetition: infinite;
+}
+
+
+.center .my-menu-panel-wrapper-text {
+	margin-top: 22px;
+}
+.center .my-menu-panel .progress-bar {
+	margin-top: -22px;
+}
+
+.my-menu-panel .hidden {
+    -webkit-transform: translate(0px,-150px);
+}
+.my-menu-panel .progress-bar {
+	position: absolute;
+	height: 151px; 
+	left: -15px;
+	border-width: 2px 4px 3px 2px;
+	/*background-image: url(../images/play/download-progress.png);*/
+	-webkit-border-image: url(../images/play/download-progress-panel.png) 5 5 3 4 stretch stretch;
+	-webkit-box-sizing: border-box;
+	z-index: -1;
+}
+.my-menu-panel .progress-bar-background  {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  bottom: -43px;
+  height: 150px;
+  left: 0px;
+  right: 0px;
+  z-index: 0;
+  border-width: 24px 24px 24px 24px;
+  -webkit-border-image: url(../images/play/download-background-panel.png) 24 24 24 24 repeat stretch;
+  -webkit-box-sizing: border-box;
+  -webkit-transition: all 200ms ease-in;
+}
+
+/*.my-menu-panel .progress-bar-background {
+	position: absolute;
+	width: 280px;
+	left: -15px;
+	height: 151px;
+	border-width: 15px 15px 11px 15px;
+	-webkit-border-image: url(../images/play/download-background-panel.png) 15 15 11 15 stretch stretch;	
+	-webkit-box-sizing: border-box;
+	z-index: 0;
+}*/
+/*
+ * Now Playing Styles
+ */
+ 
+.palm-menu-icon.music-next { background-image: url(../images/play/menu-icon-music-next.png); }
+.palm-menu-icon.music-play { background-image: url(../images/play/menu-icon-music-play.png); }
+.music-repeat,
+.music-repeat-one,
+.music-repeat-active { 
+	position: relative;left: -16px;top: 9px;margin: 0;width: 32px;height: 32px;text-align: center;background-position: top left;
+	background-image: url(../images/play/menu-icon-music-repeat.png); 
+}
+.music-favorite { 
+	position: relative;left: -16px;top: 9px;margin: 0;width: 32px;height: 32px;text-align: center;background-position: top left;
+	background-image: url(../images/play/menu-icon-music-favorite.png); 
+}
+.music-repeat-one { background-image: url(../images/play/menu-icon-music-repeat-one.png); }
+.music-repeat-active { background-image: url(../images/play/menu-icon-music-repeat-active.png); }
+.palm-menu-icon.music-more { background-image: url(../images/play/menu-icon-music-more.png); }
+.palm-menu-icon.music-previous { background-image: url(../images/play/menu-icon-music-previous.png); }
+.palm-menu-icon.music-shuffle {	background-image: url(../images/play/menu-icon-music-shuffle.png); }
+.palm-menu-icon.music-shuffle-active {	background-image: url(../images/play/menu-icon-music-shuffle-active.png); }
+.palm-menu-icon.music-pause { background-image: url(../images/play/menu-icon-music-pause.png); }
+.palm-menu-icon.music-nowplaying { background-image: url(../images/play/menu-icon-headset.png); }/*todo*/
+.palm-menu-icon.music-details { background-image: url(../images/play/menu-icon-up-arrow.png); }
+.palm-menu-icon.music-details-down { background-image: url(../images/play/menu-icon-down-arrow.png); }
+
+.palm-row .active .progress-bar {
+	position: absolute;
+	width: 10px; 
+	min-height: 51px; 
+	left: 0px;
+	border-width: 3px 5px 3px 1px;
+	-webkit-border-image: url(../images/play/download-progress.png) 3 5 3 1 stretch stretch;
+	-webkit-box-sizing: border-box; 
+	z-index: -1;
+}
+.palm-reorder-element .active .progress-bar {
+	display: none;
+}
+
+/*.palm-row .active .progress-bar-background {
+	position: absolute;
+	width: 320px;
+	height: 51px;
+	border-width: 15px 15px 11px 15px;
+	-webkit-border-image: url(../images/play/download-background.png) 15 15 11 15 stretch stretch;	
+	-webkit-box-sizing: border-box;
+	z-index: -2;
+}*/
+
+/*.palm-row .active {
+	border: none;
+	background: none;
+	background-color: rgba(255, 255, 255, 0.2);
+}*/
+
+.album-art-container {
+	width: 960px; 
+	max-height: 275px;
+	position: relative;
+	padding: 5px 0px;
+	left: -320px;
+	-webkit-transition-property: left;
+	-webkit-transition-duration: .35s;
+	-webkit-transition-timing-function: ease-in-out;
+}
+.pre3 .album-art-container {
+	left: -480px;
+}
+
+.album-art-container.previous  {
+	left: 0px;
+}
+.album-art-container.next  {
+	left: -640px;
+}
+.pre3  .album-art-container.next{
+	left: -960px;
+}
+
+.album-art-img-container {
+	float: left;
+	width: 320px;
+	text-align: center;
+}
+.pre3 .album-art-img-container{
+	width: 480px;
+}
+.album-art {
+	text-align: center;
+	position: relative;
+	max-height: 275px;
+	width: 100%;
+	padding: 5px 0px;
+}
+.now-playing-item .name{
+	padding: 1px 0px 0px 0px;
+}
+.now-playing-item .info {
+	padding: 0px 14px;
+	font-size: 14px;
+}
+
+.album-art-scroller {
+	max-height: 300px;
+	padding: 10px 0px;
+}
+
+.pre3 .album-art-scroller {
+	max-height: 600px;
+	height: 500px;
+}
+/*.album-art-scroller .albumArt {
+	text-align: center;
+	padding: 0px 0px;
+}*/
+.album-art-scroller .item {
+	text-align: center;
+	width: 200px;
+	padding: 10px;
+	float: left;
+}
+.album-art-scroller .item.currentItem {
+	background-color: rgba(255, 255, 255, 0.2);
+	-webkit-border-radius: 5px;
+}
+.album-art-scroller .item.selected {
+	background-color: rgba(0, 0, 0, 0.2);
+	-webkit-border-radius: 5px;
+}
+.pre3 .album-art-scroller .item {
+	max-height: 600px;
+	height: 600px;
+	width: 300px;
+}
+.album-art-scroller.download .item {
+	width: auto;
+}
+
+table tr { 
+	vertical-align: top;
+}
+
+
+/* Extra Divs */
+.extra,
+.scrim {
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	top: 0px;
+	z-index: 8000;
+	background: url(../images/play/extra-background.png) top left no-repeat;
+	background-size: 100%;
+	opacity: 0;
+	-webkit-transition: opacity 300ms linear;
+}
+.scrim {
+	z-index: 20000;
+	background: url(../images/scrim.png) top left no-repeat;
+	background-size: 100%;
+}
+.opacityTransition {
+	opacity: 0;
+	-webkit-transition: opacity 300ms linear;
+}
+.shown{
+	opacity: 1;
+}
+
+.extra .extra-content {
+	padding: 55px 0px 0px 0px;
+}
+.extra-content.lyrics {
+	font-size: 16px;
+	padding: 55px 15px 0px 15px;
+}
+.heading {
+	font-size: 22px;
+	text-align: center;
+	text-decoration: underline;
+}	
+
+/*Search Stuff*/
+
+.filter-field-container {
+	z-index: 7000;
+}
+.palm-filterfield-spacer {
+  /*height: 0px !important;*/
+}
+.highlight {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.palm-dark .textfield-group.noshadow.focused,
+.palm-dark .palm-group .textfield-group.noshadow.focused {
+  border-width: 15px;
+  -webkit-border-image: url(../images/blank-image.png) 15 15 15 15 stretch stretch;
+}
+
+.palm-dark .list-item-add-button {
+  background: url(../images/play/list-icon-add-item.png) center center no-repeat;
+}
+.palm-dark .add-item .title {
+  color: #aaa;
+}
+
+/*
+ *	Dashboard
+ */
+.palm-dashboard-text-container .album-art-dashboard{
+	position: absolute;
+	/*bottom: -200px;*/
+	padding-top: 12px;
+	left: -20px;
+	width: 200px;
+	height: 200px;
+	-webkit-transform: rotate(-3deg);
+}
+.palm-dashboard-text-container .album-art-overlay {
+	background: url(../images/play/dashboard-background.png) top left repeat;
+	position: absolute;
+	bottom: -164px;
+	left: -20px;
+	width: 200px;
+	height: 200px;
+	-webkit-transform: rotate(-3deg);	
+}
+.palm-dashboard-text,
+.dashboard-title {
+	position: relative;
+	z-index: 20;
+	margin-right: 130px;
+}
+
+.palm-dashboard-controls-container {
+	position: absolute;
+	right: 0px;
+	height: 32px;
+	width: 135px;
+	bottom: 8px;
+	z-index: 20px;
+}
+.palm-dashboard-controls-container .pause{
+	float: right;
+	width: 45px;
+	height: 32px;
+	text-align: center;
+	background: url(../images/play/menu-icon-music-pause.png) top center no-repeat;
+}
+.palm-dashboard-controls-container .play{
+	float: right;
+	width: 45px;
+	height: 32px;
+	text-align: center;
+	background: url(../images/play/menu-icon-music-play.png) top center no-repeat;
+}
+.palm-dashboard-controls-container .previous{
+	float: right;
+	z-index: 20px;
+	width: 45px;
+	height: 32px;
+	text-align: center;
+	background: url(../images/play/menu-icon-music-previous.png) top center no-repeat;
+}
+.palm-dashboard-controls-container .next{
+	float: right;
+	width: 45px;
+	height: 32px;
+	text-align: center;
+	background: url(../images/play/menu-icon-music-next.png) top center no-repeat;
+}
+ 
+/* Cache Dashboard */
+.palm-dashboard-spinner-container {
+	width: 54px;
+	height: 48px;
+	float: right;
+	clear: left;
+	margin-left: 4px;
+	margin-top: 8px;
+	-webkit-box-sizing: border-box;
+	border-width: 0px 0px 0px 12px;
+}
+ 
+/*
+	Preferences
+*/
+.palm-dark .textfield-group.prefs.focused {
+  -webkit-border-image: url(../images/prefs/textfield-shadow.png) 15 15 15 15 stretch stretch;
+}
+.palm-dark .textfield-group.prefs {
+  -webkit-border-image: url(../images/prefs/textfield-shadow.png) 15 15 15 15 stretch stretch;
+}
+.palm-dark .textfield-group.prefs .hint-text {
+	color: #aaa;
+}
+.palm-dark .textfield-group.prefs input,
+.palm-dark .textfield-group.prefs {
+	color: #000 !important;
+}
+
+.palm-dark .palm-button.small-button {
+  -webkit-border-image: url(../images/prefs/palm-button-small.png) 0 16 68 16 repeat repeat;
+}
+.palm-dark .palm-button.selected.small-button {
+  -webkit-border-image: url(../images/prefs/palm-button-small.png) 34 16 34 16 repeat repeat;
+}
+.palm-dark .palm-button.disabled.small-button {
+  -webkit-border-image: url(../images/prefs/palm-button-small.png) 68 16 0 16 repeat repeat;
+}
+
+
+/* Inlay Toggle style */
+.palm-header { overflow: visible; } 
+.palm-header .palm-header-wrapper {
+	margin: 0 -15px 0px 0px;
+}
+
+.palm-header .toggle-view-icon.list {
+  background: url(../images/list-view-header-icon.png) left center no-repeat;
+}
+
+.palm-header .toggle-view-icon.album {
+  background: url(../images/menu-icon-conversation.png) left center no-repeat;
+}
+
+.palm-header .name {
+  font-size: 14px;
+  color: #999;
+  float: right;
+  margin-right: 15px;
+  text-align: right;
+}
+
+.toggle-inlay {
+	float: right;
+	width: 120px;
+	height: 50px;
+	margin-right: -3px;
+	margin-left: -26px;
+}
+.toggle-list-view,
+.toggle-albumart-view {
+	float: right;
+	height: 50px;
+	width: 50px;
+	margin: 0px;
+	border-width: 0 25px;
+	-webkit-box-sizing: border-box;
+}
+.toggle-list-view > img,
+.toggle-albumart-view > img {
+	margin: 9px 0px 0px -18px;
+}
+.toggle-list-view > img {
+  margin-left: -12px;
+}
+.toggle-list-view {
+	-webkit-border-image: url(../images/play/palm-menu-inlay-first.png) 0 25 200 25 repeat repeat;
+}                           
+.toggle-albumart-view {          
+	-webkit-border-image: url(../images/play/palm-menu-inlay-last.png) 0 25 200 25 repeat repeat;
+}                             
+ .toggle-list-view.depressed { 
+	-webkit-border-image: url(../images/play/palm-menu-inlay-first.png) 100 25 100 25 repeat repeat;
+}                             
+.toggle-albumart-view.depressed {
+	-webkit-border-image: url(../images/play/palm-menu-inlay-last.png) 100 25 100 25 repeat repeat;
+}
+
+.toggle-list-view.selected  {
+	-webkit-border-image: url(../images/play/palm-menu-inlay-first.png) 50 25 150 25 repeat repeat;
+}                             
+.toggle-albumart-view.selected {          
+	-webkit-border-image: url(../images/play/palm-menu-inlay-last.png) 50 25 150 25 repeat repeat;
+}                             
+.toggle-list-view.depressed.selected { 
+	-webkit-border-image: url(../images/play/palm-menu-inlay-first.png) 150 25 50 25 repeat repeat;
+}                             
+.toggle-albumart-view.depressed.selected {
+	-webkit-border-image: url(../images/play/palm-menu-inlay-last.png) 150 25 50 25 repeat repeat;
+}
+
+
+/*Prefs stuff */
+
+.palm-dark .prefs {
+	color: #000 !important;
+}
+.palm-dark .list-selector .label {
+	font-size: 16px;
+	text-transform: none !important;
+	margin-right: 20px;
+}
+.palm-dark .list-selector .title {
+	text-transform: none !important;
+}
+
+/*
+ * Toggle Button Styles courtesy of More Solutions (http://webos101.com/ToggleButton#Styling)
+ */
+ .toggle-section .toggle-label {
+  max-width: 70%;
+  min-height: 52px;
+  line-height: 50px;
+  padding-left: 15px;
+  font-size: 17px;
+  float: left;
+}
+.sliding-toggle .toggle-text {
+  position: relative;
+}
+.sliding-toggle .toggle-text span {
+  position: relative;
+  top: 0px;
+  left: 1px;
+  -webkit-transition-property: left;
+  -webkit-transition-duration: .17s;
+  -webkit-transition-timing-function: ease-in-out;
+  z-index: 0;
+}
+.sliding-toggle .toggle-button {
+  float: none;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 100%;
+  z-index: 1;
+  background-position: top right !important;
+  background-repeat: no-repeat !important;
+  -webkit-transition-property: right, margin-right;
+  -webkit-transition-duration: .17s;
+  -webkit-transition-timing-function: ease-out;
+}
+.sliding-toggle .toggle-button.true {
+  right: 0px;
+}
+.sliding-toggle .toggle-button.false + span {
+  left: 25px;
+}
+.sliding-toggle .toggle-button.false {
+  right: 100%;
+  margin-right: -23px;
+}

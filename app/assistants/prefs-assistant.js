@@ -78,6 +78,23 @@ PrefsAssistant.prototype.setup = function() {
 		m.storePrefs();
 	}.bind(this));
 	
+	this.controller.setupWidget("playlist-tap-selector", 
+		{
+			label: $L('Tapping a Playlist'),
+			labelPlacement: Mojo.Widget.labelPlacementLeft,
+			multiline: true,
+			choices: [
+				{label: "Views Songs", value: "view"},
+				{label: "Plays Songs", value: "play"}
+			]
+		},
+		{value: m.prefs.playlistTap}
+	);
+	this.controller.listen("playlist-tap-selector", Mojo.Event.propertyChange, this.handlePlaylistTapSelector = function(event){
+		m.prefs.playlistTap = event.value;
+		m.storePrefs();
+	}.bind(this));
+	
 	this.controller.setupWidget("favorite-tap-selector", 
 		{
 			label: $L('Tapping a Favorite'),

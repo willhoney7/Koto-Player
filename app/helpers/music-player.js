@@ -31,6 +31,7 @@ var m = {
 		saveAndResume: true,
 		defaultRepeat: 2,
 		favoriteTap: "view",
+		playlistTap: "play",
 		albumArtScrollerNum: 40,
 		marqueeText: false,
 		truncateText: true,
@@ -74,6 +75,9 @@ var m = {
 			if(prefData.defaultRepeat !== undefined && prefData.defaultRepeat && !isNaN(parseInt(prefData.defaultRepeat))){
 				m.prefs.defaultRepeat = prefData.defaultRepeat;
 			}
+			if(prefData.playlistTap !== undefined){
+				m.prefs.playlistTap = prefData.playlistTap;
+			}
 			if(prefData.favoriteTap !== undefined){
 				m.prefs.favoriteTap = prefData.favoriteTap;
 			}
@@ -101,13 +105,15 @@ var m = {
 			if(prefData.twitter !== undefined){
 				m.prefs.twitter = prefData.twitter;
 			}
-			Twitter = new xTwitter({
-				consumerKey: api_keys.twitter_consumerKey,
-				consumerSecret: api_keys.twitter_consumerSecret,
-				follow: {
-					username: 'Koto_Player',
-				}
-			}, m.prefs.twitter);
+			if(api_keys){
+				Twitter = new xTwitter({
+					consumerKey: api_keys.twitter_consumerKey,
+					consumerSecret: api_keys.twitter_consumerSecret,
+					follow: {
+						username: 'Koto_Player',
+					}
+				}, m.prefs.twitter);
+			}
 			
 			/*if(prefData.dropbox !== undefined){
 				m.prefs.dropbox = prefData.dropbox;
@@ -459,7 +465,7 @@ var m = {
 		}
 	},
 	getAllPlaylists: function(callBackFunc){
-		query = {"select": ["_id", "name", "type", "songs", "songsQuery", "_kind"], "from":g.AppId + ".playlists:1", "where":[{"prop":"type","op":"!=","val":"hide"}]};
+		query = {"select": ["_id", "name", "type", "songs", "sort", "songsQuery", "_kind"], "from":g.AppId + ".playlists:1", "where":[{"prop":"type","op":"!=","val":"hide"}]};
 		m.db8_exec(query, function(array){
 			m.playlists.clear();
 			for(var i = 0; i < array.length; i++){
@@ -470,7 +476,7 @@ var m = {
 			}
 			//m.playlists = array.clone();
 			m.customPlaylists.clear();
-			secondQuery = {"select": ["_id", "name", "type", "songs", "_kind"], "from":g.AppId + ".playlists:1", "where":[{"prop":"type","op":"=","val":"custom"}]};
+			secondQuery = {"select": ["_id", "name", "type", "songs", "sort", "_kind"], "from":g.AppId + ".playlists:1", "where":[{"prop":"type","op":"=","val":"custom"}]};
 			m.db8_exec(secondQuery, function(array_){
 				m.customPlaylists = array_.clone();
 				if(callBackFunc)
@@ -622,7 +628,7 @@ var m = {
 			}
 		}.bind(this));
 	},
-	getSongsOfObj: function(obj, callBackFunc, allSongsByArtist){
+	getSongsOfObj: function(obj, callBackFunc, allSongsByArtistORDontSort){
 		var objType = m.getObjType(obj);
 		switch(objType){
 			case "artist":
@@ -635,10 +641,10 @@ var m = {
 				m.getGenreSongs(obj, callBackFunc);
 				break;
 			case "playlist":
-				m.getPlaylistSongs(obj, callBackFunc);
+				m.getPlaylistSongs(obj, callBackFunc, allSongsByArtistORDontSort);
 				break;
 			case "song":
-				if(allSongsByArtist){
+				if(allSongsByArtistORDontSort){
 					m.getAllSongsByArtistFromSong(obj, callBackFunc);
 				}
 				else {
@@ -886,9 +892,15 @@ var m = {
 			}
 		}.bind(this));
 	},
-	getPlaylistSongs: function(playlist, callBackFunc){
+	getPlaylistSongs: function(playlist, callBackFunc, dontSort){
 		if(playlist.songs){
 			m.getObjsById(playlist.songs, function(songs){
+				if(playlist.sort && playlist.sort !== "custom" && !dontSort){
+					m.debugErr("playlist.sort is " + playlist.sort);
+					songs = songs.sortBy(function(s){
+						return s[playlist.sort];
+					}, this);
+				}
 				callBackFunc(songs);
 			});
 		}else if(playlist.songsQuery){

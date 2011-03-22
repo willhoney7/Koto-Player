@@ -52,7 +52,7 @@ dd {
     width: 100%;
     position: fixed;
     left: 0px;
-    z-index: 9999;
+    z-index: 7000;
     -webkit-palm-mouse-target: ignore;
 }
 
@@ -90,7 +90,7 @@ dd {
 }
 .alphaScroller-fade-top {
 	position: fixed;
-	z-index: 10000;
+	z-index: 7000;
 	width: 26px;
 	height: 21px;
 	-webkit-border-radius: 13px 13px 0px 0px;
@@ -101,7 +101,7 @@ dd {
 .alphaScroller-fade-bottom {
 	position: fixed;
 	bottom: 40px;
-	z-index: 10000;
+	z-index: 7000;
 	width: 26px;
 	height: 21px;
 	-webkit-border-radius: 0px 0px 13px 13px;

@@ -22,7 +22,7 @@ ListAssistant.prototype.setup = function() {
 	this.mainListAttrs = { 
 	    itemTemplate: "list/list-item",
 		hasNoWidgets: true,
-		fixedHeightItems: true,
+		fixedHeightItems: false,
 		filterFunction: this.filterList.bind(this),
 		delay: 500,
 		formatters: {
@@ -169,13 +169,15 @@ ListAssistant.prototype.setup = function() {
 		}.bind(this));
 		
 		Mojo.Event.listen(this.controller.window, 'resize', this.handleResize = function(){
-			var height = this.controller.window.innerHeight;
-			if(this.panel.visible()){
-				this.scroller.setStyle({height: height + 28 - 180 + "px"});
-				this.alphaScrollerBottomFade.setStyle({bottom: "103px"});
-			} else {
-				this.scroller.setStyle({height: height + 28 - 120 + "px"});							
-				this.alphaScrollerBottomFade.setStyle({bottom: "40px"});
+			if(this.controller && this.controller.window){
+				var height = this.controller.window.innerHeight;
+				if(this.panel.visible()){
+					this.scroller.setStyle({height: height + 28 - 180 + "px"});
+					this.alphaScrollerBottomFade.setStyle({bottom: "103px"});
+				} else {
+					this.scroller.setStyle({height: height + 28 - 120 + "px"});							
+					this.alphaScrollerBottomFade.setStyle({bottom: "40px"});
+				}
 			}
 		}.bind(this));
 		this.handleResize();
@@ -381,14 +383,14 @@ ListAssistant.prototype.listTap = function(event){
 		} else if(objType === "artist" || objType === "album"){
 			m.view(obj);
 		} 
-		else if((objType === "playlist" && !obj.songsQuery) || (this.data === "favorites" && m.prefs.favoriteTap === "play")){
+		else if((objType === "playlist" && m.prefs.playlistTap === "play" && this.data !== "favorites") || (this.data === "favorites" && m.prefs.favoriteTap === "play")){
 			m.getSongsOfObj(obj, function(songs){
 				m.playArray(songs, 0);
-			}.bind(this));
+			}.bind(this), true);
 		}else {
 			m.getSongsOfObj(obj, function(songs){
 				m.viewArray(obj, songs);							
-			}.bind(this));
+			}.bind(this), true);
 		}
 	}
 };

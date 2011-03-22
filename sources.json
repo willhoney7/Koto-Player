@@ -15,6 +15,7 @@
     {"source": "app/widgets/widget_panel.js"},
     {"source": "app/widgets/widget_alphaScroller.js"},
     {"source": "app/widgets/widget_songDetails.js"},
+    {"source": "app/widgets/widget_customList.js"},
     {"source": "app/widgets/widget_addToPlaylist.js"},
     {"source": "app/widgets/widget_lyrics.js"},
     {"source": "app/widgets/widget_albumArt.js"},

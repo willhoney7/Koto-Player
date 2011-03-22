@@ -30,6 +30,16 @@ StartupAssistant.prototype.setup = function() {
 	
 	var changelog = [
 		{
+			"version": "0.7.0",
+			"log":
+				[
+					"<b>New Feature:</b> Filter songs in playlists by typing.",
+					"<b>New Feature:</b> Advanced custom playlist sorting. Tap on the \"...\" button on the playlist view page, tap sort, and pick your option.",
+					"<b>New Feature:</b> Added preference for the action to take when tapping on a playlist.",
+				
+				]
+		},
+		{
 			"version": "0.6.4",
 			"log":
 				[

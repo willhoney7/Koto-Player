@@ -1,15 +1,13 @@
 function SearchAssistant(e) {
-	if(e){
-		this.e = e;
-	}
 	scene_helpers.addControlSceneMethods(this, {search: true});
 }
 var filterString = "";
 SearchAssistant.prototype.setup = function() {
-	this.setupCommon();
 	this.initViewMenu("Search");
+	this.initCmdMenu();
+	this.setupCommon();
 		
-	var listAttrs = { 
+	this.listAttrs = { 
 		itemTemplate: "list/list-item",
 		listTemplate: "list/empty-list",
 		hasNoWidgets: true,
@@ -22,17 +20,26 @@ SearchAssistant.prototype.setup = function() {
 					return model.display.replace(new RegExp('(' + filterString + ')', 'gi'), '<span class="highlight">$1</span>');
 			},
 			"info": function(value, model){
-				if(model.secondary)
-					return model.secondary.replace(new RegExp('(' + filterString + ')', 'gi'), '<span class="highlight">$1</span>');
+				if(model.secondary){
+					return model.secondary.replace(/^(\w|\s)*\s\-\s/ig, "");
+					//return display.replace(new RegExp('(' + filterString + ')', 'gi'), '<span class="highlight">$1</span>');
+				}
 			},
-		}
+		},
+		dividerTemplate: "view/divider",
+		dividerFunction: function(itemModel){
+			if(itemModel.secondary.indexOf("Favorite ") === 0){
+				return "Favorites";
+			}
+			return (itemModel.objType === "so") ? "songs" : itemModel.objType === "ar" ? "artists" : itemModel.objType === "al" ? "albums" : "playlists";
+		}.bind(this)
 	};
 	this.items = [];
 	this.listModel = {
 		items: this.items
 	}
 
-	this.controller.setupWidget("searchResultList", listAttrs, this.listModel);
+	this.controller.setupWidget("searchResultList", this.listAttrs, this.listModel);
 	this.list = this.controller.get("searchResultList");
 	
 	this.listTapHandler = this.listTap.bind(this);
@@ -44,7 +51,7 @@ SearchAssistant.prototype.setup = function() {
 	this.controller.setupWidget('filterField', {}, this.filterFieldModel);
 	this.filterField = this.controller.get("filterField");
 	
-	this.filterHandler = this.filter.bind(this);
+	this.filterHandler = this.filterContent.bind(this);
 	this.controller.listen('filterField', Mojo.Event.filter, this.filterHandler);
 	
 	this.moreDiv = this.controller.get("moreText");
@@ -54,15 +61,10 @@ SearchAssistant.prototype.setup = function() {
 };
 
 SearchAssistant.prototype.activate = function(event) {
-	if(this.e){
-		//this.filterField.mojo.setText(this.e);
-		this.e = undefined;
-	}
-	/* put in event handlers here that should only be in effect when this scene is active. For
-	   example, key handlers that are observing the document */
+
 };
 
-SearchAssistant.prototype.filter = function(event){
+SearchAssistant.prototype.filterContent = function(event){
 	if(!event.filterString.blank()){
 		filterString = event.filterString;
 		m.search(filterString, this.renderItems.bind(this), ((this.filter !== "all") ? this.filter[0] + this.filter[1] : null));
@@ -74,6 +76,9 @@ SearchAssistant.prototype.filter = function(event){
 
 }
 SearchAssistant.prototype.renderItems = function(items){
+	//for(var i = 0; i < items.length; i++){
+	//	if(items.objType
+	//}
 	this.list.mojo.noticeRemovedItems(0, this.items.length);
 	this.list.mojo.setLength(0);
 	this.items.clear();
@@ -102,6 +107,8 @@ SearchAssistant.prototype.listTap = function(event){
 					items.push({label: $L('View & Edit Songs'), command: 'view'});
 				else if(objType === "playlist")
 					items.push({label: $L('View Songs'), command: 'view'});
+			} else {
+				items.push({label: $L('Song Details'), command: 'details'});
 			}
 			items.push({label: $L('Add to Playlist'), command: 'add-to-playlist'})
 			items.push({label: $L('Favorite'), command: 'favorite'});
@@ -110,7 +117,7 @@ SearchAssistant.prototype.listTap = function(event){
 				onChoose: function(value){
 					if(value === "favorite"){
 						m.addToFavorites(obj);
-					} else if(objType === "artist" || objType === "album"){
+					} else if(value === "view" && (objType === "artist" || objType === "album")){
 						m.view(obj);
 					}
 					else{
@@ -134,6 +141,9 @@ SearchAssistant.prototype.listTap = function(event){
 								case "add-to-playlist":
 									this.extraDiv.mojo.show("addToPlaylist", songs);
 									break;
+								case "details":
+									this.extraDiv.mojo.show("songDetails", songs, 0);					
+									break;
 							};
 						}.bind(this);
 						m.getSongsOfObj(obj, handleAction);
@@ -144,9 +154,11 @@ SearchAssistant.prototype.listTap = function(event){
 			});
 		}
 		else if(objType === "artist" || objType === "album"){
-			m.viewArtist(obj);
+			m.view(obj);
 		} 
-		else {
+		else if(objType === "song"){
+			m.viewAlbum(obj.album);
+		} else {
 			m.getSongsOfObj(obj, function(songs){
 				m.viewArray(obj, songs);							
 			}.bind(this));
@@ -174,6 +186,7 @@ SearchAssistant.prototype.moreTap = function(event) {
 			if(value){
 				this.filter = value;
 				this.moreDiv.innerHTML = this.filter;
+				this.filterContent({filterString: filterString});
 			}
 		}.bind(this),
 		placeNear: event.target,
@@ -189,6 +202,5 @@ SearchAssistant.prototype.deactivate = function(event) {
 
 SearchAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening('filterField', Mojo.Event.filter, this.filterHandler);
-	this.controller.stopListening('filterField', Mojo.Event.filterImmediate, this.filterImmediateHandler);
-	this.controller.stopListening('searchResultList', Mojo.Event.listTap, this.listTap);
+	this.controller.stopListening('searchResultList', Mojo.Event.listTap, this.listTapHandler);
 };

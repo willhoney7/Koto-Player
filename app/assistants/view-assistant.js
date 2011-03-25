@@ -27,7 +27,12 @@ ViewAssistant.prototype.setup = function() {
 				if(!m.prefs.truncateText){
 					return "noTruncate";
 				}
-			}.bind(this),//add filtering
+			}.bind(this),
+			"title": function(value, model){
+				if(model.title){
+					return model.title;
+				}
+			}
 		},
 		swipeToDelete:false, reorderable:false
 	};
@@ -124,6 +129,7 @@ ViewAssistant.prototype.handleCustomPlaylistSort = function(){
 
 ViewAssistant.prototype.listTap = function(event) {
 	objType = m.getObjType(event.item);
+	var songs = (this.subset.length > 0 && this.filter !== "")? this.subset : this.data;
 	if(event.originalEvent.target.id && event.originalEvent.target.id == 'popup'){
 		var items = [];
 		if(m.nP.songs.length > 0)
@@ -139,7 +145,6 @@ ViewAssistant.prototype.listTap = function(event) {
 		} 
 		items.push({label: $L('Favorite'), command: 'favorite'});
 		
-		var songs = (this.subset.length > 0 && this.filter !== "")? this.subset : this.data;
 		this.controller.popupSubmenu({
 			onChoose: function(value){
 				switch(value){
@@ -176,6 +181,8 @@ ViewAssistant.prototype.listReorder = function(event){
 	if(this.subset.length === this.customSortSongs.length && (this.filter === "" || !this.filter)){
 		this.data.splice(event.fromIndex, 1);
 		this.data.splice(event.toIndex, 0, event.item);
+		this.customSortSongs.splice(event.fromIndex, 1);
+		this.customSortSongs.splice(event.toIndex, 0, event.item);
 		m.savePlaylist(this.titleObj.name, {type: "custom", songs: this.customSortSongs, name: this.titleObj.name});
 	}
 }

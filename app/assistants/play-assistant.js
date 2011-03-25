@@ -23,8 +23,12 @@ PlayAssistant.prototype.setup = function () {
 			"info": function(value, model){
 				return model.artist + " - " + model.album;
 			},
-			"active": function(value, model){	
-				if(model.active) {
+			"active": function(value, model, index){
+				//m.debugErr("index is " + index);
+				//if(model._id === m.nP.songs[m.nP.index]._id){
+				//	m.debugErr("index is " + index + ", m.nP.index is " + m.nP.index);
+				//}
+				if(model._id === m.nP.songs[m.nP.index]._id && index === m.nP.index) {
 					return "active";
 				}
 			},
@@ -293,24 +297,26 @@ PlayAssistant.prototype.getItemWidth = function(event){
 }
 PlayAssistant.prototype.albumArtHold = function(event){
 	//scroller hold
-	this.nowPlayingItem.hide();
+	if(m.nP.songs.length > 1){
+		this.nowPlayingItem.hide();
 
-	this.renderAlbumArtScrollerItems();
-	this.albumArtScroller.show();
-	var songIndex = m.nP.index;
-	var start = ((m.nP.index+1) > m.prefs.albumArtScrollerNum)? m.nP.index - m.prefs.albumArtScrollerNum : 0;
-	var end = ((m.nP.songs.length - m.nP.index+1) > parseInt(m.prefs.albumArtScrollerNum)) ?m.nP.index + parseInt(m.prefs.albumArtScrollerNum) : m.nP.songs.length-1 ;
-	if(start !== 0){
-		songIndex = m.nP.index - (m.nP.index - m.prefs.albumArtScrollerNum);
+		this.renderAlbumArtScrollerItems();
+		this.albumArtScroller.show();
+		var songIndex = m.nP.index;
+		var start = ((m.nP.index+1) > m.prefs.albumArtScrollerNum)? m.nP.index - m.prefs.albumArtScrollerNum : 0;
+		var end = ((m.nP.songs.length - m.nP.index+1) > parseInt(m.prefs.albumArtScrollerNum)) ?m.nP.index + parseInt(m.prefs.albumArtScrollerNum) : m.nP.songs.length-1 ;
+		if(start !== 0){
+			songIndex = m.nP.index - (m.nP.index - m.prefs.albumArtScrollerNum);
+		}
+		
+		
+		var index = -(songIndex * this.getItemWidth());
+		if(index == -this.getItemWidth())
+			index = -this.getItemWidth() + 5;
+		
+		this.albumArtScroller.mojo.scrollTo(index, 0, false);
+		this.albumArtScroller.mojo.setSnapIndex(songIndex, false);
 	}
-	
-	
-	var index = -(songIndex * this.getItemWidth());
-	if(index == -this.getItemWidth())
-		index = -this.getItemWidth() + 5;
-	
-	this.albumArtScroller.mojo.scrollTo(index, 0, false);
-	this.albumArtScroller.mojo.setSnapIndex(songIndex, false);
 }
 PlayAssistant.prototype.renderAlbumArtScrollerItems = function(){
 	var start = ((m.nP.index+1) > m.prefs.albumArtScrollerNum)? m.nP.index - m.prefs.albumArtScrollerNum : 0;

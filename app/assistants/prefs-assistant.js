@@ -60,6 +60,12 @@ PrefsAssistant.prototype.setup = function() {
 		m.storePrefs();
 	}.bind(this));
 	
+	this.controller.setupWidget("alphaScroller-toggle", {}, this.alphaScroller = {value: m.prefs.alphaScroller});
+	this.controller.listen("alphaScroller-toggle", Mojo.Event.propertyChange, this.handleAlphaScroller = function(event){
+		m.prefs.alphaScroller = event.value;
+		m.storePrefs();
+	}.bind(this));
+	
 	this.controller.setupWidget("truncate-toggle", {}, this.truncateText = {value: m.prefs.truncateText});
 	this.controller.listen("truncate-toggle", Mojo.Event.propertyChange, this.handleTruncateText = function(event){
 		m.prefs.truncateText = event.value;

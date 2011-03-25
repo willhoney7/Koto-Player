@@ -290,8 +290,9 @@ xTwitter.prototype.generateTweet = function(){
 	if(currentSong.artist !== ""){
 		tweet += " by " + currentSong.artist;
 	}
-	if(tweet.length > 114)
-		tweet.truncate(114, ' [...]')
+	if(tweet.length > 114){
+		tweet = tweet.truncate(114, ' [...]');
+	}
 	var suffix = " on #KotoPlayer for webOS!";
 	this.tweet(tweet + suffix, function(returnValue){
 		if(returnValue){

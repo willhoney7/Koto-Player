@@ -22,7 +22,7 @@ ArtistViewAssistant.prototype.setup = function() {
 					var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
 					return tracks;
 				}
-			}
+			},
 		},
 		swipeToDelete:false, 
 		reorderable:false
@@ -47,6 +47,11 @@ ArtistViewAssistant.prototype.setup = function() {
 					return "innerList-item";
 				}
 			}.bind(this),
+			"title": function(value, model){
+				if(model.title){
+					return model.title;
+				}
+			}
 		},			
 		swipeToDelete: false, 
 		reorderable: false,

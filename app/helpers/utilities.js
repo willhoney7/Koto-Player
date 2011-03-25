@@ -23,6 +23,14 @@ function getFileInfo(filePath){
 	return {path: m[1], file: m[2], extension: m[3]};
 }
 
+function uniqArray(array){
+	for ( var i = 1; i < array.length; i++ ) {
+		if (array[i] === array[i - 1]){
+			array.splice(i--, 1);
+		}
+	}
+}
+
 Mojo.Model.format = function format(model, formatters, clone, index) {
 	var newModel = Mojo.Model.decorate(model, clone);
 	var propValue;

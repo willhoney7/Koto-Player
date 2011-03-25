@@ -180,6 +180,9 @@ AppAssistant.prototype.handleCommand = function (event) {
 				case "playground":
 					this.controller.getActiveStageController().pushScene("playground");				
 					break;
+				case "search":
+					this.controller.getActiveStageController().pushScene("search");									
+					break;
 				case Mojo.Menu.helpCmd:
 					this.controller.getActiveStageController().pushScene("help");
 					break;

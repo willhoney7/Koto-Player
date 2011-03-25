@@ -1,10 +1,6 @@
 {
 	"id": "com.tibfib.app.koto",
-<<<<<<< HEAD
-	"version": "0.6.5",
-=======
-	"version": "0.6.4",
->>>>>>> origin/master
+	"version": "0.6.7",
 	"vendor": "Will Honey (Tibfib)",
 	"type": "web",
 	"main": "index.html",

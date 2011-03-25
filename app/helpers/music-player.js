@@ -3,7 +3,7 @@ try {
 	var Future = libraries["foundations"].Control.Future; // Futures library 
 	var DB = libraries["foundations"].Data.DB; // db8 wrapper library 
 } catch (Error) { Mojo.Log.error(Error); }
-//var milliseconds;
+var milliseconds;
 var m = {
 /*
  * Variables
@@ -34,6 +34,7 @@ var m = {
 		playlistTap: "play",
 		albumArtScrollerNum: 40,
 		marqueeText: false,
+		alphaScroller: true,
 		truncateText: true,
 		metrixToggle: true,
 		useDashboard: true,
@@ -87,8 +88,11 @@ var m = {
 			if(prefData.marqueeText !== undefined){
 				m.prefs.marqueeText = prefData.marqueeText;	
 			}
+			if(prefData.alphaScroller !== undefined){
+				m.prefs.alphaScroller = prefData.alphaScroller;	
+			}
 			if(prefData.truncateText !== undefined){
-				m.prefs.truncateText = prefData.truncateTexts;	
+				m.prefs.truncateText = prefData.truncateText;	
 			}
 			if(prefData.metrixToggle !== undefined){
 				m.prefs.metrixToggle = prefData.metrixToggle;
@@ -134,7 +138,8 @@ var m = {
  * Setup Functions
  */
 	initialize: function(arg){
-		/* Todo
+	/*
+		Todo
 			//-finish forward swipe
 			//-finish search
 				//-custom search widget
@@ -174,6 +179,9 @@ var m = {
 			-improve m functions, especially initialize. it sucks
 			-sleep timer
 			
+		Known Issues:
+			- on viewAlbum, other albums by artist include songs by other artists.
+				ex: viewAlbum "The Resistance" by Muse. "Unknown Album" by Muse shows ALL songs with the album name "Unknown Album" regardless of artist.
 		*/
 		
 		db8.setup();
@@ -415,25 +423,70 @@ var m = {
 	swapAudioObjs: function(){
 		m.nP.cao = (m.nP.cao === "one")? "two" : "one";
 	},
+	sortRegex: /^(the\s|an\s|a\s)(.*)/i,
+	sortContentList: function(array){
+		if(array.length > 0){
+			var sortBy = array[0].title ? "title" : "name";
+		}
+		function sortFunction(a,b) {
+			var x = a[sortBy].replace(m.sortRegex, "$2").toLowerCase()
+			var y = b[sortBy].replace(m.sortRegex, "$2").toLowerCase();
+			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+		}
+		/*array = array.sortBy(function(obj){
+			return obj[sortBy].replace(regex, "");
+		}, this);*/
+		array.sort(sortFunction);
+		uniqArray(array);
+	},
 /*
  *	Get Functions:
  */
-	getFavorites: function(){
+	getFavorites: function(dontGetMusic){
 		m.favorites = [];
 		cookieData = this.favoritesCookie.get();
 		if(cookieData){
-			favIds = [];
+			favorites = [];
 			for(var i = 0; i < cookieData.favorites.length; i++){
-				favIds.push(cookieData.favorites[i].id)
+				favorites.push({"id": cookieData.favorites[i].id, "_kind": g.AppId + ".favorites:1"})
 			}
-			m.getObjsById(favIds, function(favorites){
-				m.favorites.clear();
-				Object.extend(m.favorites, favorites);
-				
-				m.getAllArtists();		
-			}.bind(this))
-		}else
-			m.getAllArtists();
+			if(favorites.length > 0){
+				db8.putArray(favorites, function(){
+					getFavorites();
+				}.bind(this));
+				this.favoritesCookie.put(false);
+			} else {
+				getFavorites();
+			}
+		} else {
+			getFavorites();
+		}
+		function getFavorites(){
+			var query = {"select" : ["id","_id", "position"], "from": g.AppId + ".favorites:1"};
+			m.db8_exec(query, function(objs){
+				objs = objs.sortBy(function(item){
+					return item.position;
+				});
+				m.favoriteIds = objs;
+				favIds = [];
+				for(var i = 0; i < objs.length; i++){
+					favIds.push(objs[i].id)
+				}
+				if(favIds.length > 0){
+					m.getObjsById(favIds, function(favorites){
+						m.favorites.clear();
+						Object.extend(m.favorites, favorites);
+						if(!dontGetMusic){
+							m.getAllArtists();		
+						}
+					}.bind(this))
+				} else {
+					if(!dontGetMusic){
+						m.getAllArtists();		
+					}
+				}
+			}.bind(this));
+		}
 	},
 	getAllArtists: function(){
 		m.artists.clear();
@@ -441,27 +494,35 @@ var m = {
 		//milliseconds = d.getTime();
 		var query = { "select" : ["name", "total.tracks", "total.albums", "_id", "_kind"], "orderBy":"name", "from":"com.palm.media.audio.artist:1"};
 		m.db8_exec(query, handleArtists.bind(this));
-		function handleArtists(artists){
-			Object.extend(m.artists, artists);
-			m.getAllAlbums();
+		function handleArtists(artists, done){
+			m.artists = m.artists.concat(artists);
+			if(done){
+				m.sortContentList(m.artists);
+				m.getAllAlbums();
+			}
 		}
 	},
 	getAllAlbums: function(){
 		m.albums.clear();
 		var query = {"select" : ["name", "artist", "total.tracks", "_id", "_kind", "thumbnails"], "orderBy": "name", "from":"com.palm.media.audio.album:1" };
 		m.db8_exec(query, handleAlbums.bind(this));
-		function handleAlbums(albums){
-			Object.extend(m.albums, albums);
-			m.getAllGenres();
+		function handleAlbums(albums, done){
+			m.albums = m.albums.concat(albums);
+			if(done){
+				m.sortContentList(m.albums);
+				m.getAllGenres();
+			}
 		}
 	},
 	getAllGenres: function(){
 		m.genres.clear();
 		var query = { "select" : ["name", "total.tracks", "_id", "_kind"], "from":"com.palm.media.audio.genre:1"};
 		m.db8_exec(query, handleGenres.bind(this));
-		function handleGenres(genres){
-			Object.extend(m.genres, genres);
-			m.getAllSongs();
+		function handleGenres(genres, done){
+			m.genres = m.genres.concat(genres)
+			if(done){
+				m.getAllSongs();
+			}
 		}
 	},
 	getAllPlaylists: function(callBackFunc){
@@ -554,20 +615,63 @@ var m = {
 		}
 	},
 	getAllSongs: function(){	
+		var _milliseconds;
+		var d = new Date();
+		_milliseconds = d.getTime();
+		
 		m.songs = [];
 		var query = {"select" : ["title", "path", "duration", "artist", "album", "genre", "thumbnails", "_id"], "from":"com.palm.media.audio.file:1", "where":[{"prop":"isRingtone","op":"=","val":false}], "orderBy":"title"};
-		
+		//m.debugErr("------------- GETTING SONGS --------------");
+		m.getSongs("title", function(songs){//, done){
+			//m.debugErr("Adding " + songs[0].title.charAt(0) + " thru " + songs[songs.length-1].title.charAt(0));
+			m.songs = songs;
+			
+			//if(done){
+				var d = new Date();
+				m.debugErr("Got songs. Took " + (parseInt(d.getTime()) - parseInt(_milliseconds)) + " milliseconds");
+				m.sortContentList(m.songs);
+				var d = new Date();
+				m.debugErr("AFTER SORTING: " + (parseInt(d.getTime()) - parseInt(_milliseconds)) + " milliseconds");
+
+				Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();		
+
+				if(m.songCountCookie.get()){
+					m.checkJustType.defer(m.songCountCookie.get());
+				} else {
+					m.checkJustType.defer();
+				}
+				
+			//}
+		});
 		//db8_exec: function(query, callBackFunc, isSongsQuery, ignoreNext){//this is for music queries
-		function getAllSongs(query){
-			DB.find(query, true, false).then(function(future) {
+	/*	function getAllSongs(passedQuery, callBackFunc){
+			DB.find(passedQuery, false, true).then(function(future) {
 				var result = future.result;
+
+				var d = new Date();
+				m.debugErr("----- DB FIND CALLBACK -----");
+				m.debugErr("Count: " + result.count);
+				m.debugErr((parseInt(d.getTime()) - parseInt(_milliseconds)) + " milliseconds to get a list of songs");
+
 				if (result.returnValue == true){ // Success
 					var results = result.results;
-					m.songs = m.songs.concat(results);
+					//if(m.songs.length > 0 && results[0].title > m.songs[m.songs.length-1].title){
+						m.debugErr("results.length is " + results.length);
+						m.debugErr("Adding " + results[0].title.charAt(0) + " thru " + results[results.length-1].title.charAt(0));
+						m.songs = m.songs.concat(results);
+					//}
 					if(result.next){
-						query.page = result.next;
-						getAllSongs(query);
+						var newQuery = Object.clone(passedQuery);
+						newQuery.page = result.next;
+						m.debugErr("----------------------");
+						getAllSongs(newQuery);
 					}else {
+						var d = new Date();
+						m.debugErr("-------------FINISHED. Took " + (parseInt(d.getTime()) - parseInt(_milliseconds)) + " milliseconds -------------");
+						m.sortContentList(m.songs);
+						var d = new Date();
+						m.debugErr("AFTER SORTING: " + (parseInt(d.getTime()) - parseInt(_milliseconds)) + " milliseconds");
+
 						Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();
 					}
 					if(result.fired){
@@ -580,7 +684,7 @@ var m = {
 			
 			});		
 		}
-		getAllSongs(query);
+		getAllSongs(query);*/
 		/*
 		DB.find(query, true, false).then(function(future) {
 			var result = future.result;   
@@ -728,10 +832,10 @@ var m = {
 						} else {
 							callBackFunc(albums, songs);
 						}
-					});
+					}, ((!album_) ? artist_ : undefined));
 				}
 				if(i < albums.length){
-					getAlbumSongs(albums[i].name);
+					getAlbumSongs(albums[i]);
 				} else {
 					m.debugErr("no albums");
 				}
@@ -829,7 +933,7 @@ var m = {
 			if(!callBackFunc){
 				return maybeAlbum;//well since we didn't find the same album with the same artist, give the maybeAlbum
 			} else {
-				callBackFunc(m.albums[i]);
+				callBackFunc(maybeAlbum);
 			}
 		}
 		//for some dumb reason, name and artist are not indexed.
@@ -845,16 +949,20 @@ var m = {
 		}.bind(this));*/
 	
 	},
-	getAlbumSongs: function(obj, callBackFunc){
+	getAlbumSongs: function(obj, callBackFunc, artist){
 		var album = (obj.name)? (m.getObjType(obj) === "album")?obj.name:obj.album : obj;
 		
 		//doesn't order properly
-		if(!obj.artist){
+		//if(!obj.artist){
 			var query = {"select" : ["title", "path", "duration", "artist", "album", "genre", "thumbnails", "_id"], "from":"com.palm.media.audio.file:1", "where":[{"prop":"isRingtone","op":"=","val":false},{"prop":"album","op":"=","val":album}]};
+			if(artist){
+				m.debugErr("artist provided : " + artist);
+				query.where.push({"prop":"artist","op":"=","val":artist});
+			}
 			m.db8_exec(query, function(songs){	
 				callBackFunc(songs);
 			}.bind(this));		
-		} else {
+		/*} else {
 			var query = {"select" : ["title", "path", "duration", "artist", "album", "genre", "thumbnails", "_id"], "from":"com.palm.media.audio.file:1", "where":[{"prop":"isRingtone","op":"=","val":false},{"prop":"artist","op":"=","val":obj.artist}]};
 		
 			m.db8_exec(query, function(array){
@@ -865,7 +973,7 @@ var m = {
 				}
 				callBackFunc(albumSongs);
 			}.bind(this));
-		}
+		}*/
 	},
 	getAllSongsByArtistFromSong: function(obj, callBackFunc){
 		m.getArtistSongs(obj.artist, function(array_){
@@ -896,7 +1004,7 @@ var m = {
 		if(playlist.songs){
 			m.getObjsById(playlist.songs, function(songs){
 				if(playlist.sort && playlist.sort !== "custom" && !dontSort){
-					m.debugErr("playlist.sort is " + playlist.sort);
+					//m.debugErr("playlist.sort is " + playlist.sort);
 					songs = songs.sortBy(function(s){
 						return s[playlist.sort];
 					}, this);
@@ -936,8 +1044,8 @@ var m = {
 		var d = new Date();
 		db8.merge({"from":g.AppId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, {
 			time: m.nP["audioObj" + m.nP.cao].currentTime,
-			songs: m.nP.songs.clone(),
-			unshuffledSongs: m.nP.unshuffledSongs.clone(),
+			songs: m.nP.songs,
+			unshuffledSongs: m.nP.unshuffledSongs,
 			index: m.nP.index
 		});
 	},
@@ -1015,7 +1123,7 @@ var m = {
 		}
 		for(var j = 0; j < m.favorites.length; j++){
 			if(m.getObjType(m.favorites[j]) === "playlist" && m.favorites[j].name === name){
-				m.favorites.splice(j, 1);
+				m.delFavorite(j);
 				m.storeFavorites();
 			}
 		}
@@ -1031,19 +1139,29 @@ var m = {
 				break;
 			}
 			if(i === (m.favorites.length-1) || m.favorites.length === 0){
-				m.favorites.push(obj);
-				m.cacheSearchData(obj, true);
-				m.bannerAlert("Added to Favorites", {action: "pushScene", scene: "list", data: "favorites"});
-				m.storeFavorites();			
+				db8.put({"_kind": g.AppId + ".favorites:1", "id": obj["_id"], "position": m.favorites.length}, function(){
+					//m.favorites.push(obj);
+					m.cacheSearchData(obj, true);
+					m.bannerAlert("Added to Favorites", {action: "pushScene", scene: "list", data: "favorites"});
+					m.storeFavorites();						
+				});	
 				break;
 			}
 		}
 	},
-	storeFavorites: function() {
-		var strippedFavorites = [];
+	delFavorite: function(index){
+		db8.del({"from":g.AppId + ".favorites:1", "where":[{"prop":"position","op":"=","val":index}]});
+		m.favorites.splice(index, 1);
+		m.favoriteIds.splice(index, 1);
+	},
+	storeFavorites: function(dontGetFavorites) {
+		var favoritesWithPosition = [];
 		for(var i = 0; i < m.favorites.length; i++)
-			strippedFavorites.push({id: m.favorites[i]["_id"]});
-		this.favoritesCookie.put({favorites: strippedFavorites});
+			favoritesWithPosition.push({_id: m.favoriteIds[i]._id, id: m.favorites[i]._id, position: i, _kind: g.AppId + ".favorites:1"});
+		
+		db8.mergeArray(favoritesWithPosition, function(){
+			m.getFavorites(true);
+		}.bind(this));
 	},
 	
 /*
@@ -1052,18 +1170,28 @@ var m = {
 	search: function(searchKey, callBackFunc, filter){
 		var query = {"from":g.AppId + ".data:1","where":[{"prop":"searchKey","op":"?","val":searchKey, "collate": "primary"}], "orderBy": "orderKey", "limit":50}; 
 		if(filter){
-		//	query.orderBy = undefined;
-		//	query.where.push({"prop":"objType","op":"=","val":filter});
+			//query.orderBy = undefined;
+			//query.where.push({"prop":"objType","op":"=","val":filter});
 		}
 		g.ServiceRequest.request("palm://com.palm.db/", {
 			method: "search",
 			parameters: { "query": query},
 			onSuccess: function(result){
 				if (result.returnValue == true){ // Success
-					callBackFunc(result.results);
+					if(filter){
+						var results = [];
+						for(var i = 0; i < result.results.length; i++){
+							if(result.results[i].objType === filter){
+								results.push(result.results[i]);
+							}
+						}
+						callBackFunc(results);
+					} else {
+						callBackFunc(result.results);
+					}
 				}
 				else {// Failure
-					Mojo.Log.error("find failure: Err code=" + future.exception.errorCode + "Err message=" + future.exception.message); 
+					m.debugErr("find failure: Err code=" + future.exception.errorCode + "Err message=" + future.exception.message); 
 				}
 			}.bind(this),
 			onFailure: function(e) { m.debugErr("Search failure! Err = " + JSON.stringify(e));}
@@ -1443,10 +1571,37 @@ var m = {
 		if(!song.album){
 			song.album = song.name;
 		}
-		var album = m.customAlbumArt.find(function(item){
+		var album, maybeAlbum;
+		for(var i = 0; i < m.customAlbumArt.length; i++){	
+			if(m.customAlbumArt[i].name === song.album){//same album name
+				if(m.customAlbumArt[i].artist === song.artist){//same artist, is for sure right album we want
+					album =  m.customAlbumArt[i];
+					break;
+				} else {
+					maybeAlbum = m.customAlbumArt[i];//diff artist, could be media indexing issue, or could be wrong album.. cache it for later
+				}
+			}
+		}
+		if(album === undefined && maybeAlbum !== undefined){
+			album = maybeAlbum;//well since we didn't find the same album with the same artist, give the maybeAlbum
+		}
+		/*var album = m.customAlbumArt.find(function(item){
+			if(item.name === song.name){//same album name
+				if(item.artist === song.artist){//same artist, is for sure right album we want
+					if(!callBackFunc){
+						return m.albums[i];
+					} else {
+						callBackFunc(m.albums[i]);
+						return;
+					}
+					break;
+				} else {
+					maybeAlbum = m.albums[i];//diff artist, could be media indexing issue, or could be wrong album.. cache it for later
+				}
+			}
 			return (item.name === song.album && item.artist === song.artist);
-		}, this);
-		if(album){
+		}, this);*/
+		if(album !== undefined && album.albumArt){
 			return album.albumArt;
 		} else {
 			return m.getDefaultAlbumArt(song.thumbnails[0]);
@@ -1466,9 +1621,23 @@ var m = {
 		if(!song.album){
 			song.album = song.name;
 		}
-		var album = m.customAlbumArt.find(function(item){
+		var album, maybeAlbum;
+		for(var i = 0; i < m.customAlbumArt.length; i++){	
+			if(m.customAlbumArt[i].name === song.album){//same album name
+				if(m.customAlbumArt[i].artist === song.artist){//same artist, is for sure right album we want
+					album =  m.customAlbumArt[i];
+					break;
+				} else {
+					maybeAlbum = m.customAlbumArt[i];//diff artist, could be media indexing issue, or could be wrong album.. cache it for later
+				}
+			}
+		}
+		if(album === undefined && maybeAlbum !== undefined){
+			album = maybeAlbum;//well since we didn't find the same album with the same artist, give the maybeAlbum
+		}
+		/*var album = m.customAlbumArt.find(function(item){
 			return (item.name === song.album && item.artist === song.artist);
-		}, this);
+		}, this);*/
 		if(album){
 			return true;
 		} else {
@@ -1509,7 +1678,7 @@ var m = {
 		if(objType ==="artist"){
 			m.viewArtist(obj.name);
 		} else if(objType === "album"){
-			m.viewAlbum(obj.name);
+			m.viewAlbum(obj);
 		} else {
 			m.viewArray(obj, array);
 		}
@@ -1528,10 +1697,11 @@ var m = {
 					m.viewArray({name: artist, _kind: "com.palm.media.audio.artist:1"}, songs);
 				}*/
 			}
-		}.bind(this), focus);
+		}.bind(this));
 	},
 	viewAlbum: function(album_){
 		var album = (album_.artist) ? album_ : m.getAlbum({name: album_, artist: ""});
+		m.debugErr("album.artist " + album.artist);
 		m.getFormattedArtistSongs(album.artist, function(formattedSongs, songs, error){
 			if(!error){
 				Mojo.Controller.getAppController().getStageController("cardStage").pushScene("artist-view", {name: album.artist, albums: formattedSongs, songs: songs, _kind: "com.palm.media.audio.artist:1"}, album.name);
@@ -1551,14 +1721,25 @@ var m = {
 	viewArray: function(titleObj, array, focus){
 		Mojo.Controller.getAppController().getStageController("cardStage").pushScene("view", titleObj, array, focus);
 	},
-	playArray: function(array_, index, arg){
+	playArray: function(array, index, arg){
+		//var d = new Date();
+		//milliseconds = d.getTime();
+
 		if(m.nP.songs.length > 0){
 			//m.saveNowPlaying();//save old songs
 			m.deferSaveNowPlaying();
 			m.hasSavedOldNowPlaying = true;
 		}
+		
+		//var d = new Date();
+		//m.debugErr((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after deffering save now playing");	
+		
 
-		array = JSON.parse(JSON.stringify(array_));
+		//array = JSON.parse(JSON.stringify(array_));
+		
+		//var d = new Date();
+		//m.debugErr((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after cloning array");	
+		
 		if(g.AppId === "com.tibfib.app.koto.lite"){
 			if(array.length > 10){
 				if(index >= 1){
@@ -1588,22 +1769,33 @@ var m = {
 		}
 		
 		if(array.length < 1){ return;}
-		if(m.nP.songs[m.nP.index] && m.nP.songs[m.nP.index].active){
-			m.nP.songs[m.nP.index].active = undefined;
-		}
+		//if(m.nP.songs[m.nP.index] && m.nP.songs[m.nP.index].active){
+		//	m.nP.songs[m.nP.index].active = undefined;
+		//}
 		m.nP.unshuffledSongs.clear();
 		if(arg && arg.shuffled && arg.unshuffledSongs){
 			Object.extend(m.nP.unshuffledSongs, arg.unshuffledSongs);
 		}
 		
+		//var d = new Date();
+		//m.debugErr((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after setting up unshuffled songs");	
+		
 		m.nP.songs.clear();
 		
 		Object.extend(m.nP.songs, array);
 		m.nP.index = index;
-		m.nP.songs[m.nP.index].active = true;
+		//m.nP.songs[m.nP.index].active = true;
 		m.nP.playing = true;
 		m.nP.repeat = m.prefs.defaultRepeat;
+		
+		//var d = new Date();
+		//m.debugErr((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after setting up nP object");	
+		
 		m.pushPlay();
+		
+		//var d = new Date();
+		//m.debugErr((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after pushing play");	
+		
 		
 		if(arg && arg.time){
 			m.playSong(m.nP.songs[m.nP.index].path, arg.time);
@@ -1611,10 +1803,14 @@ var m = {
 		else {
 			m.playSong(m.nP.songs[m.nP.index].path);
 		}
+		
+		//var d = new Date();
+		//m.debugErr((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after playing song");	
+		
 	},
 	/*Play Array functions*/
-	playArrayNext: function(array_){
-		array = JSON.parse(JSON.stringify(array_));
+	playArrayNext: function(array){
+		//array = JSON.parse(JSON.stringify(array_));
 		
 		/*var i = 0;
 		while(i < array.length){
@@ -1637,8 +1833,8 @@ var m = {
 		Object.extend(m.nP.songs, firstArray.concat(array, secondArray));
 		this.liteCheck();
 	},
-	playArrayLast: function(array_){
-		array = JSON.parse(JSON.stringify(array_));
+	playArrayLast: function(array){
+		//array = JSON.parse(JSON.stringify(array_));
 		/*var i = 0;
 		while(i < array.length){
 			for(var k = 0; k < m.nP.songs.length; k++){
@@ -1660,8 +1856,8 @@ var m = {
 		this.liteCheck();
 		
 	},
-	shufflePlay: function(array_){
-		array = JSON.parse(JSON.stringify(array_));
+	shufflePlay: function(array){
+		//array = JSON.parse(JSON.stringify(array_));
 		if(g.AppId === "com.tibfib.app.koto.lite"){
 			array = array.slice(0, 10);
 		}
@@ -1685,7 +1881,7 @@ var m = {
 		for(var i = 0; i < m.nP.songs.length; i++){
 			if(currentSong.title == m.nP.songs[i].title && currentSong.artist == m.nP.songs[i].artist && currentSong.album == m.nP.songs[i].album){
 				m.nP.index = i;
-				m.nP.songs[m.nP.index].active = true;
+				//m.nP.songs[m.nP.index].active = true;
 				m.nP.unshuffledSongs.clear();
 				break;
 			}
@@ -1729,25 +1925,28 @@ var m = {
 		
 	},
 	pushPlay: function(justPush){
+		var stageController = Mojo.Controller.getAppController().getStageController("cardStage");
 		if(justPush){
-			Mojo.Controller.getAppController().getStageController("cardStage").pushScene("play");
+			stageController.pushScene("play");
 		} else {
-			if(Mojo.Controller.getAppController().getStageController("cardStage").activeScene().sceneName !== "play"){
-				var playPushed, scenes = Mojo.Controller.getAppController().getStageController("cardStage").getScenes();
+			if(stageController.activeScene().sceneName !== "play"){
+				var playPushed, scenes = stageController.getScenes();
 				for(var i = 0; i < scenes.length; i++){
-					if(scenes[i].sceneName === "play")
+					if(scenes[i].sceneName === "play"){
 						playPushed = true;
+						break;
+					}
 				}
 				if(playPushed !== true){
-					Mojo.Controller.getAppController().getStageController("cardStage").pushScene("play");
+					stageController.pushScene("play");
 				}else {
-					Mojo.Controller.getAppController().getStageController("cardStage").popScenesTo("play");
-					Mojo.Controller.getAppController().getStageController("cardStage").swapScene({name: "play", transition: Mojo.Transition.zoomFade});
+					stageController.popScenesTo("play");
+					stageController.swapScene({name: "play", transition: Mojo.Transition.zoomFade});
 
 				}
 			}
 			else {
-				Mojo.Controller.getAppController().getStageController("cardStage").swapScene({name: "play", transition: Mojo.Transition.crossFade});		
+				stageController.swapScene({name: "play", transition: Mojo.Transition.crossFade});		
 			}	
 		}		
 	},
@@ -1806,13 +2005,13 @@ var m = {
 		}else {
 			m.resume();
 
-			m.nP.songs[m.nP.index].active = undefined;
+			//m.nP.songs[m.nP.index].active = undefined;
 			if(m.nP.index !== m.nP.songs.length-1){
 				m.nP.index++;
 			}else {
 				m.nP.index = 0;
 			};
-			m.nP.songs[m.nP.index].active = true;
+			//m.nP.songs[m.nP.index].active = true;
 			if(m.nP.repeat > 0){
 				if(m.nP.repeat === 1){
 					m.nP.repeat = 0;
@@ -1864,16 +2063,16 @@ var m = {
 		}
 	},
 	playNext: function(ended, play){
-		try {
-			m.nP.songs[m.nP.index].active = undefined;
-		}catch(e){}//if the user deletes the first song that is currently playing
+		//try {
+		//	m.nP.songs[m.nP.index].active = undefined;
+		//}catch(e){}//if the user deletes the first song that is currently playing
 		var oldIndex = m.nP.index;
 		if(m.nP.index !== m.nP.songs.length-1){
 			m.nP.index++;
 		}else {
 			m.nP.index = 0;
 		}
-		m.nP.songs[m.nP.index].active = true;
+		//m.nP.songs[m.nP.index].active = true;
 		m.delegate("_playNext", ended);
 		if(m.nP.playing === true){
 			if(oldIndex === m.nP.songs.length-1 && ended){
@@ -1910,13 +2109,13 @@ var m = {
 			}
 		}
 		else{
-			m.nP.songs[m.nP.index].active = undefined;
+			//m.nP.songs[m.nP.index].active = undefined;
 			if(m.nP.index > 0){
 				m.nP.index--;
 			}else {
 				m.nP.index = m.nP.songs.length-1;
 			}
-			m.nP.songs[m.nP.index].active = true;
+			//m.nP.songs[m.nP.index].active = true;
 			try {
 				m.playSong(m.nP.songs[m.nP.index].path, undefined, undefined, "previous");
 			}catch(e){m.debugErr(e)};
@@ -1928,9 +2127,9 @@ var m = {
 	},
 	stop: function(){
 		m.nP["audioObj" + m.nP.cao].pause();
-		m.nP.songs[m.nP.index].active = undefined;
+		//m.nP.songs[m.nP.index].active = undefined;
 		m.nP.index = 0;
-		m.nP.songs[m.nP.index].active = true;
+		//m.nP.songs[m.nP.index].active = true;
 		m.nP["audioObj" + m.nP.cao].src = m.nP.songs[0].path;
 		m.nP["audioObj" + m.nP.cao].load();
 		m.nP["audioObj" + m.nP.cao].pause();
@@ -2031,6 +2230,14 @@ db8 = ({
 			"indices": [
 				{"name": "name", "props": [{"name": "name", "type":"single"}]},
 				{"name": "type", "props": [{"name": "type", "type":"single"}]}
+			]
+		},
+		{
+			"kindID": g.AppId + ".favorites:1",
+			//"name": "playlists",
+			"indices": [
+				{"name": "id", "props": [{"name": "id", "type":"single"}]},
+				{"name": "position", "props": [{"name": "position", "type":"single"}]}
 			]
 		},
 		{

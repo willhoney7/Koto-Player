@@ -54,6 +54,15 @@ ListAssistant.prototype.setup = function() {
 						break;				
 				}
 			}.bind(this),
+			"title": function(value, model){
+				if(model.title || model.name){
+					if(this.data === "artists" || this.data === "albums" || this.data === "songs"){
+						return ((model.title) ? model.title : model.name).replace(m.sortRegex, "$2, $1");
+					} else {
+						return ((model.title) ? model.title : model.name);				
+					}
+				}
+			}.bind(this),
 			"rowClass": function(value, model){
 				return "content-list";
 			}.bind(this),
@@ -79,9 +88,10 @@ ListAssistant.prototype.setup = function() {
 					return "#";
 				}
 				var specialCharRegex = /(['"!@#$%^&*\(\)_ \\\/-;:<>\{\}\[\]])/;
-				if(specialCharRegex.test((this.data == "songs")?itemModel.title.charAt(0):itemModel.name.charAt(0)))
+				if(specialCharRegex.test((this.data == "songs")?itemModel.title.charAt(0):itemModel.name.charAt(0))){
 					return "&";
-				return ((this.data == "songs")?itemModel.title.charAt(0):itemModel.name.charAt(0)).toLowerCase();
+				}
+				return itemModel[(this.data === "songs") ? "title" : "name"].replace(m.sortRegex, "$2").toLowerCase().charAt(0);
 			}.bind(this);
 			break;
 		case "playlists":
@@ -134,53 +144,11 @@ ListAssistant.prototype.setup = function() {
 	this.titleBarTapHandler = this.titleBarTap.bind(this);
 	this.controller.listen(this.controller.get("title-bar"), Mojo.Event.tap, this.titleBarTapHandler);
 	
-	//this.controller.setupWidget("alphaScrollerWidget", {}, {});
-	var objHeading = (this.data === "songs")? "title" : "name", alphaListItems = [];
-	for(var i = 0; i < this.items.length; i++){
-		var specialCharRegex = /(['"!@#$%^&*\(\)_ \\\/-;:<>\{\}\[\]])/;
-		if(!isNaN(parseInt(this.items[i][objHeading].charAt(0)))){
-			if(!this.items[i-1] || (this.items[i-1][objHeading] && isNaN(parseInt(this.items[i-1][objHeading].charAt(0))))){
-				alphaListItems.push({letter: "#", index: i});
-			}
-		}
-		else if(specialCharRegex.test(this.items[i][objHeading].charAt(0))){
-			if(!this.items[i-1] || (this.items[i-1][objHeading] && !specialCharRegex.test(this.items[i][objHeading].charAt(0)))){
-				alphaListItems.push({letter: "&", index: i});
-			}
-		} else {
-			if(!this.items[i-1] || (this.items[i-1][objHeading] && this.items[i-1][objHeading].charAt(0).toUpperCase() !== this.items[i][objHeading].charAt(0).toUpperCase())){
-				alphaListItems.push({letter: this.items[i][objHeading].charAt(0).toUpperCase(), index: i});
-			}
-		}
-	}
-	
+	//this.controller.setupWidget("alphaScrollerWidget", {}, {});	
 	
 	/* Alpha Scroller Stuff*/
-	if(this.data === "artists" || this.data === "albums" || this.data === "songs"){
-		this.controller.setupWidget("alphaScrollerWidget", {mode: "vertical"}, {});
-		this.scroller = this.controller.get("alphaScrollerWidget");
-		this.scroller.setStyle({height: Mojo.Environment.DeviceInfo.screenHeight - 120+"px", width: "26px"});
-		var renderedContent = Mojo.View.render({collection: alphaListItems, template: 'widgets/widget_alphaScroller-item'});
-		Element.insert(this.scroller, "<div class='alphaScroller-fade-top' x-mojo-scroll-fade='top'></div><div class='alpha-items'>" + renderedContent + "</div><div id='alphaScroller-fade-bottom' class='alphaScroller-fade-bottom' x-mojo-scroll-fade='bottom'></div>");
-		this.alphaScrollerBottomFade = this.controller.get("alphaScroller-fade-bottom");
-		this.controller.listen(this.scroller, Mojo.Event.tap, this.handleScroller = function(event){
-			this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", "")), false);
-			this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", "")), false);
-		}.bind(this));
-		
-		Mojo.Event.listen(this.controller.window, 'resize', this.handleResize = function(){
-			if(this.controller && this.controller.window){
-				var height = this.controller.window.innerHeight;
-				if(this.panel.visible()){
-					this.scroller.setStyle({height: height + 28 - 180 + "px"});
-					this.alphaScrollerBottomFade.setStyle({bottom: "103px"});
-				} else {
-					this.scroller.setStyle({height: height + 28 - 120 + "px"});							
-					this.alphaScrollerBottomFade.setStyle({bottom: "40px"});
-				}
-			}
-		}.bind(this));
-		this.handleResize();
+	if(this.data === "artists" || this.data === "albums" || this.data === "songs"){	
+		this.setupAlphaScroller();
 	}
 	
 	
@@ -204,7 +172,71 @@ ListAssistant.prototype.setup = function() {
 		}
 	}.bind(this))*/
 };
+ListAssistant.prototype.setupAlphaScroller = function(event) {
+	//create items
+	var objHeading = (this.data === "songs")? "title" : "name", alphaListItems = [];
+	for(var i = 0; i < this.items.length; i++){
+		var specialCharRegex = /(['"!@#$%^&*\(\)_ \\\/-;:<>\{\}\[\]])/;
+		if(!isNaN(parseInt(this.items[i][objHeading].charAt(0)))){
+			if(!this.items[i-1] || (this.items[i-1][objHeading] && isNaN(parseInt(this.items[i-1][objHeading].charAt(0))))){
+				alphaListItems.push({letter: "#", index: i});
+			}
+		}
+		else if(specialCharRegex.test(this.items[i][objHeading].charAt(0))){
+			if(!this.items[i-1] || (this.items[i-1][objHeading] && !specialCharRegex.test(this.items[i][objHeading].charAt(0)))){
+				alphaListItems.push({letter: "&", index: i});
+			}
+		} else {
+			if(!this.items[i-1] || (this.items[i-1][objHeading] && this.items[i-1][objHeading].replace(m.sortRegex, "$2").charAt(0).toUpperCase() !== this.items[i][objHeading].replace(m.sortRegex, "$2").charAt(0).toUpperCase())){
+				alphaListItems.push({letter: this.items[i][objHeading].replace(m.sortRegex, "$2").charAt(0).toUpperCase(), index: i});
+			}
+		}
+	}
+	
+	this.controller.setupWidget("alphaScrollerWidget", {mode: "vertical"}, {});
+	this.scroller = this.controller.get("alphaScrollerWidget");
+	this.scroller.setStyle({height: Mojo.Environment.DeviceInfo.screenHeight - 120+"px", width: "26px"});
+	var renderedContent = Mojo.View.render({collection: alphaListItems, template: 'widgets/widget_alphaScroller-item'});
+	Element.insert(this.scroller, "<div class='alphaScroller-fade-top' x-mojo-scroll-fade='top'></div><div class='alpha-items'>" + renderedContent + "</div><div id='alphaScroller-fade-bottom' class='alphaScroller-fade-bottom' x-mojo-scroll-fade='bottom'></div>");
+	this.alphaScrollerBottomFade = this.controller.get("alphaScroller-fade-bottom");
+	this.controller.listen(this.scroller, Mojo.Event.tap, this.handleScroller = function(event){
+		this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", "")), false);
+		this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", "")), false);
+	}.bind(this));
+	
+	Mojo.Event.listen(this.controller.window, 'resize', this.handleResize = function(){
+		if(this.controller && this.controller.window){
+			var height = this.controller.window.innerHeight;
+			if(this.panel.visible()){
+				this.scroller.setStyle({height: height + 28 - 180 + "px"});
+				this.alphaScrollerBottomFade.setStyle({bottom: "103px"});
+			} else {
+				this.scroller.setStyle({height: height + 28 - 120 + "px"});							
+				this.alphaScrollerBottomFade.setStyle({bottom: "40px"});
+			}
+		}
+	}.bind(this));
+	this.handleResize();
+	
+	if(m.prefs.alphaScroller === true){
+		this.showAlphaScroller();
+	} else if(m.prefs.alphaScroller === false) {
+		this.hideAlphaScroller();
+	}
+}
+ListAssistant.prototype.hideAlphaScroller = function(event) {
+	this.scroller.hide();
+}
+ListAssistant.prototype.showAlphaScroller = function(event) {
+	this.scroller.show();
+}
+
 ListAssistant.prototype.activate = function(event) {
+	if(m.prefs.alphaScroller === true){
+		this.showAlphaScroller();
+	} else if(m.prefs.alphaScroller === false) {
+		this.hideAlphaScroller();
+	}
 	this.activateCommon();
 	
 	//if(this.data === "playlists" || this.data === "favorites"){
@@ -358,7 +390,7 @@ ListAssistant.prototype.listTap = function(event){
 		});
 	}
 	else {
-		if(objType === "song"){
+		if(objType === "song"){			
 			if(this.data === "favorites"){
 				function handleSongs(songs){
 					for(var i = 0; i < songs.length; i++){
@@ -397,12 +429,17 @@ ListAssistant.prototype.listTap = function(event){
 ListAssistant.prototype.listReorder = function(event){
 	if(this.data === "favorites"){
 		m.favorites.splice(event.fromIndex, 1);
+		var item = m.favoriteIds[event.fromIndex];
+		m.favoriteIds.splice(event.fromIndex, 1);
 		m.favorites.splice(event.toIndex, 0, event.item);
+		m.favoriteIds.splice(event.toIndex, 0, item);
+		m.storeFavorites();
 	}
 }
 ListAssistant.prototype.listDelete = function(event){
-	if(this.data === "favorites")
-		m.favorites.splice(event.index, 1);
+	if(this.data === "favorites"){
+		m.delFavorite(event.index);
+	}
 	else 
 		m.delPlaylist(event.item.name, event.index);
 	
@@ -535,10 +572,6 @@ ListAssistant.prototype.showAlphaScroller = function(event) {
 
 ListAssistant.prototype.deactivate = function(event) {
 	this.deactivateCommon();
-	
-	if(this.data == "favorites"){
-		m.storeFavorites();
-	}
 };
 ListAssistant.prototype.cleanup = function(event) {
 	this.cleanupCommon()

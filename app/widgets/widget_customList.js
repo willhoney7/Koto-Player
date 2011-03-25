@@ -1008,7 +1008,7 @@ Mojo.Widget.List = Class.create({
 		
 		// Render the actual list items:
 		//Mojo.Timing.resetAllWithPrefix('list');
-		this.renderItemsBefore(this.listItems, this.bottomSpacer);
+		this.renderItemsBefore(this.listItems, this.bottomSpacer, this.renderOffset);
 		//Mojo.Timing.reportTiming('list', "renderFromModel");
 		//Mojo.Timing.resetAllWithPrefix('list');
 		
@@ -1056,7 +1056,7 @@ Mojo.Widget.List = Class.create({
 		this.log("List: renderContainer");
 		
 		// Apply formatters here instead of in render(), so that we can also add the 'listElements' property to the decorator.
-		var obj = Mojo.Model.format(this.controller.model, this.controller.attributes.formatters);  
+		var obj = Mojo.Model.format(this.controller.model, this.controller.attributes.formatters, false);  
 		obj.listElements = "<div id='MojoListItemsParentMarker'></div>";
 
 		this.contentDiv.innerHTML = Mojo.View.render({object: obj, template: this.listTemplate});
@@ -1108,7 +1108,7 @@ Mojo.Widget.List = Class.create({
 		
 		// Render new items:
 		offset -= this.renderOffset;
-		this.renderItemsBefore(this.listItems.slice(offset, offset+limit), node);
+		this.renderItemsBefore(this.listItems.slice(offset, offset+limit), node, this.renderOffset + offset);
 		
 		this.updateSpacers();
 		
@@ -1164,7 +1164,7 @@ Mojo.Widget.List = Class.create({
 		 * @param {Object} itemModels
 		 * @param {Object} beforeNode
 		 */
-		renderItemsBefore: function renderItemsBefore(itemModels, beforeNode) {
+		renderItemsBefore: function renderItemsBefore(itemModels, beforeNode, offset) {
 			//Mojo.Timing.resume('list#rendIB');
 	//		console.profile('renderItemsBefore');
 			var attrs = this.controller.attributes;
@@ -1207,6 +1207,8 @@ Mojo.Widget.List = Class.create({
 			renderedItems = [];
 			formattedModels = [];
 			//Mojo.Timing.resume("list#IBrend");
+			//m.debugErr("itemModels " + itemModelsLength);
+
 			for(i=0; i<itemModelsLength; i++) {
 
 				itemModel = itemModels[i];
@@ -1215,7 +1217,7 @@ Mojo.Widget.List = Class.create({
 					itemContent = nullContent;
 					formattedObj = null;
 				} else {
-					formattedObj = Mojo.Model.format(itemModel, attrs.formatters);
+					formattedObj = Mojo.Model.format(itemModel, attrs.formatters, false, offset + i);
 					itemContent = Mojo.View.render({object: formattedObj, template: itemTemplate});
 				}
 
@@ -1244,6 +1246,7 @@ Mojo.Widget.List = Class.create({
 			// Since we copy the nodeList into an array (above), we don't need to worry about nodes disappearing as they're inserted into the DOM.
 			modelIndex = 0;
 			contentLength = content.length;
+			//m.debugErr("contentlength " + contentLength);
 
 			for(i=0; i<contentLength; i++) {
 				itemNode = content[i];
@@ -1415,14 +1418,15 @@ Mojo.Widget.List = Class.create({
 				beforeNode = beforeNode.nextSibling;
 			}
 		}
-		this.renderItemsBefore(newItems, beforeNode);		
+		//correct.
+		this.renderItemsBefore(newItems, beforeNode, loadIndex);		
 		
 		//Mojo.Timing.resume("list#dtSpacers");
 		this.updateSpacers();
 		//Mojo.Timing.pause("list#dtSpacers");
 		//Mojo.Timing.pause("list#applyDt");
 	},
-	
+
 	
 	/**
 	 * @private

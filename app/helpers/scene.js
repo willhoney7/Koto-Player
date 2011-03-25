@@ -156,7 +156,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 		var default_items = [                        //commands are in app-assistant
 			{ label: $L('More Options'), items: [
 				{label: $L("Update Just Type Data"), command: "update-just-type"},
-				//{label: $L("Playground"), command: "playground"}
+				{label: $L("Search"), command: "search"}
 			]},
 			{ label: $L('Preferences & Accounts'),				command: Mojo.Menu.prefsCmd },
 			{ label: $L('About Koto'),							command: 'do-about' },
@@ -298,14 +298,17 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 				}
 			}
 			if(event.type === Mojo.Event.forward){
-				if(assistant.controller.sceneName === "list" || assistant.controller.sceneName === "view"){//list scene
+				/*if(assistant.controller.sceneName === "list" || assistant.controller.sceneName === "view"){//list scene
 					assistant.getSongs(function(songs){
 						m.playArray(songs, 0);
 					}.bind(assistant));
 				}//main scene
 				else if(assistant.controller.sceneName === "main") {
 					m.shufflePlay(m.songs, 0);
-				};
+				};*/
+				if((arg && !arg.search) || !arg){
+					assistant.controller.stageController.pushScene("search");
+				}
 			}
 			if(event.type === Mojo.Event.back){
 				if(assistant.extraDiv.hasClassName("shown")){

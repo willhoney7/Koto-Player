@@ -10,6 +10,30 @@ PrefsAssistant.prototype.setup = function() {
 	this.setupCommon();
 	this.controller.getSceneScroller().mojo.revealTop(0);
 	
+	this.controller.setupWidget("theme", 
+		{
+			label: $L('Theme'),
+			labelPlacement: Mojo.Widget.labelPlacementLeft,
+			multiline: true,
+			choices: [
+				{label: "Blue", value: "blue"},
+				{label: "Black", value: "black"},
+				{label: "Green", value: "green"},
+				{label: "Red", value: "red"},
+				{label: "Purple", value: "purple"},
+				//{label: "Turquoise", value: "turquoise"},
+			]
+		},
+		{value: m.prefs.theme}
+	);
+	
+	this.controller.listen("theme", Mojo.Event.propertyChange, this.handleThemeChange = function(event){
+		this.controller.stageController.unloadStylesheet("stylesheets/" + m.prefs.theme + ".css");
+		m.prefs.theme = event.value;
+		m.storePrefs();
+		this.controller.stageController.loadStylesheet("stylesheets/" + m.prefs.theme + ".css");
+	}.bind(this));
+	
 	this.controller.setupWidget("auto-resume-nowPlaying", {}, this.autoResumeNowPlaying = {value: m.prefs.saveAndResume});
 	this.controller.listen("auto-resume-nowPlaying", Mojo.Event.propertyChange, this.handleAutoResumeNowPlaying = function(event){
 		m.prefs.saveAndResume = event.value;

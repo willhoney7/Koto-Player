@@ -30,6 +30,7 @@ var m = {
 	prefs: {
 		saveAndResume: true,
 		defaultRepeat: 2,
+		theme: "blue",
 		favoriteTap: "view",
 		playlistTap: "play",
 		albumArtScrollerNum: 40,
@@ -70,6 +71,9 @@ var m = {
 	setUpPrefs: function(){
 		var prefData = m.prefsCookie.get();
 		if(prefData){
+			if(prefData.theme !== undefined){
+				m.prefs.theme = prefData.theme;
+			}
 			if(prefData.saveAndResume !== undefined){
 				m.prefs.saveAndResume = prefData.saveAndResume;
 			}
@@ -186,7 +190,10 @@ var m = {
 		
 		db8.setup();
 		m.setUpPrefs();
-		if(m.prefs.saveAndResume == true || m.launchPlayer){
+		
+		Mojo.Controller.getAppController().getStageController("cardStage").loadStylesheet("stylesheets/" + m.prefs.theme + ".css");
+	
+	if(m.prefs.saveAndResume == true || m.launchPlayer){
 			if(!arg || (arg && !arg.fromStartup)){
 				m.resumeNowPlaying();
 			}

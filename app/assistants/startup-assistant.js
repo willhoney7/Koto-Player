@@ -30,19 +30,21 @@ StartupAssistant.prototype.setup = function() {
 	
 	var changelog = [
 		{
-			"version": "0.7.0",
+			"version": "0.7.0 RC",
 			"log":
 				[
+					"<b>New Feature:</b> In-app search! Just forward swipe to launch the search page.",
+					"<b>New Feature:</b> Theme selection! Blue, black, green, red, or purple!",
 					"<b>New Feature:</b> Filter songs in playlists by typing.",
 					"<b>New Feature:</b> Advanced custom playlist sorting. Tap on the \"...\" button on the playlist view page, tap sort, and pick your option.",
 					"<b>New Feature:</b> Added preference for the action to take when tapping on a playlist.",
 					"<b>New Feature:</b> Artists, Albums, and Songs pages now ignore \"a\", \"an\", and \"the\" in sorting.",
 					"<b>Improvement:</b> Added preference to hide the Alpha Scroller.",
 					"<b>Improvement:</b> Enhanced performance on playing songs.",
-					"<b>Improvement:</b> Moved favorites storage system to db8. Allows up to 500 favorites.",
+					"<b>Improvement:</b> Moved favorites storage system to db8. Allows up to 500 favorites rather than 100-200.",
 					"<b>Bug Fix:</b> Fixed truncation for Song Tweets.",
-					"<b>Bug Fix:</b> Album Art Scroller with one song."
-				
+					"<b>Bug Fix:</b> Album Art Scroller with one song.",
+					"<b>Bug Fix:</b> Improved handling of albums with various artists."
 				]
 		},
 		{

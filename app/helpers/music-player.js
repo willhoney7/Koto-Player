@@ -33,6 +33,7 @@ var m = {
 		theme: "blue",
 		favoriteTap: "view",
 		playlistTap: "play",
+		filterTap: "filtered",
 		albumArtScrollerNum: 40,
 		marqueeText: false,
 		alphaScroller: true,
@@ -40,6 +41,7 @@ var m = {
 		metrixToggle: true,
 		useDashboard: true,
 		closeDashboard: true,
+		indexSongsByAlbum: true,
 		lastfm: {
 			username: "",
 			sessionKey: "",
@@ -86,6 +88,9 @@ var m = {
 			if(prefData.favoriteTap !== undefined){
 				m.prefs.favoriteTap = prefData.favoriteTap;
 			}
+			if(prefData.filterTap !== undefined){
+				m.prefs.filterTap = prefData.filterTap;
+			}
 			if(prefData.albumArtScrollerNum !== undefined){
 				m.prefs.albumArtScrollerNum = prefData.albumArtScrollerNum;
 			}
@@ -106,6 +111,9 @@ var m = {
 			}
 			if(prefData.useDashboard !== undefined){
 				m.prefs.useDashboard = prefData.useDashboard;
+			}
+			if(prefData.indexSongsByAlbum !== undefined){
+				m.prefs.indexSongsByAlbum = prefData.indexSongsByAlbum;
 			}
 			if(prefData.lastfm !== undefined){
 				m.prefs.lastfm = prefData.lastfm;
@@ -1282,7 +1290,7 @@ var m = {
 			case "song":
 				obj = {
 					"orderKey": "k",
-					"searchKey": origObj.title + " " + origObj.artist + " " + origObj.album,
+					"searchKey": origObj.title + " " + origObj.artist + " " + ((m.prefs.indexSongsByAlbum === true)? origObj.album : ""),
 					"display": origObj.title,
 					"secondary": objType.capitalize() + " - " + origObj.artist + " - " + origObj.album
 				};

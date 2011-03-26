@@ -253,8 +253,12 @@ ListAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 	var i = 0;
 	while (i < this.items.length) {
 		if((this.items[i].name && this.items[i].name.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].title && this.items[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].album && this.items[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].artist && this.items[i].artist.toLowerCase().include(filterString.toLowerCase()))){
-			if (this.subset.length < count && totalSubsetSize >= offset) 
+			if (this.subset.length < count && totalSubsetSize >= offset){ 
+				if(this.items[i].title){
+					this.items[i].unFilteredIndex = i;
+				}
 				this.subset.push(this.items[i]);
+			}
 			totalSubsetSize++;
 		}
 		i++;
@@ -406,10 +410,12 @@ ListAssistant.prototype.listTap = function(event){
 					this.getSongsOfArray(this.items, handleSongs.bind(this));				
 				}
 			} else {
-				if(this.subset.length > 0 && this.filter !== ""){
+				if(this.subset.length > 0 && this.filter !== "" && m.prefs.filterTap === "filtered"){
 					m.playArray(this.subset, event.index);
+				} else if(m.prefs.filterTap === "all"){
+					m.playArray(this.items, obj.unFilteredIndex);
 				} else {
-					m.playArray(this.items, event.index);
+					m.playArray(this.items, event.index);				
 				}
 			}
 		} else if(objType === "artist" || objType === "album"){

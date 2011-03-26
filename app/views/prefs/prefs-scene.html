@@ -63,9 +63,14 @@
 			</div>
 		</div>
 		<div class="palm-row">
+			<div class="palm-row-wrapper list-selector">
+				<div id="filter-tap-selector" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div>
+		<div class="palm-row">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Show Alpha Scroller
+					Alpha Scroller
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='alphaScroller-toggle'></div>
 			</div>
@@ -87,7 +92,7 @@
 		<div class="palm-row first">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Use Dashboard
+					Dashboard
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='use-dashboard-toggle'></div>
 			</div>
@@ -102,6 +107,24 @@
 		</div>
     </div>
 </div>
+
+<div class='palm-group'>
+	<div class='palm-group-title'>Just Type</div>
+	<div class='palm-list'>
+		<div class="palm-row single">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Index Songs by Album
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='indexSongsByAlbum'></div>
+				<div class='palm-info-text' style='padding-top: 8px; font-size: 12px;'>
+					Whether or not you want songs to show up if their album matches the search string.
+				</div>
+			</div>
+		</div> 
+    </div>
+</div>
+
 
 <div class='palm-group'>
 	<div class='palm-group-title'>Misc.</div>
@@ -149,7 +172,7 @@
 			</div>
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Scrobble Songs
+					Song Scrobbling
 				</div>
 				<div id='lastfm-toggle' x-mojo-element='ToggleButton' class='toggle-text'></div>
 			</div>

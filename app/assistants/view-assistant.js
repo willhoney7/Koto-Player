@@ -97,8 +97,10 @@ ViewAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 	var i = 0;
 	while (i < this.data.length) {
 		if((this.data[i].title && this.data[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.data[i].album && this.data[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.data[i].artist && this.data[i].artist.toLowerCase().include(filterString.toLowerCase()))){
-			if (this.subset.length < count && totalSubsetSize >= offset) 
+			if (this.subset.length < count && totalSubsetSize >= offset){ 
+				this.data[i].unFilteredIndex = i;
 				this.subset.push(this.data[i]);
+			}	
 			totalSubsetSize++;
 		}
 		i++;
@@ -174,6 +176,10 @@ ViewAssistant.prototype.listTap = function(event) {
 				items: items
 		});
 	} else {
+		if(this.subset.length > 0 && this.filter !== "" && m.prefs.filterTap === "all"){
+			songs = this.data;
+			event.index = event.item.unFilteredIndex;
+		}
 		m.playArray(songs, event.index);
 	}
 };

@@ -96,17 +96,23 @@ PrefsAssistant.prototype.setup = function() {
 		m.storePrefs();
 	}.bind(this));
 	
-	this.controller.setupWidget("close-dashboard-toggle", {}, this.closeDashboard = {value: m.prefs.closeDashboard});
-	this.controller.listen("close-dashboard-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
-		m.prefs.closeDashboard = event.value;
+	this.controller.setupWidget("filter-tap-selector", 
+		{
+			label: $L('Tapping a Filtered Song'),
+			labelPlacement: Mojo.Widget.labelPlacementLeft,
+			multiline: true,
+			choices: [
+				{label: "Plays All Songs", value: "all"},
+				{label: "Plays Filtered Songs", value: "filtered"}
+			]
+		},
+		{value: m.prefs.filterTap}
+	);
+	this.controller.listen("filter-tap-selector", Mojo.Event.propertyChange, this.handleFilteredTapSelector = function(event){
+		m.prefs.filterTap = event.value;
 		m.storePrefs();
 	}.bind(this));
 	
-	this.controller.setupWidget("use-dashboard-toggle", {}, this.useDashboard = {value: m.prefs.useDashboard});
-	this.controller.listen("use-dashboard-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
-		m.prefs.useDashboard = event.value;
-		m.storePrefs();
-	}.bind(this));
 	
 	this.controller.setupWidget("playlist-tap-selector", 
 		{
@@ -142,11 +148,47 @@ PrefsAssistant.prototype.setup = function() {
 		m.storePrefs();
 	}.bind(this));
 	
+	
+	this.controller.setupWidget("close-dashboard-toggle", {}, this.closeDashboard = {value: m.prefs.closeDashboard});
+	this.controller.listen("close-dashboard-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
+		m.prefs.closeDashboard = event.value;
+		m.storePrefs();
+	}.bind(this));
+	
+	this.controller.setupWidget("use-dashboard-toggle", {}, this.useDashboard = {value: m.prefs.useDashboard});
+	this.controller.listen("use-dashboard-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
+		m.prefs.useDashboard = event.value;
+		m.storePrefs();
+	}.bind(this));
+	
+	
+	this.controller.setupWidget("indexSongsByAlbum", {trueLabel: "Yes", falseLabel: "No"}, {value: m.prefs.indexSongsByAlbum});
+	this.controller.listen("indexSongsByAlbum", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
+		m.prefs.indexSongsByAlbum = event.value;
+		m.storePrefs();
+		
+		this.controller.showAlertDialog({
+			onChoose: function(value) {
+				if(value){
+					m.setupCacheDashboard();
+				}
+			}.bind(this),
+			title: $L("Re-Index Songs"),
+			message: $L("For you changes to be in effect, you must re-index your songs."),
+			choices:[
+				{label:$L('Yes'), value: true, type:'primary'},  
+				{label:$L("Not at this time"), value: false, type:'dismiss'}    
+			]
+		}); 
+		//popup todo
+	}.bind(this));
+	
+	
 	this.controller.setupWidget("metrixToggleWidget", {}, this.metrixToggle = {value: m.prefs.metrixToggle});
-		this.controller.listen("metrixToggleWidget", Mojo.Event.propertyChange, this.handleMetrixToggle = function(event){
-			m.prefs.metrixToggle = event.value;
-			m.storePrefs();
-		}.bind(this));
+	this.controller.listen("metrixToggleWidget", Mojo.Event.propertyChange, this.handleMetrixToggle = function(event){
+		m.prefs.metrixToggle = event.value;
+		m.storePrefs();
+	}.bind(this));
 	
 	/*
 	 *	Last.fm

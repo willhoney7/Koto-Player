@@ -156,12 +156,15 @@ SearchAssistant.prototype.listTap = function(event){
 		else if(objType === "artist" || objType === "album"){
 			m.view(obj);
 		} 
-		else if(objType === "song"){
-			m.viewAlbum(obj.album);
-		} else {
-			m.getSongsOfObj(obj, function(songs){
-				m.viewArray(obj, songs);							
-			}.bind(this));
+		else {
+			m.getSongsOfObj(obj, function(songs, index_){
+				var index = index_ || 0;
+				if(objType === "song" || objType === "playlist"){
+					m.playArray(songs, index);
+				} else if(objType === "genre"){
+					m.viewArray(obj, songs);
+				}
+			}.bind(this), true);//pass true so it returns all songs by artist if it's a song
 		}
 	}.bind(this));
 }

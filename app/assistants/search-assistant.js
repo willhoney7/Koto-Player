@@ -16,11 +16,11 @@ SearchAssistant.prototype.setup = function() {
 		renderLimit: 50,
 		formatters: {
 			"title": function(value, model){
-				if(model.display)
+				if (model.display)
 					return model.display.replace(new RegExp('(' + filterString + ')', 'gi'), '<span class="highlight">$1</span>');
 			},
 			"info": function(value, model){
-				if(model.secondary){
+				if (model.secondary){
 					return model.secondary.replace(/^(\w|\s)*\s\-\s/ig, "");
 					//return display.replace(new RegExp('(' + filterString + ')', 'gi'), '<span class="highlight">$1</span>');
 				}
@@ -28,7 +28,7 @@ SearchAssistant.prototype.setup = function() {
 		},
 		dividerTemplate: "view/divider",
 		dividerFunction: function(itemModel){
-			if(itemModel.secondary.indexOf("Favorite ") === 0){
+			if (itemModel.secondary.indexOf("Favorite ") === 0){
 				return "Favorites";
 			}
 			return (itemModel.objType === "so") ? "songs" : itemModel.objType === "ar" ? "artists" : itemModel.objType === "al" ? "albums" : "playlists";
@@ -65,10 +65,10 @@ SearchAssistant.prototype.activate = function(event) {
 };
 
 SearchAssistant.prototype.filterContent = function(event){
-	if(!event.filterString.blank()){
+	if (!event.filterString.blank()){
 		filterString = event.filterString;
-		m.search(filterString, this.renderItems.bind(this), ((this.filter !== "all") ? this.filter[0] + this.filter[1] : null));
-		//m.db8_exec({"select" : ["display", "secondary", "id"], "from":g.AppId + ".data:1","where":[{"prop":"searchKey","op":"%","val":event.filterString, "collate": "primary"}], "limit":50}, this.renderItems.bind(this), false, true);
+		koto.justType.search(filterString, this.renderItems.bind(this), ((this.filter !== "all") ? this.filter[0] + this.filter[1] : null));
+		//db8.exec({"select" : ["display", "secondary", "id"], "from":koto.appId + ".data:1","where":[{"prop":"searchKey","op":"%","val":event.filterString, "collate": "primary"}], "limit":50}, this.renderItems.bind(this), false, true);
 	} else {
 		this.renderItems([]);
 	}
@@ -77,7 +77,7 @@ SearchAssistant.prototype.filterContent = function(event){
 }
 SearchAssistant.prototype.renderItems = function(items){
 	//for(var i = 0; i < items.length; i++){
-	//	if(items.objType
+	//	if (items.objType
 	//}
 	this.list.mojo.noticeRemovedItems(0, this.items.length);
 	this.list.mojo.setLength(0);
@@ -91,21 +91,21 @@ SearchAssistant.prototype.renderItems = function(items){
 
 
 SearchAssistant.prototype.listTap = function(event){
-	m.getObjsById([event.item.id], function(results){
+	db8.getObjsById([event.item.id], function(results){
 		obj = results[0];
-		var objType = m.getObjType(obj);
+		var objType = koto.utilities.getObjType(obj);
 
 		//popup
-		if(event.originalEvent.target.id && event.originalEvent.target.id == 'popup'){
+		if (event.originalEvent.target.id && event.originalEvent.target.id === 'popup'){
 			//build popup items
 			var items = [];
-			if(m.nP.songs.length > 0)
+			if (koto.nowPlaying.currentInfo.songs.length > 0)
 				items.push({label: $L('Play Next'), command: 'play-next'},{label: $L('Play Last'), command: 'play-last'});
-			if(objType !== "song"){
+			if (objType !== "song"){
 				items.unshift({label: $L('Play'), command: 'play'}, {label: $L("Shuffle Play"), command: "shuffle"});
-				if(objType === "playlist" && event.item.type && event.item.type === "custom")	
+				if (objType === "playlist" && event.item.type && event.item.type === "custom")	
 					items.push({label: $L('View & Edit Songs'), command: 'view'});
-				else if(objType === "playlist")
+				else if (objType === "playlist")
 					items.push({label: $L('View Songs'), command: 'view'});
 			} else {
 				items.push({label: $L('Song Details'), command: 'details'});
@@ -115,9 +115,9 @@ SearchAssistant.prototype.listTap = function(event){
 
 			this.controller.popupSubmenu({
 				onChoose: function(value){
-					if(value === "favorite"){
-						m.addToFavorites(obj);
-					} else if(value === "view" && (objType === "artist" || objType === "album")){
+					if (value === "favorite"){
+						koto.content.favorites.add(obj);
+					} else if (value === "view" && (objType === "artist" || objType === "album")){
 						m.view(obj);
 					}
 					else{
@@ -146,22 +146,22 @@ SearchAssistant.prototype.listTap = function(event){
 									break;
 							};
 						}.bind(this);
-						m.getSongsOfObj(obj, handleAction);
+						koto.content.getSongsOfObj(obj, handleAction);
 					}
 				}.bind(this),
 				placeNear: event.originalEvent.target,
 					items: items
 			});
 		}
-		else if(objType === "artist" || objType === "album"){
+		else if (objType === "artist" || objType === "album"){
 			m.view(obj);
 		} 
 		else {
-			m.getSongsOfObj(obj, function(songs, index_){
+			koto.content.getSongsOfObj(obj, function(songs, index_){
 				var index = index_ || 0;
-				if(objType === "song" || objType === "playlist"){
+				if (objType === "song" || objType === "playlist"){
 					m.playArray(songs, index);
-				} else if(objType === "genre"){
+				} else if (objType === "genre"){
 					m.viewArray(obj, songs);
 				}
 			}.bind(this), true);//pass true so it returns all songs by artist if it's a song
@@ -178,7 +178,7 @@ SearchAssistant.prototype.moreTap = function(event) {
 		
 	]
 	for(var i = 0; i< items.length; i++){
-		if(items[i].command == this.filter){
+		if (items[i].command === this.filter){
 			items[i].chosen = true;
 		}else {
 			items[i].chosen = false;
@@ -186,7 +186,7 @@ SearchAssistant.prototype.moreTap = function(event) {
 	}
 	this.controller.popupSubmenu({
 		onChoose: function(value){
-			if(value){
+			if (value){
 				this.filter = value;
 				this.moreDiv.innerHTML = this.filter;
 				this.filterContent({filterString: filterString});

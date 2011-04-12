@@ -28,16 +28,16 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 	
 	},	
 	getItemWidth: function(event){
-		if(Mojo.Environment.DeviceInfo.screenWidth === 320){
+		if (Mojo.Environment.DeviceInfo.screenWidth === 320){
 			return 210;
 		}
-		if(Mojo.Environment.DeviceInfo.screenWidth === 480){
+		if (Mojo.Environment.DeviceInfo.screenWidth === 480){
 			return 310;
 		}
 	},
 	getAlbumArt: function(){
 		checkConnectivity(function(connected){
-			if(connected){
+			if (connected){
 				google.search(this.album + " " + this.artist, function(array){
 					this.albumArtArray = array;
 					this.render();
@@ -52,13 +52,13 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 	render: function(){		
 		var content = Mojo.View.render({collection: this.albumArtArray, template: 'play/scroller-item', formatters: {
 			"dimension": function(value, model){
-				if(Mojo.Environment.DeviceInfo.screenHeight === 480){
+				if (Mojo.Environment.DeviceInfo.screenHeight === 480){
 					return "200px";
 				}
-				if(Mojo.Environment.DeviceInfo.screenHeight === 400){
+				if (Mojo.Environment.DeviceInfo.screenHeight === 400){
 					return "125px";
 				}
-				if(Mojo.Environment.DeviceInfo.screenHeight === 800){
+				if (Mojo.Environment.DeviceInfo.screenHeight === 800){
 					return "300px";
 				}
 			},
@@ -77,27 +77,31 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 	},
 	download: function(url){
 		checkConnectivity(function(connected){
-			if(connected){
+			if (connected){
 				m.bannerAlert("Downloading...");
 				var fileName = this.artist + " - " + this.album;
 					fileName = fileName.replace(/[^A-z0-9_\s\-]/ig, "");//get rid of special chars
 					fileName += "_" + Math.round(Math.random()*10000) + url.match(/(.*)\/([^\/\\]+)(\.\w+)$/)[3];
 					
-				g.ServiceRequest.request('palm://com.palm.downloadmanager/', {
+				koto.serviceRequest.request('palm://com.palm.downloadmanager/', {
 					method: 'download', 
 					parameters: 
 					{
 						target: url,
-						targetDir : "/media/internal/.app-storage/"+g.AppId+"/",
+						targetDir : "/media/internal/.app-storage/"+koto.appId+"/",
 						targetFilename : fileName
 					},
 					onSuccess : function (resp){
-						if(resp.returnValue === true){
+						if (resp.returnValue === true){
 							m.bannerAlert("Setting as Album Art");
-							m.setAlbumArt(this.album, this.artist, resp.target, function(response){
-								m.bannerAlert("Done!");
+							koto.albumArt.set(this.album, this.artist, resp.target, function(response){
+								//m.bannerAlert("Done!");
 								this.controller.scene.assistant.extraDiv.mojo.hide();
-								setTimeout(this.controller.scene.assistant.refreshList.bind(this), 3500);
+								var done = function done(){
+									m.bannerAlert("Done!");
+									this.refreshList();//done with this scope of the scene.
+								}.bind(this.controller.scene.assistant);
+								setTimeout(done, 3500);
 							
 							}.bind(this));
 						};
@@ -111,9 +115,9 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 	
 	},
 	albumArtTap: function(event){
-		var index = parseInt(event.target.parentElement.id);
+		var index = parseInt(event.target.parentElement.id, 10);
 		var image = this.albumArtArray[index];
-		if(!image){
+		if (!image){
 			return;
 		}
 		this.controller.scene.assistant.controller.popupSubmenu({

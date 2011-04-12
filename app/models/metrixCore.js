@@ -51,12 +51,12 @@ Metrix.prototype.coreInit = function()
 
 Metrix.prototype.postDeviceData = function(versionCtrl)
 {  
-  if(versionCtrl === true && this.lastAppRunVersion === Mojo.appInfo.version && this.lastWebosBuild === Mojo.Environment.build)
+  if (versionCtrl === true && this.lastAppRunVersion === Mojo.appInfo.version && this.lastWebosBuild === Mojo.Environment.build)
   {
     return;
   }
   
-  if(!this.postDeviceDataOnce) //Only post this once per app session.
+  if (!this.postDeviceDataOnce) //Only post this once per app session.
   {
   	this.postDeviceDataOnce = true;    
   }  
@@ -65,7 +65,7 @@ Metrix.prototype.postDeviceData = function(versionCtrl)
   	return;
   }
   
-  if((Date.parse(new Date()) - 43200) > this.lastUpdateTimestamp) // only post once every 12 hours
+  if ((Date.parse(new Date()) - 43200) > this.lastUpdateTimestamp) // only post once every 12 hours
   {
     var idRequest = this.ServiceRequest.request('palm://com.palm.preferences/systemProperties', {
                                                   method:"Get",
@@ -105,7 +105,7 @@ Metrix.prototype.postDeviceDataSuccess = function(transport)
 {
   var temp = transport.responseXML.getElementsByTagName("creationTimestamp");
   
-  if(temp.length > 0)
+  if (temp.length > 0)
   {
     this.creationTimestamp = temp.item(0).textContent;
   }
@@ -115,7 +115,7 @@ Metrix.prototype.postDeviceDataSuccess = function(transport)
   }
 
   temp = transport.responseXML.getElementsByTagName("lastUpdateTimestamp");
-  if(temp.length > 0)
+  if (temp.length > 0)
   {
     this.lastUpdateTimestamp = temp.item(0).textContent;
   }
@@ -142,9 +142,9 @@ Metrix.prototype.initializeCookie = function()
 
   var oldMetrixCookie = this.cookieData.get();
 
-  if(oldMetrixCookie)
+  if (oldMetrixCookie)
   {      
-    if(oldMetrixCookie.metrixVersion === this.metrixVersion)
+    if (oldMetrixCookie.metrixVersion === this.metrixVersion)
     {
       this.creationTimestamp = oldMetrixCookie.creationTimestamp;
       this.lastUpdateTimestamp = oldMetrixCookie.lastUpdateTimestamp;
@@ -178,13 +178,13 @@ Metrix.prototype.initializeCookie = function()
 
 Metrix.prototype.storeCookie = function(lastBulletinTime,bulletinVersion)
 {
-  if(lastBulletinTime)
+  if (lastBulletinTime)
   {
     
     this.lastBulletinTime = lastBulletinTime;
   }
   
-  if(bulletinVersion)
+  if (bulletinVersion)
   {
     this.bulletinVersion = bulletinVersion;
   }
@@ -207,9 +207,9 @@ Metrix.prototype.isExpired = function(currentUtcTime, daysAllowed)
 
   var result = false;
 
-  if(this.creationTimestamp !== null)
+  if (this.creationTimestamp !== null)
   {
-    if((currentUtcTime - this.creationTimestamp) > daysUtc)
+    if ((currentUtcTime - this.creationTimestamp) > daysUtc)
     {
       result = true;
     }
@@ -226,20 +226,20 @@ Metrix.prototype.isExpired = function(currentUtcTime, daysAllowed)
   
 Metrix.prototype.checkBulletinBoard = function(controller,minBulletinVersion, forceReview, url)
 {
-  if(minBulletinVersion)
+  if (minBulletinVersion)
   {    
-    if(minBulletinVersion > this.bulletinVersion)
+    if (minBulletinVersion > this.bulletinVersion)
     {
       this.bulletinVersion = minBulletinVersion;
     }
   }
   
-  if(!forceReview)
+  if (!forceReview)
   {
     forceReview = false;
   }
   
-  if(!url)
+  if (!url)
   {
     url = "http://metrix.webosroundup.com/MetrixInterface.asmx/GetBulletinBoard?packageId=" + Mojo.appInfo.id;
   }
@@ -256,7 +256,7 @@ Metrix.prototype.bulletinTimeCheck = function(controller, forceReview, url, resp
 {
   var timeUTC = response.utc;
 
-  if(response.utc > (this.lastBulletinTime + 86400) || forceReview === true)
+  if (response.utc > (this.lastBulletinTime + 86400) || forceReview === true)
   {
     var requestBulletin = this.AjaxRequest.request(url, {
                                                     method: "get",
@@ -273,7 +273,7 @@ Metrix.prototype.checkBulletinSuccess = function(timeUTC,controller, forceReview
   var version = transport.responseXML.getElementsByTagName("version").item(0).textContent;
   var msgArray = [];
   
-  if(version > this.bulletinVersion || forceReview === true)
+  if (version > this.bulletinVersion || forceReview === true)
   {
       var bulletins = transport.responseXML.getElementsByTagName("announcement");
 
@@ -282,7 +282,7 @@ Metrix.prototype.checkBulletinSuccess = function(timeUTC,controller, forceReview
         msgArray.push({title: bulletins[i].getElementsByTagName("title").item(0).textContent,text: bulletins[i].getElementsByTagName("message").item(0).textContent});
       }
       
-      if(msgArray.length > 0)
+      if (msgArray.length > 0)
       {
         controller.showDialog({template: "metrix/displayBulletin-dialog",assistant: new BulletinAssistant(this, controller, msgArray, timeUTC,version),preventCancel:true});
       }
@@ -297,12 +297,12 @@ Metrix.prototype.customCounts = function(valueGroup,valueName,valueData)
 {
 	var result = 0;
 	
-	if(!valueGroup || !valueName || !valueData || isNaN(valueData))
+	if (!valueGroup || !valueName || !valueData || isNaN(valueData))
 	{
 		return -1;
 	}
 	
-	if(!this.customCountsLock)
+	if (!this.customCountsLock)
 	{
   	this.customCountsLock = setTimeout(function(){this.customCountsLock = null;}.bind(this),5000);
   	
@@ -367,7 +367,7 @@ BulletinAssistant.prototype.setup = function(widget)
 	this.menuBarHandler = this.menuBarTouch.bindAsEventListener(this);
 	this.sceneAssistant.controller.listen("bulletin_view_header", Mojo.Event.tap, this.menuBarHandler);
 
-	if(this.msgArray.length > 1)
+	if (this.msgArray.length > 1)
 	{
 	  var srcString = this.sceneAssistant.controller.get("imgNext").src;
     srcString = srcString.substr(0,srcString.length - 7) + "upp.png";
@@ -399,11 +399,11 @@ BulletinAssistant.prototype.highlighter = function(btnSourceElement, btnTitleEle
 {
   var srcString = "";
   
-  if(mouseAction === "down")
+  if (mouseAction === "down")
   {
     this.sceneAssistant.controller.get(btnSourceElement).style["-webkit-border-image"] = "url(" + Mojo.appPath + "/images/Metrix/header-button-inverse.png) 0 10 0 10 stretch stretch";
 
-    if(btnType === "txt")
+    if (btnType === "txt")
     {
       this.sceneAssistant.controller.get(btnTitleElement).style["color"] = "white";
     }
@@ -411,18 +411,18 @@ BulletinAssistant.prototype.highlighter = function(btnSourceElement, btnTitleEle
     {
       srcString = this.sceneAssistant.controller.get(btnTitleElement).src;
 
-      if(srcString.substr(srcString.length - 7,7) !== "bnk.png")
+      if (srcString.substr(srcString.length - 7,7) !== "bnk.png")
       {
         srcString = srcString.substr(0,srcString.length - 7) + "dwn.png";
         this.sceneAssistant.controller.get(btnTitleElement).src = srcString;
       }
     }
   }
-  else if(mouseAction === "up")
+  else if (mouseAction === "up")
   {
     this.sceneAssistant.controller.get(btnSourceElement).style["-webkit-border-image"] = "url(" + Mojo.appPath + "/images/Metrix/header-button.png) 0 10 0 10 stretch stretch";
 
-    if(btnType === "txt")
+    if (btnType === "txt")
     {
       this.sceneAssistant.controller.get(btnTitleElement).style.color = "black";
     }
@@ -430,7 +430,7 @@ BulletinAssistant.prototype.highlighter = function(btnSourceElement, btnTitleEle
     {
       srcString = this.sceneAssistant.controller.get(btnTitleElement).src;
 
-      if(srcString.substr(srcString.length - 7,7) !== "bnk.png")
+      if (srcString.substr(srcString.length - 7,7) !== "bnk.png")
       {
         srcString = srcString.substr(0,srcString.length - 7) + "upp.png";
         this.sceneAssistant.controller.get(btnTitleElement).src = srcString;
@@ -446,7 +446,7 @@ BulletinAssistant.prototype.activate = function()
 
 BulletinAssistant.prototype.handleCommand = function(event)
 {
-	if(event.type == Mojo.Event.back)
+	if (event.type === Mojo.Event.back)
 	{
 		event.stop();
 		
@@ -470,21 +470,21 @@ BulletinAssistant.prototype.menuBarTouch = function(event)
     break;
 
     case "bltnPrevSelectorHitTarget":
-      if(this.msgIndex > 0)
+      if (this.msgIndex > 0)
       {
         this.msgIndex--;
         this.msgTitleElement.innerHTML = this.msgArray[this.msgIndex].title;
         this.msgTextElement.innerHTML = this.msgArray[this.msgIndex].text;
       }
 
-      if(this.msgIndex === 0)
+      if (this.msgIndex === 0)
       {
         srcString = this.sceneAssistant.controller.get("imgPrev").src;
         srcString = srcString.substr(0,srcString.length - 7) + "bnk.png";
         this.sceneAssistant.controller.get("imgPrev").src = srcString;
       }
 
-      if(this.msgArray.length > 1)
+      if (this.msgArray.length > 1)
       {
         srcString = this.sceneAssistant.controller.get("imgNext").src;
         srcString = srcString.substr(0,srcString.length - 7) + "upp.png";
@@ -493,21 +493,21 @@ BulletinAssistant.prototype.menuBarTouch = function(event)
     break;
 
     case "bltnNextSelectorHitTarget":
-      if(this.msgIndex < this.msgArray.length - 1)
+      if (this.msgIndex < this.msgArray.length - 1)
       {
         this.msgIndex++;
         this.msgTitleElement.innerHTML = this.msgArray[this.msgIndex].title;
         this.msgTextElement.innerHTML = this.msgArray[this.msgIndex].text;
       }
 
-      if(this.msgIndex === this.msgArray.length - 1)
+      if (this.msgIndex === this.msgArray.length - 1)
       {
         srcString = this.sceneAssistant.controller.get("imgNext").src;
         srcString = srcString.substr(0,srcString.length - 7) + "bnk.png";
         this.sceneAssistant.controller.get("imgNext").src = srcString;
       }
 
-      if(this.msgIndex > 0)
+      if (this.msgIndex > 0)
       {
         srcString = this.sceneAssistant.controller.get("imgPrev").src;
         srcString = srcString.substr(0,srcString.length - 7) + "upp.png";

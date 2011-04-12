@@ -7,11 +7,11 @@ function HandleLaunchAssistant(launchParams) {
 }
 
 HandleLaunchAssistant.prototype.setup = function() {
-	if(this.launchParams.callback  && this.launchParams.callback.id && this.launchParams.callback.action){
-		if(m.nP.songs.length > 0){
+	if (this.launchParams.callback  && this.launchParams.callback.id && this.launchParams.callback.action){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			var params = {
 				returnValue: true,
-				nowPlaying: m.nP.songs[m.nP.index]
+				nowPlaying: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]
 			}
 		} else {
 			var params = {
@@ -19,7 +19,7 @@ HandleLaunchAssistant.prototype.setup = function() {
 			}
 		}
 		params.action = this.launchParams.callback.action;
-		g.ServiceRequest.request("palm://com.palm.applicationManager", {
+		koto.serviceRequest.request("palm://com.palm.applicationManager", {
 			method: 'launch',
 			parameters:  {
 				id: this.launchParams.callback.id,

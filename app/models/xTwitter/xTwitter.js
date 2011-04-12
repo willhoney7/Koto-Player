@@ -41,8 +41,8 @@ function xTwitter(appKeys, userKeys) {
 	// Unfollow
 	this.unfollow_url = "http://api.twitter.com/1/friendships/destroy.json";
 
-	if (appKeys.consumerKey === undefined || appKeys.consumerKey == "") { Mojo.Log.error('###xTwitter - ERROR NO CONSUMER KEY! (appkeys)'); return false; }
-	if (appKeys.consumerSecret === undefined || appKeys.consumerSecret == "") { Mojo.Log.error('###xTwitter - ERROR NO CONSUMER SECRET! (appkeys)'); return false; }
+	if (appKeys.consumerKey === undefined || appKeys.consumerKey === "") { Mojo.Log.error('###xTwitter - ERROR NO CONSUMER KEY! (appkeys)'); return false; }
+	if (appKeys.consumerSecret === undefined || appKeys.consumerSecret === "") { Mojo.Log.error('###xTwitter - ERROR NO CONSUMER SECRET! (appkeys)'); return false; }
 
 	this.isLoaded = true;
 
@@ -141,9 +141,9 @@ xTwitter.prototype.tweet = function(parameters, callback) {
 	// Thanks Will Honey (Tibfib) for the suggestion of checking the variable for its type
 	// If parameters is a string we build our parameters object using the string as the status
 	// If parameters is an object we do nothing and let Twitter complain
-	if (parameters !== undefined && (typeof(parameters) == 'object' || typeof(parameters) == 'string')) {
+	if (parameters !== undefined && (typeof(parameters) === 'object' || typeof(parameters) === 'string')) {
 
-		if (typeof(parameters) == 'string') {
+		if (typeof(parameters) === 'string') {
 			parameters = { status: parameters };
 		}
 
@@ -188,9 +188,9 @@ xTwitter.prototype.tweet = function(parameters, callback) {
 };
 xTwitter.prototype.follow = function(parameters, callback) {
 
-	if (parameters !== undefined && (typeof(parameters) == 'object' || typeof(parameters) == 'string')) {
+	if (parameters !== undefined && (typeof(parameters) === 'object' || typeof(parameters) === 'string')) {
 
-		if (typeof(parameters) == 'string') {
+		if (typeof(parameters) === 'string') {
 			parameters = { screen_name: parameters };
 		}
 
@@ -235,9 +235,9 @@ xTwitter.prototype.follow = function(parameters, callback) {
 };
 xTwitter.prototype.unfollow = function(parameters, callback) {
 
-	if (parameters !== undefined && (typeof(parameters) == 'object' || typeof(parameters) == 'string')) {
+	if (parameters !== undefined && (typeof(parameters) === 'object' || typeof(parameters) === 'string')) {
 
-		if (typeof(parameters) == 'string') {
+		if (typeof(parameters) === 'string') {
 			parameters = { screen_name: parameters };
 		}
 		
@@ -280,22 +280,19 @@ xTwitter.prototype.unfollow = function(parameters, callback) {
 	}
 	else { return false; }
 };
-
-var Twitter = {};
-
 //My own function, not dawm's
 xTwitter.prototype.generateTweet = function(){
-	currentSong = m.nP.songs[m.nP.index];
+	currentSong = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index];
 	var tweet = "#NowPlaying " + currentSong.title;
-	if(currentSong.artist !== ""){
+	if (currentSong.artist !== ""){
 		tweet += " by " + currentSong.artist;
 	}
-	if(tweet.length > 114){
-		tweet = tweet.truncate(114, ' [...]');
+	if (tweet.length > 112){
+		tweet = tweet.truncate(112, ' [...]');
 	}
-	var suffix = " on #KotoPlayer for webOS!";
+	var suffix = " via @Koto_Player for webOS!";
 	this.tweet(tweet + suffix, function(returnValue){
-		if(returnValue){
+		if (returnValue){
 			m.bannerAlert("Song Tweeted!");
 		} else {
 			m.bannerError("Failed to Tweet");		

@@ -57,7 +57,7 @@ Mojo.Widget.AlphaScroller = Class.create({
 	 * .mojo Methods
 	 */	
 	checkScroller: function(){
-		m.debugErr("get state: "  + Object.toJSON(this.scroller.mojo.getState()));	
+		console.log("get state: "  + Object.toJSON(this.scroller.mojo.getState()));	
 	},
 	show: function(){
 		this.controller.element.show();//todo animate
@@ -66,7 +66,7 @@ Mojo.Widget.AlphaScroller = Class.create({
 		this.controller.element.hide();		
 	},
 	toggleVisibility: function(){
-		if(this.controller.element.visible()){
+		if (this.controller.element.visible()){
 			this.hide();
 		}else {
 			this.show();

@@ -21,7 +21,7 @@ Mojo.Widget.SongDetails = Class.create({
 	},	
 	renderContent: function(){
 		m.getSongData(this.array[this.index]._id, function(result){
-			//m.debugErr("results " + Object.toJSON(result));
+			//console.log("results " + Object.toJSON(result));
 			renderedContent = Mojo.View.render({
 				object: result,
 				formatters: {
@@ -36,17 +36,17 @@ Mojo.Widget.SongDetails = Class.create({
 						return stars;
 					},
 					"playCount": function(value, model){
-						if(model.playCount && model.playCount > 0){
+						if (model.playCount && model.playCount > 0){
 							return "Played " + ((model.playCount === 1)?model.playCount + " Time":model.playCount + " Times");
 						} else {
 							return "Played 0 Times";
 						}
 					},
 					"lastPlayed": function(value, model){
-						if(model.lastPlayed && model.lastPlayed !== "n/a"){
+						if (model.lastPlayed && model.lastPlayed !== "n/a"){
 							var d = new Date();
 							d.setTime(model.lastPlayed);
-							return "Last Played " + m.formatDate(d);
+							return "Last Played " + koto.utilities.formatDate(d);
 						}
 					},
 				},
@@ -55,14 +55,14 @@ Mojo.Widget.SongDetails = Class.create({
 			this.songDetailsTrackStatsDiv.innerHTML = renderedContent;
 		}.bind(this));
 		
-		m.getObjsById([this.array[this.index]._id], function(results){
-			results[0].albumArt = m.getAlbumArt(results[0], true);//small
+		db8.getObjsById([this.array[this.index]._id], function(results){
+			results[0].albumArt = koto.albumArt.get(results[0], true);//small
 
 			renderedContent = Mojo.View.render({
 				object: results[0],
 				formatters: {
 					"tracks": function(value, model){
-						var trackNum = parseInt(this.index) + 1;
+						var trackNum = parseInt(this.index, 10) + 1;
 						return "Track " + trackNum + " of " + this.array.length;
 							//return "Track " + model.track.position + " of " + model.track.total;
 						
@@ -75,13 +75,13 @@ Mojo.Widget.SongDetails = Class.create({
 	
 	},
 	songDetailsTap: function(event){
-		if(event.target.id === "clear_rating"){
+		if (event.target.id === "clear_rating"){
 			m.setRating(this.array[this.index]._id, 0, function(){
 				this.renderContent();
 			}.bind(this));
 		} else {
-			var rating = parseInt(event.target.id);
-			if(!isNaN(rating)){
+			var rating = parseInt(event.target.id, 10);
+			if (!isNaN(rating)){
 				m.setRating(this.array[this.index]._id, rating, function(){
 					this.renderContent();
 				}.bind(this));
@@ -89,8 +89,8 @@ Mojo.Widget.SongDetails = Class.create({
 		}
 	},
 	popupTap: function(event){
-		if(event.target.id === "popup"){
-			m.getObjsById([this.array[this.index]._id], function(results){
+		if (event.target.id === "popup"){
+			db8.getObjsById([this.array[this.index]._id], function(results){
 				event.item = results[0];
 				event.index = this.index;
 				event.originalEvent = {target: event.target};
@@ -100,22 +100,22 @@ Mojo.Widget.SongDetails = Class.create({
 		}
 	},
 	flick: function(event){
-		if(event.velocity.x > 600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
-			if(this.array[this.index-1]){
+		if (event.velocity.x > 600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
+			if (this.array[this.index-1]){
 				this.index -= 1;
 			} else {
 				this.index = this.array.length-1;
 			}
 			this.renderContent();
 		}
-		else if(event.velocity.x < -600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
-			if(this.array[this.index+1]){
+		else if (event.velocity.x < -600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
+			if (this.array[this.index+1]){
 				this.index += 1;
 			} else {
 				this.index = 0;
 			}
 			this.renderContent();
-		} else if(event.velocity.y < -1000 && (Math.abs(event.velocity.y) > Math.abs(event.velocity.x))){
+		} else if (event.velocity.y < -1000 && (Math.abs(event.velocity.y) > Math.abs(event.velocity.x))){
 			this.controller.scene.assistant.extraDiv.mojo.hide();
 
 		}
@@ -135,14 +135,14 @@ Mojo.Widget.SongDetails = Class.create({
 		//hide div
 		this.controller.element.hide();
 		var currentScene = this.controller.scene.assistant;
-		if(currentScene.controller.sceneName === "view" && currentScene.objType === "playlist" && currentScene.titleObj && currentScene.titleObj.type !== "custom"){
+		if (currentScene.controller.sceneName === "view" && currentScene.objType === "playlist" && currentScene.titleObj && currentScene.titleObj.type !== "custom"){
 			currentScene.refreshList();
 		}
 	},
 	incrementRating: function(){
 		m.getSongData(this.array[this.index]._id, function(result){
 			var rating = result.rating || 0;
-			if(rating < 5){
+			if (rating < 5){
 				rating += 1;
 				m.setRating(this.array[this.index]._id, rating, function(){
 					this.renderContent();
@@ -154,7 +154,7 @@ Mojo.Widget.SongDetails = Class.create({
 	decrementRating: function(){
 		m.getSongData(this.array[this.index]._id, function(result){
 			var rating = result.rating || 0;
-			if(rating > 0){
+			if (rating > 0){
 				rating -= 1;
 				m.setRating(this.array[this.index]._id, rating, function(){
 					this.renderContent();
@@ -163,10 +163,10 @@ Mojo.Widget.SongDetails = Class.create({
 		}.bind(this));
 	},
 	refresh: function(arg){
-		if(arg && arg.playedNext){
-			this.index = m.nP.index + 1;
+		if (arg && arg.playedNext){
+			this.index = koto.nowPlaying.currentInfo.index + 1;
 		} else if (arg && arg.playedLast){
-			this.index = m.nP.songs.length-1;
+			this.index = koto.nowPlaying.currentInfo.songs.length-1;
 		}
 		this.renderContent();
 	}

@@ -10,7 +10,7 @@ PlaygroundAssistant.prototype.setup = function() {
 			minValue: 1,
 		},
 		{
-			value: m.nP["audioObj" + m.nP.cao].playbackRate*10
+			value: koto.nowPlaying.currentInfo.audioObj.playbackRate*10
 		}
 	);
 
@@ -21,12 +21,12 @@ PlaygroundAssistant.prototype.activate = function(event) {
 	   example, key handlers that are observing the document */
 };
 PlaygroundAssistant.prototype.progressSliderChange = function(event) {
-	m.debugErr("value " + event.value);
-	m.debugErr("playbackRate " + m.nP["audioObj" + m.nP.cao].playbackRate);
+	console.log("value " + event.value);
+	console.log("playbackRate " + koto.nowPlaying.currentInfo.audioObj.playbackRate);
 	
-	m.nP["audioObj" + m.nP.cao].playbackRate = event.value/10;
+	koto.nowPlaying.currentInfo.audioObj.playbackRate = event.value/10;
 	
-	m.debugErr("playbackRate after" + m.nP["audioObj" + m.nP.cao].playbackRate);
+	console.log("playbackRate after" + koto.nowPlaying.currentInfo.audioObj.playbackRate);
 	
 }	
 PlaygroundAssistant.prototype.deactivate = function(event) {

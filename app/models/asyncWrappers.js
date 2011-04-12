@@ -12,11 +12,11 @@ var ServiceRequestWrapper = Class.create({
         
         var serviceType;
         
-        if(url === "palm://com.palm.downloadmanager/")
+        if (url === "palm://com.palm.downloadmanager/")
         {
           serviceType = "downloadmanager";
         }
-        else if(resubscribe === true)
+        else if (resubscribe === true)
         {
           serviceType = "subscription";
         }
@@ -42,7 +42,7 @@ var ServiceRequestWrapper = Class.create({
           break;
             
           case "downloadmanager":
-            if(response.completed)
+            if (response.completed)
             {          
               delete this.requests[requestId];
             }

@@ -30,12 +30,12 @@ Mojo.Widget.Lyrics = Class.create({
 	
 	},		
 	showLyrics: function(lyrics){
-		if(lyrics){
-			m.nP.songs[m.nP.index].lyrics = lyrics;
+		if (lyrics){
+			koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].lyrics = lyrics;
 		}
-		if(m.nP.songs[m.nP.index].lyrics){
+		if (koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].lyrics){
 			this.spinnerDiv.mojo.stop();
-			this.lyricsDiv.innerHTML = m.nP.songs[m.nP.index].lyrics;
+			this.lyricsDiv.innerHTML = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].lyrics;
 		}
 	},
 	//Mojo Methods
@@ -44,10 +44,10 @@ Mojo.Widget.Lyrics = Class.create({
 		this.spinnerDiv.mojo.start();
 		this.controller.element.show();						
 		
-		if(!m.nP.songs[m.nP.index].lyrics){
+		if (!koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].lyrics){
 			checkConnectivity(function(connected){
-				if(connected){
-					lyrics.searchForLyrics(m.nP.songs[m.nP.index], handleLyrics.bind(this));
+				if (connected){
+					lyrics.searchForLyrics(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index], handleLyrics.bind(this));
 				} else {
 					m.bannerError("Not Connected to Internet");
 					this.hide();
@@ -58,7 +58,7 @@ Mojo.Widget.Lyrics = Class.create({
 		}
 				
 		function handleLyrics(response){
-			if(response.lyrics){
+			if (response.lyrics){
 				this.showLyrics(response.lyrics);
 			}
 			else {

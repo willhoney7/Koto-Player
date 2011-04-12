@@ -6,17 +6,17 @@ function ContentAssistant(title) {
 ContentAssistant.prototype.setup = function(){
 	this.initViewMenu(this.title);
 	this.setupCommon();
-	if(this.title === "Basics Guide"){
+	if (this.title === "Basics Guide"){
 		this.controller.get("guide").show();
 	}
-	else if(this.title === "Tips and Tricks"){
+	else if (this.title === "Tips and Tricks"){
 		this.controller.get("tips").show();
-	}else if(this.title === "FAQs"){
+	}else if (this.title === "FAQs"){
 		this.controller.get("faqs").show();
 	}
 	
 	this.launchJustType = function(){
-		g.ServiceRequest.request("palm://com.palm.applicationManager", 
+		koto.serviceRequest.request("palm://com.palm.applicationManager", 
 			{
 				method: 'open',
 				parameters: {
@@ -34,7 +34,7 @@ ContentAssistant.prototype.setup = function(){
 
 	
 	this.controller.listen("cache", Mojo.Event.tap, function(){
-		m.setupCacheDashboard();
+		koto.justType.setupIndexingDashboard();
 	}.bind(this));
 };
 

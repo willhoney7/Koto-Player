@@ -1,18 +1,18 @@
 dropbox = ({
 	//Not even close to working.
-	authorize: function(email, password, callBackFunc){
-		g.AjaxRequest.request("https://api.dropbox.com/0/token",{
+	authorize: function(email, password, callback){
+		koto.ajaxRequest.request("https://api.dropbox.com/0/token",{
 			method: "get",
 			parameters: {
 				"email": lastfm.utf8_encode(email),
 				"password": lastfm.utf8_encode(password)
 			},
 			onSuccess: function(transport){
-				m.debugErr(transport.responseText);
+				console.log(transport.responseText);
 				m.debugObj(transport.responseJSON);
 			}.bind(this),
 			onFailure: function(transport){
-				callBackFunc({error: "Failed"});		
+				callback({error: "Failed"});		
 			}.bind(this)
 		});
 	}

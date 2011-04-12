@@ -13,12 +13,12 @@ ArtistViewAssistant.prototype.setup = function() {
 		itemTemplate:'view/list-item-album-info',
 		formatters: {
 			"albumArt": function(value, model){
-				if(model.thumbnails){
-					return m.getAlbumArt(model);
+				if (model.thumbnails){
+					return koto.albumArt.get(model);
 				}
 			},
 			"tracks": function(value, model){
-				if(model.total && model.total.tracks){
+				if (model.total && model.total.tracks){
 					var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
 					return tracks;
 				}
@@ -36,19 +36,19 @@ ArtistViewAssistant.prototype.setup = function() {
 		listTemplate:'list/innerList-list',
 		formatters: {
 			"info": function(value, model){
-				if(model.title){
+				if (model.title){
 					return model.artist + " - " + model.album;
 				}
 			},
 			"truncatingOption": function(value, model){
-				if(!m.prefs.truncateText){
+				if (!koto.preferences.obj.truncateText){
 					return "innerList-item noTruncate";
 				} else {
 					return "innerList-item";
 				}
 			}.bind(this),
 			"title": function(value, model){
-				if(model.title){
+				if (model.title){
 					return model.title;
 				}
 			}
@@ -68,15 +68,15 @@ ArtistViewAssistant.prototype.setup = function() {
 };
 
 ArtistViewAssistant.prototype.activate = function(event) {
-	if(this.focus){
+	if (this.focus){
 		var index;
 		for(var i = 0; i < this.artist.albums.length; i++){
-			if(this.artist.albums[i].name === this.focus){
+			if (this.artist.albums[i].name === this.focus){
 				index = i;
 				break;
 			}
 		}
-		if(index > 0){
+		if (index > 0){
 			this.controller.getSceneScroller().mojo.adjustBy(0, (-99*index));
 		}
 	}
@@ -84,25 +84,25 @@ ArtistViewAssistant.prototype.activate = function(event) {
 };
 
 ArtistViewAssistant.prototype.listTap = function(event) {
-	objType = m.getObjType(event.item);
-	if((event.originalEvent.target.id && event.originalEvent.target.id == 'popup') || (objType === "album" && this.artist.albums.length == 1 && event.originalEvent.target.className !=="album-art-list-item")){
+	objType = koto.utilities.getObjType(event.item);
+	if ((event.originalEvent.target.id && event.originalEvent.target.id === 'popup') || (objType === "album" && this.artist.albums.length === 1 && event.originalEvent.target.className !=="album-art-list-item")){
 		var items = [];
-		if(objType === "album")
+		if (objType === "album")
 			items.push({label: $L('Play Album'), command: 'play-now'}, {label: $L('Shuffle Album'), command: 'shuffle-play'});
-		if(m.nP.songs.length > 0)
+		if (koto.nowPlaying.currentInfo.songs.length > 0)
 			items.push({label: $L('Play Next'), command: 'play-next'},{label: $L('Play Last'), command: 'play-last'});
-		if(objType === "song" && !event.fromSongDetails){
+		if (objType === "song" && !event.fromSongDetails){
 			items.push({label: $L("Song Details"), command: "details"}, 
 				{label: $L('Add to Playlist'), command: 'add-to-playlist'}
 			);
-		} else if(objType === "album"){
+		} else if (objType === "album"){
 			items.push({label: $L('Add to Playlist'), command: 'add-to-playlist'});
 		}
 		items.push({label: $L('Favorite'), command: 'favorite'});
 		
 		this.controller.popupSubmenu({
 			onChoose: function(value){
-				if(objType === "song"){
+				if (objType === "song"){
 					switch(value){
 						case 'play-next':
 							m.playArrayNext([event.item]); 
@@ -114,13 +114,13 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 							this.extraDiv.mojo.show("addToPlaylist", [event.item]);
 							break;
 						case 'favorite':
-							m.addToFavorites(event.item);
+							koto.content.favorites.add(event.item);
 							break;
 						case "details": 
-							m.getSongsOfObj(event.item, function(songs){
+							koto.content.getSongsOfObj(event.item, function(songs){
 								var index;
 								for(var i = 0; i < songs.length; i++){
-									if(songs[i]._id === event.item._id){
+									if (songs[i]._id === event.item._id){
 										index = i;
 										break;
 									}
@@ -129,7 +129,7 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 							}.bind(this), true); //get ALL songs by artist, unformatted
 							break;
 					}
-				}else if(objType === "album"){
+				}else if (objType === "album"){
 					switch(value){
 						case "shuffle-play":
 							m.shufflePlay(event.item.songs);
@@ -147,7 +147,7 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 							this.extraDiv.mojo.show("addToPlaylist", event.item.songs);
 							break;
 						case 'favorite':
-							m.addToFavorites(event.item);
+							koto.content.favorites.add(event.item);
 							break;
 						
 					}
@@ -156,13 +156,13 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 			placeNear: event.originalEvent.target,
 				items: items
 		});
-	} else if(event.originalEvent.target.className === "album-art-list-item"){
+	} else if (event.originalEvent.target.className === "album-art-list-item"){
 		//if album art image
 		var items = [
 			{label: "Download New Album Art", command: "download"},
 			{label: "Cancel", command: "cancel"}	
 		];
-		if(m.hasCustomAlbumArt(event.item)){
+		if (koto.albumArt.has(event.item)){
 			items.splice(1, 0, {label: "Return to Default Album Art", command: "remove"});
 		}
 		this.controller.popupSubmenu({
@@ -172,7 +172,7 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 						this.extraDiv.mojo.show("albumArtDownloader", event.item.name, event.item.artist);
 						break;
 					case "remove":
-						m.setAlbumArt(event.item.name, event.item.artist, "undefined", this.refreshList.bind(this));
+						koto.albumArt.clear(event.item.name, event.item.artist, this.refreshList.bind(this));
 						break;			
 				}
 			}.bind(this),
@@ -180,11 +180,11 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 				items: items
 		});
 	}
-	else if(objType === "album"){
+	else if (objType === "album"){
 		event.item.open = !event.item.open;
 		this.controller.modelChanged(event.item);
 	}
-	else if(objType === "song"){
+	else if (objType === "song"){
 		m.playArray(event.model.songs, event.index);
 	}
 };
@@ -196,7 +196,7 @@ ArtistViewAssistant.prototype.moreTap = function(event){
 			{label: $L('Add to Playlist'), command: 'add-to-playlist'},
 			{label: $L('Favorite'), command: 'favorite'}
 		]
-		if(m.nP.songs.length > 0){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			items.splice(1, 0, {label: $L("Play All ..."), items: [
 				{label: $L('Now'), command: 'play-songs'},
 				{label: $L('Next'), command: 'play-next'},
@@ -223,8 +223,8 @@ ArtistViewAssistant.prototype.moreTap = function(event){
 					this.extraDiv.mojo.show("addToPlaylist", this.artist.songs);
 					break;
 				case 'favorite':
-					var artist = m.getArtist(this.artist.name);
-					m.addToFavorites(artist);
+					var artist = koto.content.artists.getOne(this.artist.name);
+					koto.content.favorites.add(artist);
 					break;
 			}
 		}.bind(this),

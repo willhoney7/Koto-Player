@@ -1,9 +1,9 @@
 function StartupAssistant(arg) {
-	if(arg === "new"){
+	if (arg === "new"){
 		this.message = "In a few moments, you will be prompted to give Koto access to your music. If you say no, you won't be able to use the app! <br/><br/>Once you give the app permission, it will launch a dashboard to cache your songs for Just Type. <b>It takes about 30 seconds per 500 songs depending on your device</b>. Please DO NOT close this dashboard! Make sure you add Koto to your application searches so you can type to play any song or playlist and view any artist/album/genre. Tap here to launch the Just Type Preferences, then tap \"Add Application Searches\", then \"Koto Player\".";
-	}else if(arg === "update"){
+	}else if (arg === "update"){
 		this.message = "Thanks for updating! The changelog is below!";
-	}else if(arg === "changelog" || !arg){
+	}else if (arg === "changelog" || !arg){
 		this.message = "";
 	}
 	this.arg = arg;
@@ -12,11 +12,11 @@ function StartupAssistant(arg) {
 	versionCookie.put(Mojo.Controller.appInfo.version);
 	scene_helpers.addCommonSceneMethods(this, "startup");
 	
-	if(arg !== "changelog"){
+	if (arg !== "changelog"){
 		try {
-			m.initialize({fromStartup: true});
+			//m.initialize({fromStartup: true});
 		} catch(e){
-			Mojo.Controller.getAppController().getStageController("cardStage").swapScene({name: "error", transition: Mojo.Transition.none}, e);
+			//Mojo.Controller.getAppController().getStageController("cardStage").swapScene({name: "error", transition: Mojo.Transition.none}, e);
 		}
 	}
 }
@@ -24,13 +24,21 @@ function StartupAssistant(arg) {
 StartupAssistant.prototype.setup = function() {
 
 	this.setupCommon();
-	if(this.arg === "new")
+	if (this.arg === "new")
 		this.initViewMenu("Welcome to Koto!");
 	
 	
 	var changelog = [
 		{
-			"version": "0.7.0 RC",
+			"version": "0.7.1",
+			"log":
+				[
+					"<b>Improvement:</b> Just Type Indexing greatly improved",
+					"<b>Improvement:</b> Behind-the-scenes refactoring"
+				]
+		},
+		{
+			"version": "0.7.0",
 			"log":
 				[
 					"<b>New Feature:</b> In-app search! Just forward swipe to launch the search page.",
@@ -342,9 +350,9 @@ StartupAssistant.prototype.setup = function() {
 		}
 		html += '</ul>';
 	}
-	if(this.message !== ''){
+	if (this.message !== ''){
 		this.controller.listen("message", Mojo.Event.tap, function(){
-			g.ServiceRequest.request("palm://com.palm.applicationManager", 
+			koto.serviceRequest.request("palm://com.palm.applicationManager", 
 				{
 					method: 'open',
 					parameters: {
@@ -361,10 +369,10 @@ StartupAssistant.prototype.setup = function() {
 		this.controller.get("message").show();
 		this.controller.get("metrixToggle").show();
 		
-		this.controller.setupWidget("metrixToggleWidget", {}, this.metrixToggle = {value: m.prefs.metrixToggle});
+		this.controller.setupWidget("metrixToggleWidget", {}, this.metrixToggle = {value: koto.preferences.obj.metrixToggle});
 		this.controller.listen("metrixToggleWidget", Mojo.Event.propertyChange, this.handleMetrixToggle = function(event){
-			m.prefs.metrixToggle = event.value;
-			m.storePrefs();
+			koto.preferences.obj.metrixToggle = event.value;
+			koto.preferences.store();
 		}.bind(this));
 		this.controller.setupWidget(Mojo.Menu.commandMenu, {menuClass: 'no-fade'}, this.commandMenuModel = {visible: false, items:[{},{label: "Continue", command: "swapMain-fromStartUp"},{}]});	
 		
@@ -372,24 +380,24 @@ StartupAssistant.prototype.setup = function() {
 	this.controller.get("changelog").innerHTML = html;
 	
 	this.crappedOutTimeout = setTimeout(function(){
-		if(m.songs.length === 0){
+		if (koto.content.songs.array.length === 0){
 			this.controller.stageController.swapScene("error", "Error: No permission from Media Indexer", true);
 		}
-	}.bind(this), 30000);
+	}.bind(this), 35000);
 
 };
 StartupAssistant.prototype.loaded = function(){
 	clearTimeout(this.crappedOutTimeout);
 	this.controller.setMenuVisible(Mojo.Menu.commandMenu, true);
-	if(this.arg === "new"){// || this.arg === "update"){
-		m.setupCacheDashboard();
+	if (this.arg === "new"){// || this.arg === "update"){
+		koto.justType.setupIndexingDashboard();
 	}	
 }
 StartupAssistant.prototype.handleCommand = function(event){}
 StartupAssistant.prototype.activate = function(event) {};
 StartupAssistant.prototype.deactivate = function(event) {};
 StartupAssistant.prototype.cleanup = function(event) {
-	if(m.prefs.metrixToggle === true){
-		g.Metrix.postDeviceData();
+	if (koto.preferences.obj.metrixToggle === true){
+		koto.metrix.postDeviceData();
 	}
 };

@@ -1,12 +1,7 @@
-g = {};
-g.Metrix = new Metrix(); //Instantiate Metrix Library
-g.ServiceRequest = new ServiceRequestWrapper(); //Instantiate asynchronous service protection
-g.AjaxRequest = new AjaxRequestWrapper(); ////Instantiate ajax request protection
-g.AppId = Mojo.appInfo.id;
 function AppAssistant(appController){
 	/*try{
 		cookie.initialize();
-		if(new Mojo.Model.Cookie('id_cookie_mojomessenger_id').get()){
+		if (new Mojo.Model.Cookie('id_cookie_mojomessenger_id').get()){
 			global_id = new Mojo.Model.Cookie('id_cookie_mojomessenger_id').get();
 		}else{
 			new Mojo.Model.Cookie('id_cookie_mojomessenger_id').put(global_id);
@@ -24,21 +19,38 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 			// application already running
 			cardStageController.activate();
 		else {
-			if(this.controller.getStageController("dashboard")){
+			if (this.controller.getStageController("dashboard")){
 				this.launchFromDash();
 			} else {
 				// Need to launch the stage and scene
 				var pushMainScene = function(stageController){
 					var versionCookie = new Mojo.Model.Cookie('appVersion_mojoPlayer');
-					if(!versionCookie.get()){
-						stageController.pushScene("startup", "new");
+					if (!versionCookie.get()){
+						try {
+							koto.setup({action: "setup", delayResume: true});
+						}catch(e){
+							stageController.swapScene({name: "error", transition: Mojo.Transition.crossFade}, e);
+						}
 					}
-					else if(versionCookie.get() !== Mojo.Controller.appInfo.version){
+					else if (versionCookie.get() !== Mojo.Controller.appInfo.version){
 						stageController.pushScene("startup", "update");
+						
+						try {
+							koto.setup({action: "setup", delayResume: true});
+						}catch(e){
+							stageController.swapScene({name: "error", transition: Mojo.Transition.crossFade}, e);
+						}
 					}	
 					else {
 						stageController.pushScene('main');
+						
+						try {
+							koto.setup({action: "setup"});
+						}catch(e){
+							stageController.swapScene({name: "error", transition: Mojo.Transition.crossFade}, e);
+						}
 					}
+			
 				};	
 				var stageArgs = {
 					name: 'cardStage',
@@ -51,7 +63,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
    }
    else {
 		//m.debugObj("launchParams", launchParams);
-		if(launchParams.action){
+		if (launchParams.action){
 			switch (launchParams.action) {
 				case 'pushScene':
 					data = launchParams.data || "";
@@ -62,18 +74,18 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 					cardStageController.activate();
 					break;
 				case "getNowPlayingData"://todo
-					if(!cardStageController){
+					if (!cardStageController){
 						m.setupHandleLaunchStage(launchParams);
 					} else {
-						if(launchParams.callback  && launchParams.callback.id && launchParams.callback.action){
-							if(m.nP.songs.length > 0){
+						if (launchParams.callback  && launchParams.callback.id && launchParams.callback.action){
+							if (koto.nowPlaying.currentInfo.songs.length > 0){
 								var params = {
 									returnValue: true,
 									nowPlaying: {
-										title: m.nP.songs[m.nP.index].title,
-										artist: m.nP.songs[m.nP.index].artist,
-										album: m.nP.songs[m.nP.index].album,
-										path: m.nP.songs[m.nP.index].path
+										title: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].title,
+										artist: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].artist,
+										album: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].album,
+										path: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path
 									}
 								}
 							} else {
@@ -82,7 +94,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 								}
 							}
 							params.action = launchParams.callback.action;
-							g.ServiceRequest.request("palm://com.palm.applicationManager", {
+							koto.serviceRequest.request("palm://com.palm.applicationManager", {
 								method: 'launch',
 								parameters:  {
 									id: launchParams.callback.id,
@@ -92,7 +104,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 						} 
 					}
 					/*
-					if(!cardStageController){
+					if (!cardStageController){
 						this.controller.closeAllStages();
 					}*/
 					break;
@@ -101,7 +113,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 					break;
 			}
 		}else if (launchParams.justTypeTap){
-			m.getObjsById([launchParams.justTypeTap], function(results){
+			db8.getObjsById([launchParams.justTypeTap], function(results){
 				if (cardStageController)
 					cardStageController.activate();
 				else {
@@ -117,15 +129,15 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 					this.controller.createStageWithCallback(stageArgs, pushMainScene.bind(this), 'card');
 				}
 				var obj = results[0];
-				var objType = m.getObjType(obj);
-				if(objType === "artist" || objType === "album"){
+				var objType = koto.utilities.getObjType(obj);
+				if (objType === "artist" || objType === "album"){
 					m.view(obj);
 				}
-				m.getSongsOfObj(obj, function(songs, index_){
+				koto.content.getSongsOfObj(obj, function(songs, index_){
 					var index = index_ || 0;
-					if(objType === "song" || objType === "playlist"){
+					if (objType === "song" || objType === "playlist"){
 						m.playArray(songs, index);
-					} else if(objType === "genre"){
+					} else if (objType === "genre"){
 						m.viewArray(obj, songs);
 					}
 				}.bind(this), true);//pass true so it returns all songs by artist if it's a song
@@ -136,7 +148,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 AppAssistant.prototype.launchFromDash = function(){
 	var cardStageController = this.controller.getStageController('cardStage');
 
-	if(cardStageController){
+	if (cardStageController){
 		cardStageController.activate();
 	} else {
 		var pushMainScene = function(stageController){
@@ -172,7 +184,7 @@ AppAssistant.prototype.handleCommand = function (event) {
 					this.controller.getActiveStageController().pushScene("about");
 					break;
 				case 'update-just-type':
-					m.setupCacheDashboard();
+					koto.justType.setupIndexingDashboard();
 					break;
 				case "resume-now-playing":
 					m.resumeNowPlaying();
@@ -192,7 +204,7 @@ AppAssistant.prototype.handleCommand = function (event) {
 						params: {'target': "http://developer.palm.com/appredirect/?packageid=com.tibfib.mojo.player"}
 					};
         
-					g.ServiceRequest.request('palm://com.palm.applicationManager',
+					koto.serviceRequest.request('palm://com.palm.applicationManager',
 					{
 						method: 'open',
 						parameters: launchParams

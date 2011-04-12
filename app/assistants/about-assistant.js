@@ -3,11 +3,11 @@ function AboutAssistant() {
 }
 AboutAssistant.prototype.setup = function() {
 	this.setupCommon();
-	if(g.AppId !== "com.tibfib.app.koto"){
+	if (koto.appId !== "com.tibfib.app.koto"){
 		this.controller.get("launchCatalog").innerHTML = "Buy Koto";
-		if(g.AppId === "com.tibfib.app.koto.lite"){
+		if (koto.appId === "com.tibfib.app.koto.lite"){
 			this.controller.get("lite").show();
-		} else if(g.AppId === "com.tibfib.app.koto.hb"){
+		} else if (koto.appId === "com.tibfib.app.koto.hb"){
 			this.controller.get("preware").show();
 		}
 	}

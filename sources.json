@@ -8,6 +8,8 @@
     {"source": "app/helpers/utilities.js"},
     {"source": "app/assistants/app-assistant.js"},
     {"source": "app/helpers/music-player.js"},
+    {"source": "app/helpers/koto.js"},
+    {"source": "app/helpers/db8.js"},
     {"source": "app/helpers/scene.js"},
     {"source": "app/helpers/lyrics.js"},
     {"source": "app/helpers/google.js"},

@@ -31,7 +31,7 @@ function str_hmac_sha1(key, data){ return binb2str(core_hmac_sha1(key, data));}
  */
 function sha1_vm_test()
 {
-  return hex_sha1("abc") == "a9993e364706816aba3e25717850c26c9cd0d89d";
+  return hex_sha1("abc") === "a9993e364706816aba3e25717850c26c9cd0d89d";
 }
 
 /*
@@ -60,7 +60,7 @@ function core_sha1(x, len)
 
     for(var j = 0; j < 80; j++)
     {
-      if(j < 16) w[j] = x[i + j];
+      if (j < 16) w[j] = x[i + j];
       else w[j] = rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
       var t = safe_add(safe_add(rol(a, 5), sha1_ft(j, b, c, d)),
                        safe_add(safe_add(e, w[j]), sha1_kt(j)));
@@ -87,9 +87,9 @@ function core_sha1(x, len)
  */
 function sha1_ft(t, b, c, d)
 {
-  if(t < 20) return (b & c) | ((~b) & d);
-  if(t < 40) return b ^ c ^ d;
-  if(t < 60) return (b & c) | (b & d) | (c & d);
+  if (t < 20) return (b & c) | ((~b) & d);
+  if (t < 40) return b ^ c ^ d;
+  if (t < 60) return (b & c) | (b & d) | (c & d);
   return b ^ c ^ d;
 }
 
@@ -108,7 +108,7 @@ function sha1_kt(t)
 function core_hmac_sha1(key, data)
 {
   var bkey = str2binb(key);
-  if(bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);
+  if (bkey.length > 16) bkey = core_sha1(bkey, key.length * chrsz);
 
   var ipad = Array(16), opad = Array(16);
   for(var i = 0; i < 16; i++)
@@ -194,7 +194,7 @@ function binb2b64(binarray)
                 |  ((binarray[i+2 >> 2] >> 8 * (3 - (i+2)%4)) & 0xFF);
     for(var j = 0; j < 4; j++)
     {
-      if(i * 8 + j * 6 > binarray.length * 32) str += b64pad;
+      if (i * 8 + j * 6 > binarray.length * 32) str += b64pad;
       else str += tab.charAt((triplet >> 6*(3-j)) & 0x3F);
     }
   }

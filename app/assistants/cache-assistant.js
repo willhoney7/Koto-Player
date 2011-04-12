@@ -15,26 +15,26 @@ CacheAssistant.prototype.setup = function() {
 CacheAssistant.prototype.cache = function() {
 	var d = new Date();
 	var milliseconds = d.getTime();
-	m.debugErr("caching songs");
-	m.cacheArray(m.songs, function(){
-		m.debugErr("caching artists");
-		m.cacheArray(m.artists, function(){
-			m.debugErr("caching albums");
-			m.cacheArray(m.albums, function(){
-				m.debugErr("caching playlists");
-				m.cacheArray(m.playlists, function(){
-					m.debugErr("caching favorites");
-					m.cacheArray(m.favorites, function(){
+	console.log("caching songs");
+	koto.justType.cacheArray(koto.content.songs.array, function(){
+		console.log("caching artists");
+		koto.justType.cacheArray(koto.content.artists.array, function(){
+			console.log("caching albums");
+			koto.justType.cacheArray(koto.content.albums.array, function(){
+				console.log("caching playlists");
+				koto.justType.cacheArray(m.playlists, function(){
+					console.log("caching favorites");
+					koto.justType.cacheArray(koto.content.favorites.array, function(){
 						//this.commandMenuModel.visible = true;
 						//this.controller.modelChanged(this.commandMenuModel)
 							var d = new Date();
-						if(m.songs.length > 0){
+						if (koto.content.songs.array.length > 0){
 							var oldStuff = Math.round(d.getTime()/60000) -2;//del stuff older than 2 minutes, since it no longer exists.
-							DB.del({"from":g.AppId + ".data:1", "where":[{"prop":"lastUpdate","op":"<","val":oldStuff}]});
+							DB.del({"from":koto.appId + ".data:1", "where":[{"prop":"lastUpdate","op":"<","val":oldStuff}]});
 						}
 						//close stage
 						
-						m.debugErr("DONE: " + Math.round((parseInt(d.getTime()) - parseInt(milliseconds))/1000) + " seconds total to cache");
+						console.log("DONE: " + Math.round((parseInt(d.getTime(), 10) - parseInt(milliseconds, 10))/1000) + " seconds total to cache");
 						
 						Mojo.Controller.getAppController().closeStage("cacheStage");
 						

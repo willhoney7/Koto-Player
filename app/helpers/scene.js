@@ -10,7 +10,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 	assistant.setupCommon = function(){
 		//setup standard app menu
 		assistant.controller.setDefaultTransition(Mojo.Transition.zoomFade);
-		if((arg && !arg.nowPlaying) || !arg){
+		if ((arg && !arg.nowPlaying) || !arg){
 			assistant.initAppMenu();
 			assistant.handleMoreTap = assistant.moreTap.bind(assistant);
 			assistant.controller.listen("more", Mojo.Event.tap, assistant.handleMoreTap);
@@ -27,7 +27,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 		assistant.extraDiv = assistant.controller.get("extra");
 		
 		assistant.controller.listen(assistant.controller.sceneElement, Mojo.Event.keypress, function(event){
-			if(Mojo.View.isTextField(event.originalEvent.target)){
+			if (Mojo.View.isTextField(event.originalEvent.target)){
 				return;
 			}
 			//Mojo.Log.error(event.originalEvent.keyCode);
@@ -44,43 +44,43 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 					break;
 				case 118://v
 				case 86:
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "view"});
 					}
 					break;
 				case 109://m
 				case 77:
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "more"});
 					}
 					break;
 				case 112://p
 				case 80:
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "playlist-popup"});
 					}
 					break;
 				case 108://l
 				case 76:
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						//Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "lyrics"});				
 					}
 					break;
 				case 100://d
 				case 68: 
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "details"});														
 					}
 					break;
 				case 99:
 				case 67://c
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "continue-album"});								
 					}
 					break;
 				case 102://f
 				case 70:
-					if(arg && arg.nowPlaying){
+					if (arg && arg.nowPlaying){
 						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "favorite-song"});								
 					}
 					break;
@@ -88,15 +88,15 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 				case 119:
 				case 87://w 
 				case 43://+
-					if(assistant.extraDiv.mojo.visible("songDetails")){
+					if (assistant.extraDiv.mojo.visible("songDetails")){
 						assistant.extraDiv.mojo.run("songDetails", "incrementRating");
 					}
 					break;
 				case 115://s
 				case 83:
 				case 45://-
-					if(arg && arg.nowPlaying){
-						if(assistant.extraDiv.mojo.visible("songDetails")){
+					if (arg && arg.nowPlaying){
+						if (assistant.extraDiv.mojo.visible("songDetails")){
 							assistant.extraDiv.mojo.run("songDetails", "decrementRating");
 						} else {
 							Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "shuffle"});
@@ -107,19 +107,19 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			
 		}.bind(this));
 		
-		if((arg && !arg.search) || !arg){
+		if ((arg && !arg.search) || !arg){
 			//assistant.controller.listen(assistant.controller.sceneElement, Mojo.Event.keypress, assistant.search.bind(assistant));
 		}
 	};
 	
 	assistant.activateCommon = function(){
 		assistant.checkCmdMenu();
-		if(m.nP.songs.length > 0){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			assistant.panel.removeClassName("shown");
 			assistant.panel.mojo.updateSong();
 		} 
-		if(m.hasSavedOldNowPlaying){
-			if((((arg && !arg.nowPlaying) || !arg) && assistant.appMenuModel.items[0].items.length < 2) || ((arg && arg.nowPlaying)  && assistant.appMenuModel.items[1].items.length < 2)){
+		if (m.hasSavedOldNowPlaying){
+			if ((((arg && !arg.nowPlaying) || !arg) && assistant.appMenuModel.items[0].items.length < 2) || ((arg && arg.nowPlaying)  && assistant.appMenuModel.items[1].items.length < 2)){
 				assistant.appMenuModel.items[0].items.push({label: $L("Recover Now Playing"), command: "resume-now-playing"});
 				assistant.controller.modelChanged(assistant.appMenuModel);
 			}
@@ -135,16 +135,16 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 	
 	};
 	assistant.stageDeactivate = function(){
-		if(!assistant.panel.hasClassName("hidden")){
+		if (!assistant.panel.hasClassName("hidden")){
 			assistant.panel.addClassName("center");	
 			assistant.panel.mojo.hideMarquee();
 		}
-		if(m.nP.songs.length > 0){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			m.showDashboard();
 		}
 	};
 	assistant.stageActivate = function(){
-		if(assistant.panel.hasClassName("center")){
+		if (assistant.panel.hasClassName("center")){
 			assistant.panel.removeClassName("center");	
 			assistant.panel.mojo.checkMarquee();
 			
@@ -162,10 +162,10 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			{ label: $L('About Koto'),							command: 'do-about' },
 			{ label: $L('Help'),								command: Mojo.Menu.helpCmd },
 		];
-		if(m.hasSavedOldNowPlaying === true){
+		if (m.hasSavedOldNowPlaying === true){
 			default_items[0].items.push({label: $L("Recover Now Playing"), command: "resume-now-playing"});
 		}
-		if(opts){
+		if (opts){
 			opts.items = opts.items.concat(default_items);
 		}
 		if (!opts) {
@@ -189,7 +189,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 		assistant.controller.get("title").innerHTML = title;
 	};
 	assistant.initCmdMenu = function(isNowPlaying){
-		if(isNowPlaying) {
+		if (isNowPlaying) {
 			var items = [
 				{icon:"music-more", submenu: "more-menu"},
 				{icon:"music-previous", command: "previous"},
@@ -198,7 +198,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 				{icon:"music-shuffle", command: "shuffle"}					
 			]
 			var visible = true;
-			if(m.nP.unshuffledSongs.length > 0)
+			if (koto.nowPlaying.currentInfo.unshuffledSongs.length > 0)
 				items[4].icon = "music-shuffle-active";	
 		}
 		else {
@@ -209,9 +209,9 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 				{icon:"music-next", command: "next"},
 				{icon:"music-details", command: "showDetails"}					
 			];
-			var visible = (m.nP.songs.length > 0)?true:false;
+			var visible = (koto.nowPlaying.currentInfo.songs.length > 0)?true:false;
 		}
-		if(m.nP.playing === false)
+		if (koto.nowPlaying.currentInfo.playing === false)
 			items[2].icon = "music-play";
 
 		assistant.controller.setupWidget(Mojo.Menu.commandMenu, 
@@ -228,32 +228,32 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 	};
 	
 	assistant.checkCmdMenu = function(){
-		if(m.nP.playing === true){
-			if(assistant.cmdMenuModel.items[1].items[2].icon !== "music-pause"){
+		if (koto.nowPlaying.currentInfo.playing === true){
+			if (assistant.cmdMenuModel.items[1].items[2].icon !== "music-pause"){
 				assistant.cmdMenuModel.items[1].items[2].icon = "music-pause";
 				assistant.controller.modelChanged(assistant.cmdMenuModel);
 			}
 		}		
 		else{
-			if(assistant.cmdMenuModel.items[1].items[2].icon !== "music-play"){
+			if (assistant.cmdMenuModel.items[1].items[2].icon !== "music-play"){
 				assistant.cmdMenuModel.items[1].items[2].icon = "music-play";
 				assistant.controller.modelChanged(assistant.cmdMenuModel);
 			}
 		}
-		if((arg && !arg.nowPlaying) || !arg){
-			if(!assistant.panel.visible()){
-				if(assistant.cmdMenuModel.items[1].items[4].icon !== "music-details"){
+		if ((arg && !arg.nowPlaying) || !arg){
+			if (!assistant.panel.visible()){
+				if (assistant.cmdMenuModel.items[1].items[4].icon !== "music-details"){
 					assistant.cmdMenuModel.items[1].items[4].icon = "music-details";
 					assistant.controller.modelChanged(assistant.cmdMenuModel);
 				} 
 			} else {
-				if(assistant.cmdMenuModel.items[1].items[4].icon !== "music-details-down"){
+				if (assistant.cmdMenuModel.items[1].items[4].icon !== "music-details-down"){
 					assistant.cmdMenuModel.items[1].items[4].icon = "music-details-down";
 					assistant.controller.modelChanged(assistant.cmdMenuModel);
 				}
 			};
 		}
-		if(m.nP.songs.length > 0 && !assistant.panel.hasClassName("center")){
+		if (koto.nowPlaying.currentInfo.songs.length > 0 && !assistant.panel.hasClassName("center")){
 			assistant.controller.setMenuVisible(Mojo.Menu.commandMenu, true);
 		}
 		else {
@@ -262,20 +262,20 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 	};
 	assistant.search = function(event){
 		var text = Mojo.Char.isValidWrittenChar(event.originalEvent.keyCode);
-		if(text){
+		if (text){
 			assistant.controller.stageController.pushScene("search", text);
 		}	
 	};
 	
-	if((arg && !arg.nowPlaying) || !arg){
+	if ((arg && !arg.nowPlaying) || !arg){
 		assistant.handleCommand = function(event){
-			if(event.type == Mojo.Event.command) {
+			if (event.type === Mojo.Event.command) {
 				switch(event.command){
 					case 'pushNowPlaying':
 						m.pushPlay();
 						break;					
 					case 'play_pause':
-						if(m.nP.playing === true){
+						if (koto.nowPlaying.currentInfo.playing === true){
 							m.pause();
 						}
 						else{
@@ -291,27 +291,27 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 						break;
 					case 'showDetails':
 						assistant.panel.mojo.toggleVisibility();
-						if(assistant.controller.sceneName === "list" && assistant.scroller && assistant.alphaScrollerBottomFade && assistant.scroller.visible()){
+						if (assistant.controller.sceneName === "list" && assistant.scroller && assistant.alphaScrollerBottomFade && assistant.scroller.visible()){
 							assistant.handleResize();
 						}
 						break;
 				}
 			}
-			if(event.type === Mojo.Event.forward){
-				/*if(assistant.controller.sceneName === "list" || assistant.controller.sceneName === "view"){//list scene
+			if (event.type === Mojo.Event.forward){
+				/*if (assistant.controller.sceneName === "list" || assistant.controller.sceneName === "view"){//list scene
 					assistant.getSongs(function(songs){
 						m.playArray(songs, 0);
 					}.bind(assistant));
 				}//main scene
-				else if(assistant.controller.sceneName === "main") {
-					m.shufflePlay(m.songs, 0);
+				else if (assistant.controller.sceneName === "main") {
+					m.shufflePlay(koto.content.songs.array, 0);
 				};*/
-				if((arg && !arg.search) || !arg){
+				if ((arg && !arg.search) || !arg){
 					assistant.controller.stageController.pushScene("search");
 				}
 			}
-			if(event.type === Mojo.Event.back){
-				if(assistant.extraDiv.hasClassName("shown")){
+			if (event.type === Mojo.Event.back){
+				if (assistant.extraDiv.hasClassName("shown")){
 					assistant.extraDiv.mojo.hide();
 					event.stop();
 					event.stopPropagation();
@@ -337,8 +337,8 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 	}
 	assistant._updateProgress = function(){
 		assistant.panel.mojo.updateProgress();
-		//if(((m.nP.audioObj.currentTime/m.nP.audioObj.duration) > .5) || (m.nP.audioObj.currentTime > 240)){
-			//lastfm.scrobble(m.nP.songs[m.nP.index]);//todo TEST
+		//if (((koto.nowPlaying.currentInfo.audioObj.currentTime/koto.nowPlaying.currentInfo.audioObj.duration) > .5) || (koto.nowPlaying.currentInfo.audioObj.currentTime > 240)){
+			//lastfm.scrobble(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]);//todo TEST
 		//}
 	}
 };
@@ -358,14 +358,14 @@ scene_helpers.addCommonSceneMethods = function(assistant, sceneName) {
 		};	
 		var prefsDisable = false, aboutDisable = false, helpDisable = false, scenes = assistant.controller.stageController.getScenes();
 		for(var i = 0; i < scenes.length; i++){
-			if(scenes[i].sceneName === "about" || sceneName === "about")
+			if (scenes[i].sceneName === "about" || sceneName === "about")
 				aboutDisable = true;
-			else if(scenes[i].sceneName === "help" || sceneName === "help")
+			else if (scenes[i].sceneName === "help" || sceneName === "help")
 				helpDisable = true;
-			else if(scenes[i].sceneName === "prefs" || sceneName === "prefs")
+			else if (scenes[i].sceneName === "prefs" || sceneName === "prefs")
 				prefsDisable = true;
 		}
-		if(sceneName === "startup"){
+		if (sceneName === "startup"){
 			aboutDisable = true; prefsDisable = true;
 		}
 		assistant.appMenuModel = {
@@ -382,7 +382,7 @@ scene_helpers.addCommonSceneMethods = function(assistant, sceneName) {
 		assistant.controller.get("title").innerHTML = title;
 	}
 	assistant.stageDeactivate = function(){
-		if(m.nP.songs.length > 0){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			m.showDashboard();
 		}
 	};

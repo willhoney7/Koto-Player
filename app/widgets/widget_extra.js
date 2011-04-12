@@ -21,7 +21,7 @@ Mojo.Widget.Extra = Class.create({
 		//Element.insert(this.scroller, "<div style='height: 50px'></div>");
 
 		
-		if(!this.controller.model.playlistDisabled){
+		if (!this.controller.model.playlistDisabled){
 			//setup playlist
 			var content = Mojo.View.render({object: {id: "addToPlaylist", widget: "AddToPlaylist", class_:"extra-content", style: "display: none"}, template: "widgets/widget_declaration"});
 			Element.insert(this.scroller, content);
@@ -30,7 +30,7 @@ Mojo.Widget.Extra = Class.create({
 			this.controller.scene.setupWidget("addToPlaylist", {}, {});
 		}
 		
-		if(!this.controller.model.songDetailsDisabled){
+		if (!this.controller.model.songDetailsDisabled){
 			//setup songDetails
 			var content = Mojo.View.render({object: {id: "songDetails", widget: "SongDetails", class_:"extra-content", style: "display: none"}, template: "widgets/widget_declaration"});
 			Element.insert(this.scroller, content);
@@ -39,7 +39,7 @@ Mojo.Widget.Extra = Class.create({
 			this.controller.scene.setupWidget("songDetails", {}, {});
 		}
 		
-		if(!this.controller.model.albumArtDownloaderDisabled){
+		if (!this.controller.model.albumArtDownloaderDisabled){
 			//setup songDetails
 			var content = Mojo.View.render({object: {id: "albumArtDownloader", widget: "AlbumArtDownloader", class_:"extra-content", style: "display: none"}, template: "widgets/widget_declaration"});
 			Element.insert(this.scroller, content);
@@ -48,7 +48,7 @@ Mojo.Widget.Extra = Class.create({
 			this.controller.scene.setupWidget("albumArtDownloader", {}, {});
 		}
 		
-		/*if(!this.controller.model.sleepTimerDisabled){
+		/*if (!this.controller.model.sleepTimerDisabled){
 			//setup sleepTimer
 			var content = Mojo.View.render({object: {id: "sleepTimer", widget: "SleepTimer"}, template: "widgets/widget_declaration"});
 			Element.insert(this.scroller, content);
@@ -56,7 +56,7 @@ Mojo.Widget.Extra = Class.create({
 
 			this.controller.scene.setupWidget("sleepTimer", {}, {});
 		}*/
-		/*if(!this.controller.model.searchListDisabled){
+		/*if (!this.controller.model.searchListDisabled){
 			//setup searchList
 			var content = Mojo.View.render({object: {id: "searchList", widget: "SearchList"}, template: "widgets/widget_declaration"});
 			Element.insert(this.scroller, content);
@@ -65,8 +65,8 @@ Mojo.Widget.Extra = Class.create({
 			this.controller.scene.setupWidget("searchList", {}, {});
 		
 		}*/
-		if(this.controller.model.scene === "play"){
-			if(!this.controller.model.lyricsDisabled){
+		if (this.controller.model.scene === "play"){
+			if (!this.controller.model.lyricsDisabled){
 				//setup lyrics
 				var content = Mojo.View.render({object: {id: "lyrics", widget: "Lyrics", class_:"extra-content lyrics", style: "display: none"}, template: "widgets/widget_declaration"});
 				Element.insert(this.scroller, content);
@@ -85,7 +85,7 @@ Mojo.Widget.Extra = Class.create({
 	},
 	//Mojo Methods
 	hide: function(dontHideScrim, dontHideSearchListDiv){
-		if(!dontHideScrim){
+		if (!dontHideScrim){
 			this.controller.element.removeClassName("shown");
 			this.titleDiv.removeClassName("shown");
 			this.titleDiv.hide();
@@ -102,25 +102,25 @@ Mojo.Widget.Extra = Class.create({
 		//this.sleepTimerDiv.mojo.hide();
 		
 		/*hide search list
-		if(!dontHideSearchListDiv){
+		if (!dontHideSearchListDiv){
 			this.searchListDiv.mojo.hide();
 		}*/
-		if(this.albumArtDownloaderDiv){
+		if (this.albumArtDownloaderDiv){
 			this.albumArtDownloaderDiv.mojo.hide();
 		}
 		
 		//hide lyrics, if it exists.
-		if(this.lyricsDiv){
+		if (this.lyricsDiv){
 			this.lyricsDiv.mojo.hide();
 		}
 		//hide song details, if it exists
-		if(this.songDetailsDiv){
+		if (this.songDetailsDiv){
 			this.songDetailsDiv.mojo.hide();
 		}
 		
 	},
 	toggle: function(widgetId, arg, arg2){
-		if(!this[widgetId+"Div"].visible()){
+		if (!this[widgetId+"Div"].visible()){
 			this.show(widgetId, arg, arg2);
 		}
 		else {

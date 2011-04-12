@@ -10,20 +10,20 @@ DashboardAssistant.prototype.setup = function () {
 };
  
 DashboardAssistant.prototype.displayDashboard = function(){
-	m.nP.songs[m.nP.index].albumArt = m.getAlbumArt(m.nP.songs[m.nP.index]);
+	koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].albumArt = koto.albumArt.get(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]);
 	renderedInfo = Mojo.View.render({
-		object: m.nP.songs[m.nP.index],
+		object: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index],
 		template: "dashboard/dashboard-template",
 		formatters: {
 			"albumArt": function(value, model){
-				if(model.thumbnails){
-					return m.getAlbumArt(model);
+				if (model.thumbnails){
+					return koto.albumArt.get(model);
 				}
 			}
 		}
 	});
 	this.infoElement.innerHTML = renderedInfo;
-	if(m.nP.playing === false){
+	if (koto.nowPlaying.currentInfo.playing === false){
 		this.playPauseDiv.removeClassName("pause");
 		this.playPauseDiv.addClassName("play");
 	}
@@ -44,8 +44,8 @@ DashboardAssistant.prototype.launchMain = function () {
 };
 
 DashboardAssistant.prototype.controlTap = function (event) {
-	if(event.target.id === "play_pause"){
-		if(m.nP.playing === true){
+	if (event.target.id === "play_pause"){
+		if (koto.nowPlaying.currentInfo.playing === true){
 			this.playPauseDiv.removeClassName("pause");
 			m.pause();
 			this.playPauseDiv.addClassName("play");
@@ -55,9 +55,9 @@ DashboardAssistant.prototype.controlTap = function (event) {
 			m.resume();
 			this.playPauseDiv.addClassName("pause");
 		}
-	}else if(event.target.id === "previous"){
+	}else if (event.target.id === "previous"){
 		m.playPrevious();
-	}else if(event.target.id === "next"){
+	}else if (event.target.id === "next"){
 		m.playNext();
 	}
 };
@@ -67,8 +67,8 @@ DashboardAssistant.prototype.deactivate = function (event) {};
 DashboardAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("dashboard-contents", Mojo.Event.tap, this.switchHandler);
 	
-	if(!m.prefs.closeDashboard && !Mojo.Controller.getAppController().getStageController("cardStage")){
-		m.nP["audioObj" + m.nP.cao].pause();		
+	if (!koto.preferences.obj.closeDashboard && !Mojo.Controller.getAppController().getStageController("cardStage")){
+		koto.nowPlaying.currentInfo.audioObj.pause();		
 		m.saveNowPlaying();
 	}
 };

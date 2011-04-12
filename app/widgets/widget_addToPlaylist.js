@@ -18,11 +18,11 @@ Mojo.Widget.AddToPlaylist = Class.create({
 			addItemLabel: " ",
 			formatters: {
 				"info": function(value, model){
-					if(model.songs)
+					if (model.songs)
 						return model.songs.length + " Track(s)";
 				}
 			}
-		}, {items: m.customPlaylists});
+		}, {items: koto.content.playlists.customArray});
 		
 		this.playlistList = this.controller.get("playlist-list");
 		this.controller.instantiateChildWidgets(this.controller.element); 
@@ -30,13 +30,13 @@ Mojo.Widget.AddToPlaylist = Class.create({
 		this.controller.listen("playlist-list", Mojo.Event.listTap, this.playlistListTapHandler = this.listTap.bind(this));
 		
 		this.playlistTextFieldHandler = function(event){
-			if(Mojo.Char.isEnterKey(event.keyCode)) {
-				if(event.srcElement.parentElement.id=="playlist-textfield") {
+			if (Mojo.Char.isEnterKey(event.keyCode)) {
+				if (event.srcElement.parentElement.id=="playlist-textfield") {
 					var playlist_name = this.playlistTextFieldDiv.mojo.getValue();
-					if(playlist_name !== ""){
-						//var songs = (m.nP.unshuffledSongs.length > 0 && this.playlistShuffleToggleModel.value === false)?m.nP.unshuffledSongs.clone():m.nP.songs.clone();
+					if (playlist_name !== ""){
+						//var songs = (koto.nowPlaying.currentInfo.unshuffledSongs.length > 0 && this.playlistShuffleToggleModel.value === false)?koto.nowPlaying.currentInfo.unshuffledSongs.clone():koto.nowPlaying.currentInfo.songs.clone();
 						var songs_ = [];
-						m.savePlaylist(playlist_name, {
+						koto.content.playlists.saveOne(playlist_name, {
 							name: playlist_name,
 							songs: this.playlistSongs,
 							type: "custom",
@@ -68,7 +68,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 		for(var i = 0; i < this.playlistSongs.length; i++){
 			songs_.push(this.playlistSongs[i]["_id"]);
 		}
-		m.savePlaylist(event.item.name, {
+		koto.content.playlists.saveOne(event.item.name, {
 			name: event.item.name,
 			songs: songs_,
 			type: "custom",
@@ -77,8 +77,8 @@ Mojo.Widget.AddToPlaylist = Class.create({
 				this.controller.modelChanged(this.playlistTextFieldModel);
 				
 				var currentScene = this.controller.scene.assistant;
-				if(currentScene.titleObj && m.getObjType(currentScene.titleObj) === "playlist" && event.item.name === currentScene.titleObj.name){
-					m.getPlaylist(event.item.name, function(playlist){
+				if (currentScene.titleObj && koto.utilities.getObjType(currentScene.titleObj) === "playlist" && event.item.name === currentScene.titleObj.name){
+					koto.content.playlists.getOne(event.item.name, function(playlist){
 						currentScene.titleObj = playlist;
 						currentScene.data = playlist.songs;
 						currentScene.controller.modelChanged(currentScene.listModel);
@@ -93,13 +93,13 @@ Mojo.Widget.AddToPlaylist = Class.create({
 	
 	//Mojo Methods
 	show: function(songs){
-		if(!this.playListSongs)
+		if (!this.playListSongs)
 			this.playlistSongs = songs;
 		else {
 			this.playlistSongs.clear();
 			Object.extend(this.playlistSongs, songs);
 		}
-		this.playlistList.mojo.noticeUpdatedItems(0, m.customPlaylists);
+		this.playlistList.mojo.noticeUpdatedItems(0, koto.content.playlists.customArray);
 		this.controller.element.show();	
 	
 		this.playlistTextFieldDiv.mojo.focus();//fix bug..

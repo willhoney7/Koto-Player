@@ -6,7 +6,7 @@ function ErrorAssistant(error, isPalmBug) {
 
 ErrorAssistant.prototype.setup = function() {
 	this.controller.get("error").innerHTML = this.error;
-	if(this.isPalmBug){
+	if (this.isPalmBug){
 		this.controller.get("legacyError").hide();
 		this.controller.get("mediaIndexerError").show();
 	}
@@ -26,8 +26,8 @@ ErrorAssistant.prototype.deactivate = function(event) {
 };
 
 ErrorAssistant.prototype.cleanup = function(event) {
-	if(this.metrixToggle.value === true){
-		g.Metrix.postDeviceData();
+	if (this.metrixToggle.value === true){
+		koto.metrix.postDeviceData();
 	}
 	
 };

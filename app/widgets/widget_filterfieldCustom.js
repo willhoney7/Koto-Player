@@ -253,7 +253,7 @@ Mojo.Widget.FilterFieldCustom = Class.create(
 		//so can get sym logic
 		this.filterWriteDiv.show();
 		this.filterWriteDiv.focus();
-		if(!this.filterOpen) {
+		if (!this.filterOpen) {
 			this.filter.show();
 			this.filterOpen = true;
 			if (!this.viewDiv) {
@@ -282,12 +282,12 @@ Mojo.Widget.FilterFieldCustom = Class.create(
 	handleKey: function(e) {
 		// ignore characters unused in filter search typing
 		//eat enter keys to avoid newlines	
-		if (e.keyCode == Mojo.Char.enter) {
+		if (e.keyCode === Mojo.Char.enter) {
 			Event.stop(e);
 			return true;
 		}
 
-		if ((e.keyCode < 32 || e.keyCode == 127) && (e.keyCode != 8)) {
+		if ((e.keyCode < 32 || e.keyCode === 127) && (e.keyCode != 8)) {
 			return;
 		}
 

@@ -29,11 +29,11 @@ Mojo.Widget.SearchList = Class.create({
 			renderLimit: 50,
 			formatters: {
 				"title": function(value, model){
-					if(model.display)
+					if (model.display)
 						return model.display;
 				},
 				"info": function(value, model){
-					if(model.secondary)
+					if (model.secondary)
 						return model.secondary;
 				},
 			}
@@ -68,13 +68,13 @@ Mojo.Widget.SearchList = Class.create({
 		this.controller.stopListening('searchResultList', Mojo.Event.listTap, this.listTap);
 	},	
 	filterImmediate: function(event){
-		if(!event.filterString.blank()){
+		if (!event.filterString.blank()){
 			this.controller.scene.assistant.extraDiv.mojo.showSearch();
 		}
 	},
 	filter: function(event){
-		if(!event.filterString.blank()){
-			m.db8_exec({"select" : ["display", "secondary", "id"], "from":g.AppId + ".data:1","where":[{"prop":"searchKey","op":"%","val":event.filterString, "collate": "primary"}], "limit":50}, this.renderItems.bind(this), false, true);
+		if (!event.filterString.blank()){
+			db8.exec({"select" : ["display", "secondary", "id"], "from":koto.appId + ".data:1","where":[{"prop":"searchKey","op":"%","val":event.filterString, "collate": "primary"}], "limit":50}, this.renderItems.bind(this), false, true);
 		} else {
 			this.controller.scene.assistant.extraDiv.mojo.hide();
 		}
@@ -92,21 +92,21 @@ Mojo.Widget.SearchList = Class.create({
 		this.filterField.mojo.setCount(items.length);
 	},
 	listTap: function(event){	
-		m.getObjsById([event.item.id], function(results){
+		db8.getObjsById([event.item.id], function(results){
 			obj = results[0];
-			var objType = m.getObjType(obj);
+			var objType = koto.utilities.getObjType(obj);
 		
 			//popup
-			if(event.originalEvent.target.id && event.originalEvent.target.id == 'popup'){
+			if (event.originalEvent.target.id && event.originalEvent.target.id === 'popup'){
 				//build popup items
 				var items = [];
-				if(m.nP.songs.length > 0)
+				if (koto.nowPlaying.currentInfo.songs.length > 0)
 					items.push({label: $L('Play Next'), command: 'play-next'},{label: $L('Play Last'), command: 'play-last'});
-				if(objType !== "song"){
+				if (objType !== "song"){
 					items.unshift({label: $L('Play'), command: 'play'}, {label: $L("Shuffle Play"), command: "shuffle"});
-					if(objType === "playlist" && event.item.type && event.item.type === "custom")	
+					if (objType === "playlist" && event.item.type && event.item.type === "custom")	
 						items.push({label: $L('View & Edit Songs'), command: 'view'});
-					else if(objType === "playlist")
+					else if (objType === "playlist")
 						items.push({label: $L('View Songs'), command: 'view'});
 				}
 				items.push({label: $L('Add to Playlist'), command: 'add-to-playlist'})
@@ -114,8 +114,8 @@ Mojo.Widget.SearchList = Class.create({
 
 				this.controller.scene.assistant.controller.popupSubmenu({
 					onChoose: function(value){
-						if(value === "favorite")
-							m.addToFavorites(obj);
+						if (value === "favorite")
+							koto.content.favorites.add(obj);
 						else{
 							var handleAction = function(songs){
 								switch(value){
@@ -140,7 +140,7 @@ Mojo.Widget.SearchList = Class.create({
 								};
 							}.bind(this);
 							var formatted = (value === "view") ? true : false;
-							m.getSongsOfObj(obj, handleAction, formatted);
+							koto.content.getSongsOfObj(obj, handleAction, formatted);
 						}
 					}.bind(this),
 					placeNear: event.originalEvent.target,
@@ -148,12 +148,12 @@ Mojo.Widget.SearchList = Class.create({
 				});
 			}
 			else {
-				if((objType === "song" || objType === "playlist") || (this.data === "favorites" && m.prefs.favoriteTap === "play")){
-					m.getSongsOfObj(obj, function(songs){
+				if ((objType === "song" || objType === "playlist") || (this.data === "favorites" && koto.preferences.obj.favoriteTap === "play")){
+					koto.content.getSongsOfObj(obj, function(songs){
 						m.playArray(songs, 0);
 					}.bind(this), false);
 				}else {
-					m.getSongsOfObj(obj, function(songs){
+					koto.content.getSongsOfObj(obj, function(songs){
 						var focus = (objType === "album") ? obj.name : undefined;
 						m.viewArray(songs, obj, focus);
 					}.bind(this), true);//pass true so it returns formatted songs

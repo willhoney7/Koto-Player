@@ -2,10 +2,10 @@ function ViewAssistant(titleObj, data, focus) {
 	this.data = data;
 	
 	this.titleObj = titleObj;
-	if(focus){
+	if (focus){
 		this.focus = focus;
 	}
-	this.objType = m.getObjType(this.titleObj);
+	this.objType = koto.utilities.getObjType(this.titleObj);
 	scene_helpers.addControlSceneMethods(this);
 }
 
@@ -19,24 +19,24 @@ ViewAssistant.prototype.setup = function() {
 		delay: 100,
 		formatters: {
 			"info": function(value, model){
-				if(m.getObjType(model) === "song"){
+				if (koto.utilities.getObjType(model) === "song"){
 					return model.artist + " - " + model.album;
 				}
 			},
 			"truncatingOption": function(value, model){
-				if(!m.prefs.truncateText){
+				if (!koto.preferences.obj.truncateText){
 					return "noTruncate";
 				}
 			}.bind(this),
 			"title": function(value, model){
-				if(model.title){
+				if (model.title){
 					return model.title;
 				}
 			}
 		},
 		swipeToDelete:false, reorderable:false
 	};
-	if(this.objType === "playlist" && this.titleObj.type === "custom"){
+	if (this.objType === "playlist" && this.titleObj.type === "custom"){
 		this.listAttrs["swipeToDelete"] = true;
 		this.listAttrs["autoconfirmDelete"] = true;
 		this.listAttrs["reorderable"] = true;
@@ -51,7 +51,7 @@ ViewAssistant.prototype.setup = function() {
 	this.listWidget = this.controller.get("results_list");
 	this.listTapHandler = this.listTap.bind(this);
 	this.controller.listen(this.listWidget, Mojo.Event.listTap, this.listTapHandler);
-	if(this.objType === "playlist"){
+	if (this.objType === "playlist"){
 		this.listDeleteHandler = this.listDelete.bind(this);
 		this.listReorderHandler = this.listReorder.bind(this);
 		this.controller.listen(this.listWidget, Mojo.Event.listDelete, this.listDeleteHandler);
@@ -62,7 +62,7 @@ ViewAssistant.prototype.setup = function() {
 
 ViewAssistant.prototype.setupTitle = function(event){
 	this.initViewMenu(this.titleObj.name);
-	if(!this.subTitleDev){
+	if (!this.subTitleDev){
 		this.subTitleDiv = this.controller.get("title-secondary");
 	}
 	
@@ -78,8 +78,8 @@ ViewAssistant.prototype.activate = function(event) {
 	this.activateCommon();
 };
 ViewAssistant.prototype.refreshList = function(event) {
-	if(this.objType === "playlist" && this.titleObj.type && this.titleObj.type !== "custom"){
-		m.getPlaylistSongs(this.titleObj, function(songs){
+	if (this.objType === "playlist" && this.titleObj.type && this.titleObj.type !== "custom"){
+		koto.content.playlists.getSongsOfOne(this.titleObj, function(songs){
 			this.listWidget.mojo.noticeUpdatedItems(0, songs);
 			this.data = songs;
 		}.bind(this));
@@ -96,7 +96,7 @@ ViewAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 	//loop through the original data set & get the this.subset of items that have the filterstring 
 	var i = 0;
 	while (i < this.data.length) {
-		if((this.data[i].title && this.data[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.data[i].album && this.data[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.data[i].artist && this.data[i].artist.toLowerCase().include(filterString.toLowerCase()))){
+		if ((this.data[i].title && this.data[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.data[i].album && this.data[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.data[i].artist && this.data[i].artist.toLowerCase().include(filterString.toLowerCase()))){
 			if (this.subset.length < count && totalSubsetSize >= offset){ 
 				this.data[i].unFilteredIndex = i;
 				this.subset.push(this.data[i]);
@@ -118,10 +118,10 @@ ViewAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 	
 }
 ViewAssistant.prototype.handleCustomPlaylistSort = function(){
-	//if(this.titleObj.sort && this.titleObj.sort !== "custom"){
-		if(!this.titleObj.sort)
+	//if (this.titleObj.sort && this.titleObj.sort !== "custom"){
+		if (!this.titleObj.sort)
 			this.titleObj.sort = "custom";
-		m.debugErr("playlist.sort is " + this.titleObj.sort);
+		console.log("playlist.sort is " + this.titleObj.sort);
 		this.customSortSongs = JSON.parse(JSON.stringify(this.data));
 		this.data = this.data.sortBy(function(s){
 			return s[this.titleObj.sort];
@@ -130,18 +130,18 @@ ViewAssistant.prototype.handleCustomPlaylistSort = function(){
 };
 
 ViewAssistant.prototype.listTap = function(event) {
-	objType = m.getObjType(event.item);
+	objType = koto.utilities.getObjType(event.item);
 	var songs = (this.subset.length > 0 && this.filter !== "")? this.subset : this.data;
-	if(event.originalEvent.target.id && event.originalEvent.target.id == 'popup'){
+	if (event.originalEvent.target.id && event.originalEvent.target.id === 'popup'){
 		var items = [];
-		if(m.nP.songs.length > 0)
+		if (koto.nowPlaying.currentInfo.songs.length > 0)
 			items.push({label: $L('Play Next'), command: 'play-next'},{label: $L('Play Last'), command: 'play-last'});
-		if(objType === "song"){
-			if(!event.fromSongDetails){
+		if (objType === "song"){
+			if (!event.fromSongDetails){
 				items.push({label: $L("Song Details"), command: "details"});
-			} if(this.objType !== "artist" && this.objType !== "album"){
+			} if (this.objType !== "artist" && this.objType !== "album"){
 				items.push({label: $L("View Album"), command: "view"});		
-			} if(!event.fromSongDetails){
+			} if (!event.fromSongDetails){
 				items.push({label: $L('Add to Playlist'), command: 'add-to-playlist'});
 			}
 		} 
@@ -160,13 +160,13 @@ ViewAssistant.prototype.listTap = function(event) {
 						this.extraDiv.mojo.show("addToPlaylist", [event.item]);
 						break;
 					case 'favorite':
-						m.addToFavorites(event.item);
+						koto.content.favorites.add(event.item);
 						break;
 					case "details": 
 						this.extraDiv.mojo.toggle("songDetails", songs, event.index);
 						break;
 					case "view":
-						if(objType === "artist" || objType === "album"){
+						if (objType === "artist" || objType === "album"){
 							m.view(obj);
 						}
 						break;
@@ -176,7 +176,7 @@ ViewAssistant.prototype.listTap = function(event) {
 				items: items
 		});
 	} else {
-		if(this.subset.length > 0 && this.filter !== "" && m.prefs.filterTap === "all"){
+		if (this.subset.length > 0 && this.filter !== "" && koto.preferences.obj.filterTap === "all"){
 			songs = this.data;
 			event.index = event.item.unFilteredIndex;
 		}
@@ -184,31 +184,31 @@ ViewAssistant.prototype.listTap = function(event) {
 	}
 };
 ViewAssistant.prototype.listReorder = function(event){
-	if(this.subset.length === this.customSortSongs.length && (this.filter === "" || !this.filter)){
+	if (this.subset.length === this.customSortSongs.length && (this.filter === "" || !this.filter)){
 		this.data.splice(event.fromIndex, 1);
 		this.data.splice(event.toIndex, 0, event.item);
 		this.customSortSongs.splice(event.fromIndex, 1);
 		this.customSortSongs.splice(event.toIndex, 0, event.item);
-		m.savePlaylist(this.titleObj.name, {type: "custom", songs: this.customSortSongs, name: this.titleObj.name});
+		koto.content.playlists.saveOne(this.titleObj.name, {type: "custom", songs: this.customSortSongs, name: this.titleObj.name});
 	}
 }
 ViewAssistant.prototype.listDelete = function(event){
-	if((this.subset.length > 0 && this.filter !== "") || this.titleObj.sort !== "custom"){
+	if ((this.subset.length > 0 && this.filter !== "") || this.titleObj.sort !== "custom"){
 		for(var i = 0; i < this.customSortSongs.length; i++){
-			if(this.customSortSongs[i]._id === this.subset[event.index]._id){
+			if (this.customSortSongs[i]._id === this.subset[event.index]._id){
 				this.customSortSongs.splice(i, 1);
 				break;
 			}
 		}
 		for(var i = 0; i < this.data.length; i++){
-			if(this.data[i]._id === this.subset[event.index]._id){
+			if (this.data[i]._id === this.subset[event.index]._id){
 				this.data.splice(i, 1);
 				break;
 			}
 
 		}
 		//this.data.splice(event.index, 1);
-		if(this.subset.length > 0 && this.filter !== ""){
+		if (this.subset.length > 0 && this.filter !== ""){
 			this.subset.splice(event.index, 1);
 			this.listWidget.mojo.setLength(this.subset.length);
 			this.listWidget.mojo.setCount(this.subset.length);
@@ -218,7 +218,7 @@ ViewAssistant.prototype.listDelete = function(event){
 		this.data = this.customSortSongs;
 	}
 	this.setupTitle();
-	m.savePlaylist(this.titleObj.name, {type: "custom", sort: this.titleObj.sort, songs: this.customSortSongs, name: this.titleObj.name});
+	koto.content.playlists.saveOne(this.titleObj.name, {type: "custom", sort: this.titleObj.sort, songs: this.customSortSongs, name: this.titleObj.name});
 }
 ViewAssistant.prototype.moreTap = function(event){
 	
@@ -228,7 +228,7 @@ ViewAssistant.prototype.moreTap = function(event){
 			{label: $L('Add to Playlist'), command: 'add-to-playlist'},
 			{label: $L('Favorite'), command: 'favorite'}
 		]
-		if(this.objType === "playlist" && this.titleObj.type === "custom"){
+		if (this.objType === "playlist" && this.titleObj.type === "custom"){
 			items.splice(2, 0, 
 				{label: $L('Sort'), items: [
 					{label: $L('Custom'), command: 'sort-custom'},		
@@ -239,18 +239,18 @@ ViewAssistant.prototype.moreTap = function(event){
 				{}
 			);
 			for(var i = 0; i < items[2].items.length; i++){
-				if(this.titleObj.sort && items[2].items[i].label.toLowerCase() === this.titleObj.sort){
+				if (this.titleObj.sort && items[2].items[i].label.toLowerCase() === this.titleObj.sort){
 					items[2].items[i].chosen = true;
 					break;
-				} else if(!this.titleObj.sort){
+				} else if (!this.titleObj.sort){
 					items[2].items[0].chosen = true;
 					break;
 				}
 			}
 		}
-		//if(m.getObjType(this.titleObj) === "playlist")TODO
+		//if (koto.utilities.getObjType(this.titleObj) === "playlist")TODO
 		//	items.unshift({label: $L('Edit Playlist Name'), command: 'edit-playlist-name'},{});
-		if(m.nP.songs.length > 0){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			items.splice(1, 0, {label: $L("Play All ..."), items: [
 				{label: $L('Next'), command: 'play-next'},
 				{label: $L('Last'), command: 'play-last'}			
@@ -277,7 +277,7 @@ ViewAssistant.prototype.moreTap = function(event){
 							this.extraDiv.mojo.show("addToPlaylist", songs);
 							break;
 						case 'favorite':
-							m.addToFavorites(this.titleObj);
+							koto.content.favorites.add(this.titleObj);
 							break;
 						
 						case "sort-custom":
@@ -285,12 +285,12 @@ ViewAssistant.prototype.moreTap = function(event){
 						case "sort-artist":
 						case "sort-album":
 							var sort = value.split("-")[1];
-							m.savePlaylist(this.titleObj.name, {type: "custom", sort: sort, songs: this.customSortSongs, name: this.titleObj.name});
+							koto.content.playlists.saveOne(this.titleObj.name, {type: "custom", sort: sort, songs: this.customSortSongs, name: this.titleObj.name});
 							this.titleObj.sort = sort;	
-							if(sort !== "custom"){
+							if (sort !== "custom"){
 								this.listWidget.mojo.setReorderable(false);
 								this.data = this.data.sortBy(function(s){
-									if(sort !== "title"){
+									if (sort !== "title"){
 										return s[sort] + " " + s.title;
 									}
 									return s[sort];
@@ -317,7 +317,7 @@ ViewAssistant.prototype.cleanup = function(event) {
 	this.cleanupCommon();
 	this.controller.stopListening(this.controller.get("results_list"), Mojo.Event.listTap, this.listTapHandler);
 	
-	if(this.objType === "playlist"){
+	if (this.objType === "playlist"){
 		this.controller.stopListening(this.controller.get("results_list"), Mojo.Event.listDelete, this.listDeleteHandler);
 		this.controller.stopListening(this.controller.get("results_list"), Mojo.Event.listReorder, this.listReorderHandler);
 	}

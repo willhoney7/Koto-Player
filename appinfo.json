@@ -1,6 +1,6 @@
 {
 	"id": "com.tibfib.app.koto",
-	"version": "0.7.0",
+	"version": "0.7.7",
 	"vendor": "Will Honey (Tibfib)",
 	"type": "web",
 	"main": "index.html",

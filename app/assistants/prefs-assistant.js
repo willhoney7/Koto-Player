@@ -24,20 +24,20 @@ PrefsAssistant.prototype.setup = function() {
 				//{label: "Turquoise", value: "turquoise"},
 			]
 		},
-		{value: m.prefs.theme}
+		{value: koto.preferences.obj.theme}
 	);
 	
 	this.controller.listen("theme", Mojo.Event.propertyChange, this.handleThemeChange = function(event){
-		this.controller.stageController.unloadStylesheet("stylesheets/" + m.prefs.theme + ".css");
-		m.prefs.theme = event.value;
-		m.storePrefs();
-		this.controller.stageController.loadStylesheet("stylesheets/" + m.prefs.theme + ".css");
+		this.controller.stageController.unloadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
+		koto.preferences.obj.theme = event.value;
+		koto.preferences.store();
+		this.controller.stageController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
 	}.bind(this));
 	
-	this.controller.setupWidget("auto-resume-nowPlaying", {}, this.autoResumeNowPlaying = {value: m.prefs.saveAndResume});
+	this.controller.setupWidget("auto-resume-nowPlaying", {}, this.autoResumeNowPlaying = {value: koto.preferences.obj.saveAndResume});
 	this.controller.listen("auto-resume-nowPlaying", Mojo.Event.propertyChange, this.handleAutoResumeNowPlaying = function(event){
-		m.prefs.saveAndResume = event.value;
-		m.storePrefs();
+		koto.preferences.obj.saveAndResume = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	this.controller.setupWidget("default-repeat-mode", 
@@ -51,11 +51,11 @@ PrefsAssistant.prototype.setup = function() {
 				{label: "Repeat", value: 2}
 			]
 		},
-		{value: m.prefs.defaultRepeat}
+		{value: koto.preferences.obj.defaultRepeat}
 	);
 	this.controller.listen("default-repeat-mode", Mojo.Event.propertyChange, this.handleRepeatModeChange = function(event){
-		m.prefs.defaultRepeat = event.value;
-		m.storePrefs();
+		koto.preferences.obj.defaultRepeat = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	this.controller.setupWidget("number-of-album-art-scroller", 
@@ -71,29 +71,29 @@ PrefsAssistant.prototype.setup = function() {
 				{label: "150", value: 75},
 			]
 		},
-		{value: m.prefs.albumArtScrollerNum}
+		{value: koto.preferences.obj.albumArtScrollerNum}
 	);
 	this.controller.listen("number-of-album-art-scroller", Mojo.Event.propertyChange, this.handleAlbumArtScrollerNum = function(event){
-		m.prefs.albumArtScrollerNum = event.value;
-		m.storePrefs();
+		koto.preferences.obj.albumArtScrollerNum = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
-	this.controller.setupWidget("marquee-toggle", {}, this.marqueeText = {value: m.prefs.marqueeText});
+	this.controller.setupWidget("marquee-toggle", {}, this.marqueeText = {value: koto.preferences.obj.marqueeText});
 	this.controller.listen("marquee-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
-		m.prefs.marqueeText = event.value;
-		m.storePrefs();
+		koto.preferences.obj.marqueeText = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
-	this.controller.setupWidget("alphaScroller-toggle", {}, this.alphaScroller = {value: m.prefs.alphaScroller});
+	this.controller.setupWidget("alphaScroller-toggle", {}, this.alphaScroller = {value: koto.preferences.obj.alphaScroller});
 	this.controller.listen("alphaScroller-toggle", Mojo.Event.propertyChange, this.handleAlphaScroller = function(event){
-		m.prefs.alphaScroller = event.value;
-		m.storePrefs();
+		koto.preferences.obj.alphaScroller = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
-	this.controller.setupWidget("truncate-toggle", {}, this.truncateText = {value: m.prefs.truncateText});
+	this.controller.setupWidget("truncate-toggle", {}, this.truncateText = {value: koto.preferences.obj.truncateText});
 	this.controller.listen("truncate-toggle", Mojo.Event.propertyChange, this.handleTruncateText = function(event){
-		m.prefs.truncateText = event.value;
-		m.storePrefs();
+		koto.preferences.obj.truncateText = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	this.controller.setupWidget("filter-tap-selector", 
@@ -106,11 +106,11 @@ PrefsAssistant.prototype.setup = function() {
 				{label: "Plays Filtered Songs", value: "filtered"}
 			]
 		},
-		{value: m.prefs.filterTap}
+		{value: koto.preferences.obj.filterTap}
 	);
 	this.controller.listen("filter-tap-selector", Mojo.Event.propertyChange, this.handleFilteredTapSelector = function(event){
-		m.prefs.filterTap = event.value;
-		m.storePrefs();
+		koto.preferences.obj.filterTap = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	
@@ -124,11 +124,11 @@ PrefsAssistant.prototype.setup = function() {
 				{label: "Plays Songs", value: "play"}
 			]
 		},
-		{value: m.prefs.playlistTap}
+		{value: koto.preferences.obj.playlistTap}
 	);
 	this.controller.listen("playlist-tap-selector", Mojo.Event.propertyChange, this.handlePlaylistTapSelector = function(event){
-		m.prefs.playlistTap = event.value;
-		m.storePrefs();
+		koto.preferences.obj.playlistTap = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	this.controller.setupWidget("favorite-tap-selector", 
@@ -141,36 +141,36 @@ PrefsAssistant.prototype.setup = function() {
 				{label: "Plays Songs", value: "play"}
 			]
 		},
-		{value: m.prefs.favoriteTap}
+		{value: koto.preferences.obj.favoriteTap}
 	);
 	this.controller.listen("favorite-tap-selector", Mojo.Event.propertyChange, this.handleFavoriteTapSelector = function(event){
-		m.prefs.favoriteTap = event.value;
-		m.storePrefs();
+		koto.preferences.obj.favoriteTap = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	
-	this.controller.setupWidget("close-dashboard-toggle", {}, this.closeDashboard = {value: m.prefs.closeDashboard});
+	this.controller.setupWidget("close-dashboard-toggle", {}, this.closeDashboard = {value: koto.preferences.obj.closeDashboard});
 	this.controller.listen("close-dashboard-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
-		m.prefs.closeDashboard = event.value;
-		m.storePrefs();
+		koto.preferences.obj.closeDashboard = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
-	this.controller.setupWidget("use-dashboard-toggle", {}, this.useDashboard = {value: m.prefs.useDashboard});
+	this.controller.setupWidget("use-dashboard-toggle", {}, this.useDashboard = {value: koto.preferences.obj.useDashboard});
 	this.controller.listen("use-dashboard-toggle", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
-		m.prefs.useDashboard = event.value;
-		m.storePrefs();
+		koto.preferences.obj.useDashboard = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	
-	this.controller.setupWidget("indexSongsByAlbum", {trueLabel: "Yes", falseLabel: "No"}, {value: m.prefs.indexSongsByAlbum});
+	this.controller.setupWidget("indexSongsByAlbum", {trueLabel: "Yes", falseLabel: "No"}, {value: koto.preferences.obj.indexSongsByAlbum});
 	this.controller.listen("indexSongsByAlbum", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
-		m.prefs.indexSongsByAlbum = event.value;
-		m.storePrefs();
+		koto.preferences.obj.indexSongsByAlbum = event.value;
+		koto.preferences.store();
 		
 		this.controller.showAlertDialog({
 			onChoose: function(value) {
-				if(value){
-					m.setupCacheDashboard();
+				if (value){
+					koto.justType.setupIndexingDashboard();
 				}
 			}.bind(this),
 			title: $L("Re-Index Songs"),
@@ -184,39 +184,39 @@ PrefsAssistant.prototype.setup = function() {
 	}.bind(this));
 	
 	
-	this.controller.setupWidget("metrixToggleWidget", {}, this.metrixToggle = {value: m.prefs.metrixToggle});
+	this.controller.setupWidget("metrixToggleWidget", {}, this.metrixToggle = {value: koto.preferences.obj.metrixToggle});
 	this.controller.listen("metrixToggleWidget", Mojo.Event.propertyChange, this.handleMetrixToggle = function(event){
-		m.prefs.metrixToggle = event.value;
-		m.storePrefs();
+		koto.preferences.obj.metrixToggle = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	
 	/*
 	 *	Last.fm
 	 */
-	this.controller.setupWidget("lastfm-toggle", {}, {value: m.prefs.lastfm.scrobble});
+	this.controller.setupWidget("lastfm-toggle", {}, {value: koto.preferences.obj.lastfm.scrobble});
 	this.controller.listen("lastfm-toggle", Mojo.Event.propertyChange, this.handleLastFMToggle = function(event){
-		m.prefs.lastfm.scrobble = event.value;
-		m.storePrefs();
+		koto.preferences.obj.lastfm.scrobble = event.value;
+		koto.preferences.store();
 	}.bind(this));
 	this.controller.setupWidget("lastfm-username", {hintText: "Username", autoFocus: false, textCase: Mojo.Widget.steModeLowerCase}, {value: ""});
 	this.controller.setupWidget("lastfm-password", {hintText: "Password", autoFocus: false}, {value: ""});
-	if(m.prefs.lastfm.sessionKey !== ""){
+	if (koto.preferences.obj.lastfm.sessionKey !== ""){
 		this.controller.get("not-logged-in").hide();
-		this.controller.get("username").innerHTML = m.prefs.lastfm.username;
+		this.controller.get("username").innerHTML = koto.preferences.obj.lastfm.username;
 		this.controller.get("logged-in").show();
 	}
 	this.controller.listen("log-in", Mojo.Event.tap, this.handleLogIn = function(event){
 		lastfm.getAuth(this.controller.get("lastfm-username").mojo.getValue(), this.controller.get("lastfm-password").mojo.getValue(),
 			function(){
 				this.controller.get("not-logged-in").hide();
-				this.controller.get("username").innerHTML = m.prefs.lastfm.username;
+				this.controller.get("username").innerHTML = koto.preferences.obj.lastfm.username;
 				this.controller.get("logged-in").show();
 			}.bind(this)
 		);
 	}.bind(this));	
 	this.controller.listen("log-out", Mojo.Event.tap, this.handleLogOut = function(event){
-		m.prefs.lastfm = {username: "", sessionKey: "", scrobble: true};
-		m.storePrefs();
+		koto.preferences.obj.lastfm = {username: "", sessionKey: "", scrobble: true};
+		koto.preferences.store();
 		this.controller.get("logged-in").hide();
 		this.controller.get("username").innerHTML = "";
 		this.controller.get("lastfm-username").mojo.setValue("");
@@ -229,28 +229,28 @@ PrefsAssistant.prototype.setup = function() {
 	 */
 	this.controller.setupWidget("twitter-username", {hintText: "Username", autoFocus: false, textCase: Mojo.Widget.steModeLowerCase}, {value: ""});
 	this.controller.setupWidget("twitter-password", {hintText: "Password", autoFocus: false}, {value: ""});
-	if(m.prefs.twitter.authorized === true){
+	if (koto.preferences.obj.twitter.authorized === true){
 		this.controller.get("twitter-not-logged-in").hide();
-		this.controller.get("twitter-logged-in-username").innerHTML = m.prefs.twitter.username;
+		this.controller.get("twitter-logged-in-username").innerHTML = koto.preferences.obj.twitter.username;
 		this.controller.get("twitter-logged-in").show();
 	}
 	this.controller.listen("twitter-log-in", Mojo.Event.tap, this.handleTwitterLogIn = function(event){
 		Twitter.authorize(this.controller.get("twitter-username").mojo.getValue(), this.controller.get("twitter-password").mojo.getValue(),
 		  function(response){
-			if(response !== false) {
-				m.prefs.twitter.authorized = true;
-				m.prefs.twitter.username = response.username;
-				m.prefs.twitter.token = response.token;
-				m.prefs.twitter.secret = response.secret;
+			if (response !== false) {
+				koto.preferences.obj.twitter.authorized = true;
+				koto.preferences.obj.twitter.username = response.username;
+				koto.preferences.obj.twitter.token = response.token;
+				koto.preferences.obj.twitter.secret = response.secret;
 				//save credentials
 				
 				this.controller.get("twitter-not-logged-in").hide();
-				this.controller.get("twitter-logged-in-username").innerHTML = m.prefs.twitter.username;
+				this.controller.get("twitter-logged-in-username").innerHTML = koto.preferences.obj.twitter.username;
 				this.controller.get("twitter-logged-in").show();
 				
 				this.controller.showAlertDialog({
 					onChoose: function(value) {
-						if(value){
+						if (value){
 							Twitter.followMe();
 						}
 					}.bind(this),
@@ -262,7 +262,7 @@ PrefsAssistant.prototype.setup = function() {
 					]
 				}); 
 			} else {
-				m.prefs.twitter = {            
+				koto.preferences.obj.twitter = {            
 					username: '',
 					authorized: false,
 					token: '',
@@ -275,8 +275,8 @@ PrefsAssistant.prototype.setup = function() {
 	}.bind(this));	
 	this.controller.listen("twitter-log-out", Mojo.Event.tap, this.handleTwitterLogOut = function(event){
 		Twitter.logout()
-		m.prefs.twitter = {username: "", authorized: false, username: "", token: "", secret: ""};
-		m.storePrefs();
+		koto.preferences.obj.twitter = {username: "", authorized: false, username: "", token: "", secret: ""};
+		koto.preferences.store();
 		this.controller.get("twitter-logged-in").hide();
 		this.controller.get("twitter-logged-in-username").innerHTML = "";
 		this.controller.get("twitter-username").mojo.setValue("");
@@ -290,26 +290,26 @@ PrefsAssistant.prototype.setup = function() {
 	 */
 	/*this.controller.setupWidget("dropbox-username", {hintText: "Email/Username", autoFocus: false}, {value: ""});
 	this.controller.setupWidget("dropbox-password", {hintText: "Password", autoFocus: false}, {value: ""});
-	if(m.prefs.dropbox.token !== ""){
+	if (koto.preferences.obj.dropbox.token !== ""){
 		this.controller.get("dropbox-not-logged-in").hide();
-		this.controller.get("dropbox-logged-in-username").innerHTML = m.prefs.dropbox.displayName;
+		this.controller.get("dropbox-logged-in-username").innerHTML = koto.preferences.obj.dropbox.displayName;
 		this.controller.get("dropbox-logged-in").show();
 	}
 	this.controller.listen("dropbox-log-in", Mojo.Event.tap, this.handleDropboxLogIn = function(event){
 		dropbox.authorize(this.controller.get("dropbox-username").mojo.getValue(), this.controller.get("dropbox-password").mojo.getValue(),
 		  function(response){
-			if(response && !response.error) {
-				m.prefs.dropbox.displayName = response.displayName;
-				m.prefs.dropbox.token = response.token;
-				m.prefs.dropbox.secret = response.secret;
+			if (response && !response.error) {
+				koto.preferences.obj.dropbox.displayName = response.displayName;
+				koto.preferences.obj.dropbox.token = response.token;
+				koto.preferences.obj.dropbox.secret = response.secret;
 				//save credentials
 				
 				this.controller.get("dropbox-not-logged-in").hide();
-				this.controller.get("dropbox-logged-in-username").innerHTML = m.prefs.dropbox.displayName;
+				this.controller.get("dropbox-logged-in-username").innerHTML = koto.preferences.obj.dropbox.displayName;
 				this.controller.get("dropbox-logged-in").show();
 				
 			} else {
-				m.prefs.dropbox = {            
+				koto.preferences.obj.dropbox = {            
 					displayName: '',
 					token: '',
 					secret: ''
@@ -320,12 +320,12 @@ PrefsAssistant.prototype.setup = function() {
 		);
 	}.bind(this));	
 	this.controller.listen("dropbox-log-out", Mojo.Event.tap, this.handleDropboxLogOut = function(event){
-		m.prefs.dropbox = {            
+		koto.preferences.obj.dropbox = {            
 			displayName: '',
 			token: '',
 			secret: ''
 		};		
-		m.storePrefs();
+		koto.preferences.store();
 		this.controller.get("dropbox-logged-in").hide();
 		this.controller.get("dropbox-logged-in-username").innerHTML = "";
 		this.controller.get("dropbox-username").mojo.setValue("");
@@ -346,7 +346,7 @@ PrefsAssistant.prototype.activate = function(event) {
 };
 
 PrefsAssistant.prototype.deactivate = function(event) {
-	m.storePrefs();
+	koto.preferences.store();
 };
 
 PrefsAssistant.prototype.cleanup = function(event) {

@@ -188,12 +188,12 @@ Mojo.Widget.List = Class.create({
 		var node, input;
 		var index = this.listItems.indexOf(itemModel);
 		
-		if(index >= 0) {
+		if (index >= 0) {
 			node = this.getNodeByIndex(index + this.renderOffset);
 
 			input = (focusSelector && node.querySelector(focusSelector)) || node.querySelector('input[type=text]') || node.querySelector('textarea');
-			if(input) {
-				if(input.focus) {
+			if (input) {
+				if (input.focus) {
 					input.focus();
 				} else if (input.mojo && input.mojo.focus) {
 					input.mojo.focus();
@@ -215,16 +215,16 @@ Mojo.Widget.List = Class.create({
 		
 		this.addItemVisible = show;
 
-		if(this.bigItemsList.length === 0) {
+		if (this.bigItemsList.length === 0) {
 			this.updateListItems();
 		}
 		
-		if(this.addItemNode){
+		if (this.addItemNode){
 			item = this.findPrevListItem();
-			if(!show && this.addItemNode.parentNode) {
+			if (!show && this.addItemNode.parentNode) {
 				this.addItemNode.parentNode.removeChild(this.addItemNode);
 			} 
-			else if(show && !this.addItemNode.parentNode) {
+			else if (show && !this.addItemNode.parentNode) {
 				this.listItemsParent.appendChild(this.addItemNode);
 			}
 			
@@ -233,14 +233,14 @@ Mojo.Widget.List = Class.create({
 		
 	},
 	setReorderable: function(value){
-		if(value === true){
-			if(this.controller.attributes.reorderable === false) {
+		if (value === true){
+			if (this.controller.attributes.reorderable === false) {
 				this.holdHandler = this.holdHandler.bindAsEventListener(this);
 				this.controller.listen(this.controller.element, Mojo.Event.hold, this.holdHandler);
 				this.controller.attributes.reorderable = true;
 			}
-		} else if(value === false){
-			if(this.controller.attributes.reorderable === true) {
+		} else if (value === false){
+			if (this.controller.attributes.reorderable === true) {
 				this.controller.stopListening(this.controller.element, Mojo.Event.hold, this.holdHandler);
 				this.controller.attributes.reorderable = false;
 			}
@@ -279,14 +279,14 @@ Mojo.Widget.List = Class.create({
 		needUpdate = (offset + limit > this.renderOffset) && (offset < this.renderOffset + this.listItems.length);
 
 		// Move render window back in order to keep it correct if needed.
-		if(offset < this.renderOffset) {
+		if (offset < this.renderOffset) {
 			this.renderOffset = Math.max(0, this.renderOffset - limit);
 		}
 		
 		// Optimize the common case of removing 1 element.
 		// This unfortunately doesn't apply if updated===true, since moveWindowIfInvalid()
 		// may or may not have updated everything already.
-		if(needUpdate && limit === 1) {
+		if (needUpdate && limit === 1) {
 			
 			// remove the deleted item from the DOM
 			node = this.getNodeByIndex(offset);
@@ -296,7 +296,7 @@ Mojo.Widget.List = Class.create({
 			this.renumberListItems();
 			
 			// If we're not rendering the whole list already, then we need to render a new item.
-			if(this.renderLimit <= this.bigItemsList.length) {
+			if (this.renderLimit <= this.bigItemsList.length) {
 				needToRenderItems = true;
 				
 				// save anchor position while renderOffset is still in sync with the DOM items
@@ -304,7 +304,7 @@ Mojo.Widget.List = Class.create({
 				
 				// Move window back if it's past the end of the list... but not < 0.
 				windowShift = 0;
-				if(this.renderOffset + this.renderLimit > this.bigItemsList.length) {
+				if (this.renderOffset + this.renderLimit > this.bigItemsList.length) {
 					windowShift = this.renderOffset;
 					this.renderOffset = Math.max(0, this.bigItemsList.length - this.renderLimit);
 					windowShift = this.renderOffset - windowShift; // windowShift should be 0 or -1
@@ -314,9 +314,9 @@ Mojo.Widget.List = Class.create({
 			// Reload items, so we have models for the entire set we're rendering:
 			this.listItems = this.bigItemsList.slice(this.renderOffset, this.renderOffset+this.renderLimit, true);
 			
-			if(needToRenderItems) {
+			if (needToRenderItems) {
 				
-				if(windowShift < 0) {
+				if (windowShift < 0) {
 					// our window shifted back, render the first one.
 					this.renderItemsBefore([this.listItems[0]], this.findNextListItem());
 				} else {
@@ -342,9 +342,9 @@ Mojo.Widget.List = Class.create({
 			// So, we still need to update things if needUpdate is true.
 			updated = this.moveWindowIfInvalid();
 
-			if(needUpdate) {
+			if (needUpdate) {
 				this.updateListItems();
-			} else if(!updated) {
+			} else if (!updated) {
 				this.saveAnchorPosition();
 				this.updateSpacers();
 			}
@@ -408,7 +408,7 @@ Mojo.Widget.List = Class.create({
 		
 		this.bigItemsList.noticeAddedItems(offset, items);
 		
-		if(offset < this.renderOffset) { 
+		if (offset < this.renderOffset) { 
 			this.renderOffset += items.length;
 		}
 		
@@ -416,14 +416,14 @@ Mojo.Widget.List = Class.create({
 		// Unfortunately, we still have to call updateListItems() below, since adjustRenderWindow() won't render
 		// the newly inserted items into the DOM (and in fact, leaves the DOM in a bad state in this case, duplicating
 		// items at the end since our listItems are out of sync with the BigList).
-		if(adjustWindow) {
+		if (adjustWindow) {
 			this.adjustRenderWindow();
 		}
 		
 		// Update if necessary.
 		// No updates needed unless insert is within our window.
 		// TODO: We should always update the spacers here, so the scroll bar appears correct.
-		if(needUpdate) {
+		if (needUpdate) {
 			this.updateListItems();
 		}
 		
@@ -453,7 +453,7 @@ Mojo.Widget.List = Class.create({
 		
 		
 		// Return if we don't need to re-render anything.
-		if(offset + limit < this.renderOffset || 
+		if (offset + limit < this.renderOffset || 
 			offset > this.renderOffset + this.renderLimit) {
 			this.log('noticeUpdatedItems: return without rendering.');
 			return;
@@ -521,13 +521,13 @@ Mojo.Widget.List = Class.create({
 	getNodeByIndex: function(index) {
 		var node;
 		
-		if(index < this.renderOffset || index >= this.renderOffset + this.listItems.length) {
+		if (index < this.renderOffset || index >= this.renderOffset + this.listItems.length) {
 			return undefined;
 		}
 		
 		index -= this.renderOffset;
 		for(node = this.listItemsParent.firstChild; node; node=node.nextSibling) {
-			if(node._mojoListIndex === index) {
+			if (node._mojoListIndex === index) {
 				return node;
 			}
 		}
@@ -584,7 +584,7 @@ Mojo.Widget.List = Class.create({
 		// Only set size if the list is currently 0 size.
 		// This ensures that it will (pretty much) only be used to set the initial size,
 		// and subsequent changes to list size will go through noticeAddedItems/noticeRemovedItems.
-		if(this.bigItemsList.length === 0 && length > 0) {
+		if (this.bigItemsList.length === 0 && length > 0) {
 			this.setLength(length);
 		}
 	},
@@ -616,13 +616,13 @@ Mojo.Widget.List = Class.create({
 		
 		this.log("List: Setting length to", length, ", inval=", inval);
 		
-		if(inval) {
+		if (inval) {
 			if ( this.secondRun ) {
 				this.controller.window.clearTimeout(this.secondRun);
 				this.secondRun = undefined;
 			}
 			this.bigItemsList.setLengthAndInvalidate(length);
-		} else if(length === this.bigItemsList.length) {
+		} else if (length === this.bigItemsList.length) {
 			// don't bother with any of this if the length is not changing.
 			// (unless we're invalidating, above.)
 			this.completeLazySetup();
@@ -641,7 +641,7 @@ Mojo.Widget.List = Class.create({
 		
 		if (forceUpdate) {
 			this.updateListItems();
-		} else if(!movedWindow && !this.adjustRenderWindow()) {
+		} else if (!movedWindow && !this.adjustRenderWindow()) {
 			// If the list is not re-rendered, we need to at least update the spacer heights.
 			this.saveAnchorPosition();
 			this.updateSpacers();
@@ -670,18 +670,18 @@ Mojo.Widget.List = Class.create({
 		var top;
 		
 		
-		if(node) {
+		if (node) {
 			top = Mojo.View.viewportOffset(node).top;
 //			Mojo.Log.info('Revealing item '+index+', loaded. actual top='+top);
 		} else {
 						
 			// estimate scroll destination from beginning of top spacer if the index is in the first half of the spacer range.
-			if(index < this.renderOffset/2) {
+			if (index < this.renderOffset/2) {
 				top = Mojo.View.viewportOffset(this.topSpacer).top + (index * this.averageItemHeight);
 			}
 			
 			// estimate from the bottom of the top spacer if it's in the second half of the spacer range
-			else if(index < this.renderOffset) {
+			else if (index < this.renderOffset) {
 				top = Mojo.View.viewportOffset(this.topSpacer).top + this.topSpacerHeight - ((this.renderOffset - index) * this.averageItemHeight);
 			}
 			
@@ -739,7 +739,7 @@ Mojo.Widget.List = Class.create({
 		this.itemsProperty = attributes.itemsProperty || 'items';
 				
 		// TODO: Remove this legacy code:
-		if(!this.controller.attributes.itemsCallback && !this.controller.attributes.itemsProperty && 
+		if (!this.controller.attributes.itemsCallback && !this.controller.attributes.itemsProperty && 
 			!this.controller.model.items && this.controller.model.listItems) {
 			this.itemsProperty = 'listItems';
 			Mojo.Log.error("WARNING: The default model property for List widget items is now 'items' instead of 'listItems'.  Please update your code.");
@@ -757,7 +757,7 @@ Mojo.Widget.List = Class.create({
 		
 		// If this is specified, then we keep a hash to track deleted items.
 		this.uniquenessProperty = attributes.uniquenessProperty;
-		if(this.uniquenessProperty !== undefined) {
+		if (this.uniquenessProperty !== undefined) {
 			this._deletedItems = {}; // will contain uniqueness values from deleted items
 		}
 		
@@ -767,7 +767,7 @@ Mojo.Widget.List = Class.create({
 		// TODO: remove this hack once model is not automatically set to attributes when missing.
 		// In the mean time, this prevents mojo-list events from having a model property set to the attributes,
 		// so new app code won't come to depend on it.
-		if(this.controller.model === attributes) {
+		if (this.controller.model === attributes) {
 			this.controller.model = {};
 		}
 		
@@ -777,7 +777,7 @@ Mojo.Widget.List = Class.create({
 		// No items callback?
 		// We use a local one to return elements from our model array... 
 		// this is less efficient, but guarantees that the same logic is used everywhere.
-		if(!this.itemsCallback) {
+		if (!this.itemsCallback) {
 			this.itemsCallback = this.loadItemsFromModel;
 		} else {
 			// items are really lazily loaded, so watch for aboutToActivate, and delay transitions until we have items.
@@ -832,13 +832,13 @@ Mojo.Widget.List = Class.create({
 		this.controller.listen(this.controller.element, 'change', this.handleChange);
 		
 		// Optional drag'n'drop reordering:
-		if(attributes.reorderable) {
+		if (attributes.reorderable) {
 			this.holdHandler = this.holdHandler.bindAsEventListener(this);
 			this.controller.listen(this.controller.element, Mojo.Event.hold, this.holdHandler);
 		}
 
 		// Optional gestural delete:
-		if(attributes.swipeToDelete) {
+		if (attributes.swipeToDelete) {
 			this.dragStartHandler = this.dragStartHandler.bindAsEventListener(this);
 			this.controller.listen(this.controller.element, Mojo.Event.dragStart, this.dragStartHandler);
 			
@@ -846,7 +846,7 @@ Mojo.Widget.List = Class.create({
 			// we only had to convert it once per framework instance.  But, this is potentially unsafe
 			// since we need to clone the nodes for use in various other documents, so now we just
 			// keep one copy per list widget (if the list has swipe-delete).
-			if(attributes.autoconfirmDelete) {
+			if (attributes.autoconfirmDelete) {
 				// Deletes are immediately confirmed, so there's no need for a delete/undo spacer.  Just use the reorder spacer.
 				deleteTemplateName = "list/spacer-item";
 			} else {
@@ -861,7 +861,7 @@ Mojo.Widget.List = Class.create({
 			// We store a random value on the scene controller to use as the delete property truth value.
 			// This lets us implicitly 'undo' pending deletes when the scene is popped.
 			// We can't just store it on the list, since lists inside lists may be destroyed & recreated when the parent list changes.
-			if(this.controller.scene._mojoListDeleteCookie === undefined) {
+			if (this.controller.scene._mojoListDeleteCookie === undefined) {
 				this.controller.scene._mojoListDeleteCookie = Math.random() + 1; // add 1 so it's at least guaranteed to be truthy
 			}
 			this.deleteTruth = this.controller.scene._mojoListDeleteCookie;
@@ -873,7 +873,7 @@ Mojo.Widget.List = Class.create({
 		this.nullItemTemplate = attributes.nullItemTemplate || Mojo.Widget.getSystemTemplatePath("list/null-item");
 		
 		// Both swipe-delete and reordering require the list to be a drop container.
-		if(attributes.swipeToDelete || attributes.reorderable) {
+		if (attributes.swipeToDelete || attributes.reorderable) {
 			Mojo.Drag.setupDropContainer(this.controller.element, this);
 			this.dragDatatype = attributes.dragDatatype;
 		}
@@ -884,7 +884,7 @@ Mojo.Widget.List = Class.create({
 					'setInitialSize', 'setLength', 'setLengthAndInvalidate', 'getLength', 'revealItem', 'getItemByNode']);
 				
 		// If there's an add-item label, then render the item:
-		if(attributes.addItemLabel) {
+		if (attributes.addItemLabel) {
 			this.addItemNode = Mojo.View.convertToNode(Mojo.View.render({object:{addItemLabel:attributes.addItemLabel}, 
 														template: Mojo.Widget.getSystemTemplatePath("list/add-item")}), this.controller.document);
 			
@@ -904,12 +904,12 @@ Mojo.Widget.List = Class.create({
 		this.lazySetupComplete = true;
 		
 		// If we're 0-length, and have an empty template, then we may need to re-render, so that we display it.
-		if(this.bigItemsList.length === 0 && this.emptyTemplate) {
+		if (this.bigItemsList.length === 0 && this.emptyTemplate) {
 			this.updateListItems();
 		}
 		
 		// Continue activation procedure if we delayed it.
-		if(this.activateContinuationFunc) {
+		if (this.activateContinuationFunc) {
 			this.activateContinuationFunc();
 			delete this.activateContinuationFunc;
 		}
@@ -919,7 +919,7 @@ Mojo.Widget.List = Class.create({
 	/**
 	 * @private
 	 * Describe what this does...
-	 * @param {Object} callbackFunction
+	 * @param {Object} callbacktion
 	 */
 	setupBigList: function() {
 		if (this.bigItemsList) {
@@ -933,7 +933,7 @@ Mojo.Widget.List = Class.create({
 		
 		// If our items are actually in an array, we can set the size now.
 		// This will cause any needed items to be loaded.
-		if(this.itemsCallback === this.loadItemsFromModel) {
+		if (this.itemsCallback === this.loadItemsFromModel) {
 			this.bigItemsList.setLength(this.controller.model[this.itemsProperty].length);
 		}
 		else {
@@ -943,7 +943,7 @@ Mojo.Widget.List = Class.create({
 		
 		// lists which are still 0-length at this point haven't been drawn at all.
 		// We need to draw them, in case they have an 'add' item showing or something.
-		if(this.bigItemsList.length === 0) {
+		if (this.bigItemsList.length === 0) {
 			this.renderFromModel();
 		}
 		
@@ -960,12 +960,12 @@ Mojo.Widget.List = Class.create({
 		this.controller.stopListening(this.controller.element, Mojo.Event.tap, this.handleTap);
 		this.controller.stopListening(this.controller.element, 'change', this.handleChange);
 		
-		if(this.controller.attributes.reorderable) {
+		if (this.controller.attributes.reorderable) {
 			this.controller.stopListening(this.controller.element, Mojo.Event.hold, this.holdHandler);
 		}
 		
 		// Optional gestural delete:
-		if(this.controller.attributes.swipeToDelete) {
+		if (this.controller.attributes.swipeToDelete) {
 			this.controller.stopListening(this.controller.element, Mojo.Event.dragStart, this.dragStartHandler);
 		}
 	},
@@ -988,8 +988,8 @@ Mojo.Widget.List = Class.create({
 		var item;
 		
 		// If there are no items, and the addItem is hidden, then do not even render the list container.
-		if(this.bigItemsList.length === 0 && !this.addItemVisible) {
-			if(this.emptyTemplate && this.lazySetupComplete) {
+		if (this.bigItemsList.length === 0 && !this.addItemVisible) {
+			if (this.emptyTemplate && this.lazySetupComplete) {
 				this.contentDiv.innerHTML = Mojo.View.render({object: model, template: this.emptyTemplate, attributes:attrs});
 			}else {
 				this.contentDiv.innerHTML = '';
@@ -1026,7 +1026,7 @@ Mojo.Widget.List = Class.create({
 		this.log("setupItemsParent");
 		
 		// Insert spacer divs:
-		if(this.topSpacer.parentNode) {
+		if (this.topSpacer.parentNode) {
 			Element.remove(this.topSpacer);
 			Element.remove(this.bottomSpacer);
 		}
@@ -1034,11 +1034,11 @@ Mojo.Widget.List = Class.create({
 		this.listItemsParent.appendChild(this.bottomSpacer);
 		
 		// ... and the "add item" node:
-		if(this.addItemNode) {
-			if(this.addItemNode.parentNode) {
+		if (this.addItemNode) {
+			if (this.addItemNode.parentNode) {
 				Element.remove(this.addItemNode);
 			}
-			if(this.addItemVisible) {
+			if (this.addItemVisible) {
 				this.listItemsParent.appendChild(this.addItemNode);
 			}
 		}
@@ -1080,7 +1080,7 @@ Mojo.Widget.List = Class.create({
 		this.log('List: rerenderSomeItems: offset ',offset,", limit ",limit);
 		
 		// If the list is not rendered at all, we need to do the whole thing:
-		if(!this.listItemsParent) {
+		if (!this.listItemsParent) {
 			this.updateListItems();
 			return;
 		}
@@ -1091,7 +1091,7 @@ Mojo.Widget.List = Class.create({
 		// this could be a slightly rocky ride when using variable height items.
 		
 		node = this.getNodeByIndex(offset);
-		if(node) {
+		if (node) {
 			
 			// Remove old items:
 			for(i=0; i<limit && node; i++) {
@@ -1102,7 +1102,7 @@ Mojo.Widget.List = Class.create({
 		}
 		
 		// If we removed nodes all the way to the end, then render new ones before the bottom spacer:
-		if(!node) {
+		if (!node) {
 			node = this.bottomSpacer;
 		}
 		
@@ -1122,11 +1122,11 @@ Mojo.Widget.List = Class.create({
 	*/
 	removeListItemNode: function(node) {
 		var spacer = node._mojoDeleteSpacer;
-		if(spacer && spacer._mojoListIndex === undefined && spacer.parentNode) {
+		if (spacer && spacer._mojoListIndex === undefined && spacer.parentNode) {
 			spacer.remove();
 		}
 		
-		if(node.parentNode) {
+		if (node.parentNode) {
 			node.remove();
 		}
 	},
@@ -1207,12 +1207,12 @@ Mojo.Widget.List = Class.create({
 			renderedItems = [];
 			formattedModels = [];
 			//Mojo.Timing.resume("list#IBrend");
-			//m.debugErr("itemModels " + itemModelsLength);
+			//console.log("itemModels " + itemModelsLength);
 
 			for(i=0; i<itemModelsLength; i++) {
 
 				itemModel = itemModels[i];
-				if(itemModel === null) {
+				if (itemModel === null) {
 					nullContent = nullContent || Mojo.View.render({object: {averageItemHeight: avgItemHeight}, template: nullItemTemplate});
 					itemContent = nullContent;
 					formattedObj = null;
@@ -1246,25 +1246,25 @@ Mojo.Widget.List = Class.create({
 			// Since we copy the nodeList into an array (above), we don't need to worry about nodes disappearing as they're inserted into the DOM.
 			modelIndex = 0;
 			contentLength = content.length;
-			//m.debugErr("contentlength " + contentLength);
+			//console.log("contentlength " + contentLength);
 
 			for(i=0; i<contentLength; i++) {
 				itemNode = content[i];
-				if(itemNode && itemNode.nodeType === itemNode.ELEMENT_NODE) {
+				if (itemNode && itemNode.nodeType === itemNode.ELEMENT_NODE) {
 					itemNode._mojoListIndex = -1;
 					itemModel = itemModels[modelIndex];
 					formattedObj = formattedModels[modelIndex];
 					modelIndex++;
 
 					// Generate divider label, if needed
-					if(divFunc && formattedObj) {
+					if (divFunc && formattedObj) {
 						itemNode._mojoListDividerLabel = divFunc(formattedObj);
 					}
 
 					listItemsParent.insertBefore(itemNode, beforeNode);
-					if(itemModel) {
+					if (itemModel) {
 						itemNode._mojoListItemModel = itemModel; // stash the item model on the element, so it's there for whoever needs it.
-						if(preventDeleteProperty) {
+						if (preventDeleteProperty) {
 							itemNode._ignoreSwipeToDelete = !!itemModel[preventDeleteProperty];
 						}
 						if (hasWidgets) {
@@ -1273,19 +1273,19 @@ Mojo.Widget.List = Class.create({
 					}
 
 					// If we have an 'item rendered' function, then call it:
-					if(itemModel && onItemRendered) {
+					if (itemModel && onItemRendered) {
 						onItemRendered(controllerElement, itemModel, itemNode);
 					}
 
 					// If item was deleted, then show the spacer instead:
-					if(swipeToDelete && itemModel && this.isModelDeleted(itemModel)) {
+					if (swipeToDelete && itemModel && this.isModelDeleted(itemModel)) {
 
 						this.replaceWithDeleteSpacer(itemNode);
 
 						// If delete is already confirmed, then it was probably animating to 0 height when we re-rendered the list.
 						// We "jump to the end", making it 0-height and saving a reference to it so we can finish the delete process 
 						// after we complete rendering.
-						if(this.isModelDeleteConfirmed(itemModel) || autoconfirmDelete) {
+						if (this.isModelDeleteConfirmed(itemModel) || autoconfirmDelete) {
 							itemNode._mojoDeleteSpacer.style.height="0px";
 							confirmedDeletes = confirmedDeletes || [];
 							confirmedDeletes.push(itemNode._mojoDeleteSpacer);						
@@ -1322,7 +1322,7 @@ Mojo.Widget.List = Class.create({
 			//Mojo.Timing.pause('list#rendIB');
 
 			// If we rendered any confirmed deleted items that were not yet removed, go ahead and complete the delete process now.
-			if(confirmedDeletes) {
+			if (confirmedDeletes) {
 				for(i=0; i<confirmedDeletes.length; i++) {
 					this.deleteDraggedItemWithEvent(confirmedDeletes[i]);
 				}
@@ -1357,7 +1357,7 @@ Mojo.Widget.List = Class.create({
 		
 		this.log("applyDeltaToListItems: ",delta,", new offset: ",(this.renderOffset+delta));
 		
-		if(count === 0) {
+		if (count === 0) {
 			return;
 		}
 		
@@ -1365,7 +1365,7 @@ Mojo.Widget.List = Class.create({
 		//Mojo.Timing.resume("list#dtSetup");
 		
 		// set up parameters for rest of function, depending on window move direction.
-		if(delta > 0) {
+		if (delta > 0) {
 			loadIndex = this.renderOffset + delta + this.listItems.length - count;
 			insertType = 'push';
 			removeIndex = 0;
@@ -1396,7 +1396,7 @@ Mojo.Widget.List = Class.create({
 		for(node = nodeIterator.call(this); node && count > 0; count--) {
 			
 			// remove the item if it's in our delta range.  Delta's negative when removing items from the end.
-			if(node._mojoListIndex < delta || node._mojoListIndex >= this.renderLimit+delta) {
+			if (node._mojoListIndex < delta || node._mojoListIndex >= this.renderLimit+delta) {
 				this.removeListItemNode(node);
 			} else {
 				break;
@@ -1435,7 +1435,7 @@ Mojo.Widget.List = Class.create({
 	updateListClasses: function() {
 		var node, count;
 		
-		if(!this.listItemsParent) {
+		if (!this.listItemsParent) {
 			return;
 		}
 		
@@ -1444,19 +1444,19 @@ Mojo.Widget.List = Class.create({
 		count = 0; // count of items since beginning or the last section divider.
 		while(node) {
 			
-			if(node._mojoListIndex !== undefined) {
+			if (node._mojoListIndex !== undefined) {
 				
 				// Is this item followed by a divider?
-				if(node.nextSibling && node.nextSibling._mojoListDivider) {
+				if (node.nextSibling && node.nextSibling._mojoListDivider) {
 					// Yes, give it 'single' or 'last'.
-					if(count === 0) {
+					if (count === 0) {
 						this.setListClasses(node, true, false, false);
 					} else {
 						this.setListClasses(node, false, false, true);
 					}
 				} else {
 					// No divider, give it 'first' or nothing at all.
-					if(count === 0) {
+					if (count === 0) {
 						this.setListClasses(node, false, true, false);
 					} else {
 						this.setListClasses(node, false, false, false);
@@ -1465,7 +1465,7 @@ Mojo.Widget.List = Class.create({
 				
 				count++;
 				
-			} else if(node._mojoListDivider) {
+			} else if (node._mojoListDivider) {
 				count = 0;
 			}
 			
@@ -1473,9 +1473,9 @@ Mojo.Widget.List = Class.create({
 		}
 		
 		// If we're rendering the first item in the list, make it 'first' or 'single'.
-		if(this.renderOffset === 0 && this.bigItemsList.length === 1) {
+		if (this.renderOffset === 0 && this.bigItemsList.length === 1) {
 			node = this.findNextListItem();
-			if(node) {
+			if (node) {
 				//if first item in list and no add items after it ||
 				if (!this.addItemVisible) {
 					this.setListClasses(node, true, false, false);
@@ -1486,10 +1486,10 @@ Mojo.Widget.List = Class.create({
 		}
 		
 		// If we're rendering the last item, and the length > 1, and there's no special 'add' item, then make it 'last'.
-		if(this.renderOffset + this.listItems.length === this.bigItemsList.length && 
+		if (this.renderOffset + this.listItems.length === this.bigItemsList.length && 
 			this.bigItemsList.length > 1 && !this.addItemVisible) {
 			node = this.findPrevListItem();
-			if(node) {
+			if (node) {
 				//this node is that last in the list BUT it had a divider directly above it so it is single NOT last
 			 	if (node.previousSibling && node.previousSibling._mojoListDivider) {
 					this.setListClasses(node, true, false, false);
@@ -1529,10 +1529,10 @@ Mojo.Widget.List = Class.create({
 	 * determine if the class is already present on the node.
 	 */
 	twiddleClassName: function(node, apply, propName, className) {
-		if(apply && !node[propName]) {
+		if (apply && !node[propName]) {
 			Element.addClassName(node, className);
 			node[propName] = true;
-		} else if(!apply && node[propName]) {
+		} else if (!apply && node[propName]) {
 			Element.removeClassName(node, className);
 			delete node[propName];
 		}
@@ -1548,7 +1548,7 @@ Mojo.Widget.List = Class.create({
 		var template;
 		
 		
-		if(!this.listItemsParent || !this.controller.attributes.dividerFunction) {
+		if (!this.listItemsParent || !this.controller.attributes.dividerFunction) {
 			return;
 		}
 		
@@ -1565,19 +1565,19 @@ Mojo.Widget.List = Class.create({
 		while(node) {
 			
 			// skip all nodes except items & dividers.
-			if(node._mojoListIndex !== undefined || node._mojoListDivider) {
+			if (node._mojoListIndex !== undefined || node._mojoListDivider) {
 				
 				// Is it a list item node?
-				if(node._mojoListIndex !== undefined) {
+				if (node._mojoListIndex !== undefined) {
 					itemModel = this.listItems[node._mojoListIndex];
 					
 					// ignore items that haven't been loaded yet.
-					if(itemModel) {
+					if (itemModel) {
 						
 						// If the previous node was a divider, then the label had better match.
 						// Otherwise, we remove it.
 						// If the returned value for the divider label is undefined, don't draw a divider
-						if(node._mojoListDividerLabel !== undefined && prevDivider && prevDivider._mojoListDividerLabel != node._mojoListDividerLabel) {
+						if (node._mojoListDividerLabel !== undefined && prevDivider && prevDivider._mojoListDividerLabel != node._mojoListDividerLabel) {
 							prevDivider.parentNode.removeChild(prevDivider);
 							prevDivider = undefined;
 							curDivider = undefined;
@@ -1586,7 +1586,7 @@ Mojo.Widget.List = Class.create({
 						// If there's no current divider, or else the current divider's label doesn't match, 
 						// then we insert a new divider.
 						// If the returned value for the divider label is undefined, don't draw a divider
-						if(node._mojoListDividerLabel !== undefined && (!curDivider || curDivider._mojoListDividerLabel != node._mojoListDividerLabel)) {
+						if (node._mojoListDividerLabel !== undefined && (!curDivider || curDivider._mojoListDividerLabel != node._mojoListDividerLabel)) {
 							newDivider = Mojo.Model.decorate(itemModel);
 							newDivider.dividerLabel = node._mojoListDividerLabel;
 							newDivider = Mojo.View.render({object: newDivider, template: template});
@@ -1600,15 +1600,15 @@ Mojo.Widget.List = Class.create({
 				}
 				
 				// Is it a divider?
-				if(node._mojoListDivider) {
+				if (node._mojoListDivider) {
 				
 					// Dividers before dividers get removed.
-					if(prevDivider) {
+					if (prevDivider) {
 						prevDivider.parentNode.removeChild(prevDivider);
 					}
 					
 					// If this divider duplicates the one already in effect, then we remove it.
-					if(curDivider && curDivider._mojoListDividerLabel == node._mojoListDividerLabel) {
+					if (curDivider && curDivider._mojoListDividerLabel === node._mojoListDividerLabel) {
 						dupDivider = node;
 						node = node.previousSibling; // so we're at the right node after this iteration
 						dupDivider.parentNode.removeChild(dupDivider);
@@ -1646,13 +1646,13 @@ Mojo.Widget.List = Class.create({
 		var node = this.listItemsParent.firstChild;
 		
 		while(node) {
-			if(node._mojoListIndex !== undefined) {
+			if (node._mojoListIndex !== undefined) {
 				
 				// If we're reordering, then it's possible our dummy node was removed from the DOM 
 				// when the user scrolled away, and then re-rendered again later, when they scrolled 
 				// back.  So we may need to re-insert it.  We catch this case by comparing the 
 				// absolute index of our dummy node, while renumbering the items.
-				if(this.reorderDummyNode && this.reorderDummyNode !== node && 
+				if (this.reorderDummyNode && this.reorderDummyNode !== node && 
 					this.reorderDummyNode._mojoAbsoluteListIndex === this.renderOffset+i) {
 					node.parentNode.replaceChild(this.reorderDummyNode, node);
 					node = this.reorderDummyNode;
@@ -1737,7 +1737,7 @@ Mojo.Widget.List = Class.create({
 	_findDataObj: function(event) {
 		var index = Mojo.Widget.Util.findListItemIndex(event, this.listItemsParent);
 		
-		if(index === undefined) {
+		if (index === undefined) {
 			return undefined;
 		}
 		
@@ -1763,7 +1763,7 @@ Mojo.Widget.List = Class.create({
 		var index, dataObj, node, isAddNode;
 		
 		// Don't handle taps on text fields, or else they don't function.
-		if(Mojo.View.isTextField(event.target)) {
+		if (Mojo.View.isTextField(event.target)) {
 			return;
 		}
 		
@@ -1772,27 +1772,27 @@ Mojo.Widget.List = Class.create({
 		
 		// Don't handle taps on delete spacers or partially swiped items:
 		node = Mojo.Widget.Util.findListItemNode(event.target, this.listItemsParent);
-		if(!isAddNode && (!node || node._mojoDeletedListNode || node._mojoSwipeDeleteDragger)) {
+		if (!isAddNode && (!node || node._mojoDeletedListNode || node._mojoSwipeDeleteDragger)) {
 			return;
 		}
 		
 		// Find index & item model corresponding to the tapped element.
 		if (node) {
 			index = node._mojoListIndex;
-			if(index !== undefined) {
+			if (index !== undefined) {
 				dataObj = this.listItems[index];
 			}
 		}
 		
 		
 		// If we found an item model for this tap event, send a listTap event.
-		if(dataObj) {
+		if (dataObj) {
 			Event.stop(event);
 			Mojo.Event.send(this.controller.element, Mojo.Event.listTap, 
 						{model:this.controller.model, item:dataObj, index: index + this.renderOffset, originalEvent:event});				
 		}
 		// Was it in the add item?  Send a listAdd event.
-		else if(isAddNode) {
+		else if (isAddNode) {
 			Event.stop(event);
 			Mojo.Event.send(this.controller.element, Mojo.Event.listAdd, {model:this.controller.model, originalEvent:event});
 		} 
@@ -1807,11 +1807,11 @@ Mojo.Widget.List = Class.create({
 		var index = Mojo.Widget.Util.findListItemIndex(event, this.listItemsParent);
 		var dataObj;
 		
-		if(index !== undefined) {
+		if (index !== undefined) {
 			dataObj = this.listItems[index];
 		}
 		
-		if(dataObj) {
+		if (dataObj) {
 			Event.stop(event);
 			Mojo.Event.send(this.controller.element, Mojo.Event.listChange, 
 						{model:this.controller.model, item:dataObj, index: index + this.renderOffset, originalEvent:event});
@@ -1826,7 +1826,7 @@ Mojo.Widget.List = Class.create({
 		// lazySetupComplete is set when our size is set and/or we receive some items (updateItems or addItems).
 		// this means the async service request for items has been completed, and so it's now safe to begin the scene transition.
 		// If we try to activate before this happens, we get a wrapped function from the synchronizer in order to delay the transition.
-		if(!this.lazySetupComplete) {
+		if (!this.lazySetupComplete) {
 			this.activateContinuationFunc = event.synchronizer.wrap(Mojo.doNothing);
 		}
 		
@@ -1856,18 +1856,18 @@ Mojo.Widget.List = Class.create({
 		var node;
 		
 		// If swipeToDelete's been turned off, then don't do anything.
-		if(!this.controller.attributes.swipeToDelete) {
+		if (!this.controller.attributes.swipeToDelete) {
 			return;
 		}
 
-		if(Math.abs(event.filteredDistance.x) > 2*Math.abs(event.filteredDistance.y)) {
+		if (Math.abs(event.filteredDistance.x) > 2*Math.abs(event.filteredDistance.y)) {
 			
 			// This will only return items with _mojoListIndex set, so we don't need to worry about stuff being reordered, or other nodes in the list.
 			node = Mojo.Widget.Util.findListItemNode(event.target, this.listItemsParent);
 			
-			if(node && !node._ignoreSwipeToDelete) {
+			if (node && !node._ignoreSwipeToDelete) {
 				// Don't allow swiping of delete spacers or items which are animating back into place.
-				if(!node._mojoDeletedListNode && !node._mojoSwipeDeleteDragger) {
+				if (!node._mojoDeletedListNode && !node._mojoSwipeDeleteDragger) {
 	//				this.swipeDeleteNode = node;
 	//				node.addEventListener(Mojo.Event.flick, this.flickDeleteHandler, false);
 				
@@ -1902,7 +1902,7 @@ Mojo.Widget.List = Class.create({
 		
 		// If hold was on a list item, and not a delete-spacer, then reorder it!
 		node = Mojo.Widget.Util.findListItemNode(event.target, this.listItemsParent);
-		if(node && !node._mojoDeletedListNode) {
+		if (node && !node._mojoDeletedListNode) {
 			
 			Element.removeClassName(node, 'selected');
 			
@@ -1968,7 +1968,7 @@ Mojo.Widget.List = Class.create({
 		// this.log("Dragging item "+el._mojoListIndex);
 		var elHeight;
 		
-		if(this.controller.attributes.fixedHeightItems) {
+		if (this.controller.attributes.fixedHeightItems) {
 			elHeight = this.averageItemHeight;
 		} else {
 			elHeight = el.getHeight();
@@ -1977,13 +1977,13 @@ Mojo.Widget.List = Class.create({
 		this.dragAdjNode = undefined;
 		
 		// Insert correct type of spacer, depending on whether we're reordering items or deleting them.
-		if(el._mojoSwipeDeleteDragger) {
+		if (el._mojoSwipeDeleteDragger) {
 			this.handleSwipeDeleteEnter(el);
 		} else { 
 			// If the element is in our list, we can save a lot of time looking for the correct adjacent item
 			//  by beginning the search at the item itself.  Unfortunately, this won't work when the item is 
 			// not in the list.
-			if(el.parentNode === this.listItemsParent) {
+			if (el.parentNode === this.listItemsParent) {
 				this.dragAdjNode = el.nextSibling;
 			}
 			
@@ -2005,9 +2005,9 @@ Mojo.Widget.List = Class.create({
 	dragHover: function(el) {
 		var newAdj;
 				
-		if(!el._mojoSwipeDeleteDragger) {
+		if (!el._mojoSwipeDeleteDragger) {
 			newAdj = this.findAdjacentDragNode(el);
-			if(newAdj && newAdj !== this.dragAdjNode) {
+			if (newAdj && newAdj !== this.dragAdjNode) {
 				this.dragAdjNode = newAdj;
 				this.addSpacerBeforeNode(newAdj);
 			}
@@ -2033,7 +2033,7 @@ Mojo.Widget.List = Class.create({
 		this.removeReorderDummyNode();
 		
 		// If this was a swipe-to-delete, then we can skip the rest of this routine after cleaning up.
-		if(el._mojoSwipeDeleteDragger) {
+		if (el._mojoSwipeDeleteDragger) {
 			this.handleSwipeDeleteDrop(el);
 			return;
 		}
@@ -2045,12 +2045,12 @@ Mojo.Widget.List = Class.create({
 		delete el._mojoAbsoluteListIndex; // since it's only valid while reordering
 		
 		
-		if(this.curDragSpacer) {
+		if (this.curDragSpacer) {
 			this.curDragSpacer.parentNode.replaceChild(el, this.curDragSpacer);
 			this.curDragSpacer = undefined;
 		}
 		
-		if(oldPos === undefined) {
+		if (oldPos === undefined) {
 			return;
 		}
 		
@@ -2058,11 +2058,11 @@ Mojo.Widget.List = Class.create({
 		
 		// If the item came from a different container, we send a listAdd event, and specify the itemModel & index.
 		// Default behavior for the event adds the item model to our list.
-		if(newItem) {
+		if (newItem) {
 			listEvent = Mojo.Event.send(this.controller.element, Mojo.Event.listAdd, 
 						{model:this.controller.model, item:el._mojoListItemModel, index:newPos});
 			
-			if(!listEvent.defaultPrevented) {
+			if (!listEvent.defaultPrevented) {
 				this.noticeAddedItems(newPos, [el._mojoListItemModel]);
 				// TODO: If we're not dynamically loaded, modify the original array.
 			}
@@ -2072,7 +2072,7 @@ Mojo.Widget.List = Class.create({
 			
 			// The positions are set up so that newPos is the new index of the element after it has been removed/reinserted.
 			// So, if it's moving only within this container, then we need to tweak newPos to take into account that it's moving from oldPos.
-			if(newPos > oldPos) {
+			if (newPos > oldPos) {
 				newPos--;
 			}
 			
@@ -2083,14 +2083,14 @@ Mojo.Widget.List = Class.create({
 			// This helps guarantee that the scroll-position-maintaining code won't screw things up due to inconsistent item numbering.
 			this.renumberListItems();
 			
-			if(oldPos != newPos) {
+			if (oldPos != newPos) {
 				// Send a mojo-list-reorder event, so the move can be persisted.
 				Mojo.Event.send(this.controller.element, Mojo.Event.listReorder, 
 								{model:this.controller.model, item:el._mojoListItemModel, 
 									fromIndex:oldPos, toIndex:newPos});
 			
 				// Refresh ourselves.
-				if(this.bigItemsList.reorderItem(oldPos, newPos)) {
+				if (this.bigItemsList.reorderItem(oldPos, newPos)) {
 					this.updateListItems();
 				}
 			}
@@ -2134,9 +2134,9 @@ Mojo.Widget.List = Class.create({
 		spacer = this.curDragSpacer;
 		this.curDragSpacer = undefined;
 		
-		if(spacer) {
+		if (spacer) {
 			f = function(el){
-				if(el.parentNode) {
+				if (el.parentNode) {
 					el.remove();
 				}
 			};
@@ -2152,7 +2152,7 @@ Mojo.Widget.List = Class.create({
 	removeReorderDummyNode: function() {
 		var node = this.reorderDummyNode;
 		
-		if(node && node.parentNode) {
+		if (node && node.parentNode) {
 			node.remove();
 		}
 		
@@ -2176,7 +2176,7 @@ Mojo.Widget.List = Class.create({
 		this.removeCurDragSpacer();
 		
 		// Lazy initialization of the reorder spacer node:
-		if(!this.reorderTemplateNode) {
+		if (!this.reorderTemplateNode) {
 			this.reorderTemplateNode = Mojo.View.convertToNode(	
 											Mojo.View.render({template: Mojo.Widget.getSystemTemplatePath("list/spacer-item")}),
 											this.controller.document);
@@ -2191,13 +2191,13 @@ Mojo.Widget.List = Class.create({
 		}
 		
 		// this is triggered on teh initial hold event, since we need to skip the growing animation in that case.
-		if(startFullHeight) {
+		if (startFullHeight) {
 			spacer.style.height = this.dragHeight+'px';
 		}		
 		
 		this.listItemsParent.insertBefore(spacer, adjacentNode);
 		
-		if(!startFullHeight) {
+		if (!startFullHeight) {
 			spacer.style.height = '0px';
 			Mojo.Animation.animateStyle(spacer, 'height', 'ease-out', {from: 0, to: this.dragHeight, duration: 0.1});			
 		}
@@ -2222,9 +2222,9 @@ Mojo.Widget.List = Class.create({
 		// Search back in the list of child nodes, in case we should be before any of those nodes:
 		while(curNode) {
 			// skip the element being dragged
-			if(curNode !== el) {
+			if (curNode !== el) {
 				// if our midpoint is below the quarter point, then we're done searching back.
-				if(elY > curNode.offsetTop + (curNode.offsetHeight * 0.25)) {
+				if (elY > curNode.offsetTop + (curNode.offsetHeight * 0.25)) {
 					break;
 				}
 				foundNode = curNode;
@@ -2233,16 +2233,16 @@ Mojo.Widget.List = Class.create({
 		}
 		
 		// Return new adjacent node, if we found one.
-		if(foundNode) {
+		if (foundNode) {
 			return foundNode;
 		}
 		
 		// Alternatively search forward in the list of sibling nodes instead.
 		curNode = this.dragAdjNode;
 		while(curNode) {
-			if(curNode !== el) {
+			if (curNode !== el) {
 				// if our midpoint is above its 3/4 point, then we're done searching forwards.
-				if(elY < curNode.offsetTop + (curNode.offsetHeight * 0.75)) {
+				if (elY < curNode.offsetTop + (curNode.offsetHeight * 0.75)) {
 					break;
 				}
 				foundNode = curNode; // otherwise, it should at least go AFTER this node.
@@ -2252,7 +2252,7 @@ Mojo.Widget.List = Class.create({
 		
 		// Since we need to return the item AFTER the insertion spot, 
 		// we need to 'advance' this node one more time before returning it.
-		if(foundNode) {
+		if (foundNode) {
 			return this.findNextListItem(foundNode, true) || this.addItemNode || this.bottomSpacer;
 		}
 		
@@ -2273,13 +2273,13 @@ Mojo.Widget.List = Class.create({
 		var index = 0;
 		var nextNode = 0;
 		
-		if(this.curDragSpacer) {
+		if (this.curDragSpacer) {
 			nextNode = this.findNextListItem(this.curDragSpacer);
-			if(nextNode) {
+			if (nextNode) {
 				index = nextNode._mojoListIndex;
 			} else {
 				nextNode = this.findPrevListItem(this.curDragSpacer);
-				if(nextNode) {
+				if (nextNode) {
 					index = nextNode._mojoListIndex+1;
 				}
 			}
@@ -2306,7 +2306,7 @@ Mojo.Widget.List = Class.create({
 	 */
 	isModelDeleted: function(itemModel) {
 		var uniqueVal, val;
-		if(this.uniquenessProperty !== undefined) {
+		if (this.uniquenessProperty !== undefined) {
 			uniqueVal = itemModel[this.uniquenessProperty];
 			return !!this._deletedItems[uniqueVal];
 		}
@@ -2318,7 +2318,7 @@ Mojo.Widget.List = Class.create({
 	/** @private */
 	isModelDeleteConfirmed: function(itemModel) {
 		var uniqueVal;
-		if(this.uniquenessProperty !== undefined) {
+		if (this.uniquenessProperty !== undefined) {
 			uniqueVal = itemModel[this.uniquenessProperty];
 			return this._deletedItems[uniqueVal] === this.kDeletedItemConfirmed;
 		}
@@ -2335,7 +2335,7 @@ Mojo.Widget.List = Class.create({
 	markModelDeleted: function(itemModel, deleteState) {
 		var uniqueVal;
 		
-		if(!itemModel) {
+		if (!itemModel) {
 			return;
 		}
 		
@@ -2343,16 +2343,16 @@ Mojo.Widget.List = Class.create({
 		// continue to support two schemes for tracking deleted items.  We use a hash 
 		// to remember them if we have a uniquenessProperty, and continue to mark the item
 		// models themselves otherwise.
-		if(this.uniquenessProperty !== undefined) {
+		if (this.uniquenessProperty !== undefined) {
 			uniqueVal = itemModel[this.uniquenessProperty];
-			if(deleteState) {
+			if (deleteState) {
 				this._deletedItems[uniqueVal] = deleteState;
 			} else {
 				delete this._deletedItems[uniqueVal];
 			}
 		} else {
 			
-			if(deleteState === this.kDeletedItemSwiped) {
+			if (deleteState === this.kDeletedItemSwiped) {
 				deleteState = this.deleteTruth;
 			}
 			itemModel[this.deletedProperty] = deleteState;
@@ -2361,7 +2361,7 @@ Mojo.Widget.List = Class.create({
 			// We never used to send out a propertyChange event for 'confirmed', so this reduces the risk of introducing bugs,
 			// and now that we have 'uniquenessProperty' apps should never need to persist the deleted property, so 
 			// the propertyChange event shouldn't be needed anyways.  But we'll leave it in for now to preserve compatibility.
-			if(deleteState !== this.kDeletedItemConfirmed) {
+			if (deleteState !== this.kDeletedItemConfirmed) {
 				Mojo.Event.send(this.controller.element, Mojo.Event.propertyChange,
 					{ property: this.deletedProperty,
 						value: itemModel[this.deletedProperty],
@@ -2380,7 +2380,7 @@ Mojo.Widget.List = Class.create({
 	 * @param {Object} itemModel
 	 */
 	purgeItemMark: function(itemModel) {		
-		if(this.uniquenessProperty !== undefined) {
+		if (this.uniquenessProperty !== undefined) {
 			this.markModelDeleted(itemModel, this.kDeletedItemCancelled);
 		} else {
 			itemModel[this.deletedProperty] = this.kDeletedItemCancelled;
@@ -2411,7 +2411,7 @@ Mojo.Widget.List = Class.create({
 		var swipeDeleteQueue = this.swipeToDeleteQueue;
 		var idx = swipeDeleteQueue.indexOf(el);
 
-		if(idx !== -1) {
+		if (idx !== -1) {
 			completionArray = swipeDeleteQueue.splice(0, idx+1);
 			
 			for(i = 0; i < completionArray.length; i++) {
@@ -2441,13 +2441,13 @@ Mojo.Widget.List = Class.create({
 		// This is a cheap way to check if it was dragged about 3/4 of the width of the screen, 
 		// it does not properly account for borders in the list container.
 		deleteThreshold = this.controller.window.innerWidth * 0.65;
-		if(Math.abs(delta) > deleteThreshold) {
+		if (Math.abs(delta) > deleteThreshold) {
 			
 			// In order to ensure that confirmations can't come out of order, we 
 			// adjust the start & end points of the animation here, so the animations
 			// are always the same duration.
 			inPos = el.offsetLeft;
-			if(delta > 0) {
+			if (delta > 0) {
 				outPos = inPos + (outPos - deleteThreshold);
 			} else {
 				outPos = inPos + (outPos + deleteThreshold);
@@ -2477,7 +2477,7 @@ Mojo.Widget.List = Class.create({
 			
 			// We don't confirm here when 'autoconfirm' is set, because 'el' is not ready to delete yet.
 			// We must wait for the end of the current animation.  But confirming other stuff is okay.
-			if(!this.controller.attributes.autoconfirmDelete) {
+			if (!this.controller.attributes.autoconfirmDelete) {
 				this.confirmOtherDeletes(el._mojoDeleteSpacer);
 			}
 		} else {
@@ -2509,9 +2509,9 @@ Mojo.Widget.List = Class.create({
 		delete el._mojoSwipeDeleteDragger;
 		
 		// If swiped element is no longer in the DOM, then we treat it like it wasn't dragged far enough.
-		if(cancelled || el.parentNode !== this.listItemsParent) {
+		if (cancelled || el.parentNode !== this.listItemsParent) {
 			deleteSpacer = el._mojoDeleteSpacer;
-			if(deleteSpacer.parentNode) {
+			if (deleteSpacer.parentNode) {
 				deleteSpacer.remove();
 			}
 			delete el._mojoDeleteSpacer;
@@ -2522,7 +2522,7 @@ Mojo.Widget.List = Class.create({
 			this.replaceWithDeleteSpacer(el);
 			
 			// Confirm the delete immediately, if we're set to autoconfirm.
-			if(this.controller.attributes.autoconfirmDelete) {
+			if (this.controller.attributes.autoconfirmDelete) {
 				this.confirmDelete(el._mojoDeleteSpacer);
 			} else {
 				// Make a SECOND pass, confirming other deletes.  
@@ -2551,7 +2551,7 @@ Mojo.Widget.List = Class.create({
 		// This loop actually takes about 12ms in a 100 list of emails, so we may want to consider being smarter about it at some point.
 		deleteSpacer = this.findNextListItem();
 		while(deleteSpacer) {
-			if(deleteSpacer !== newDeleteSpacer && deleteSpacer._mojoDeletedListNode) {
+			if (deleteSpacer !== newDeleteSpacer && deleteSpacer._mojoDeletedListNode) {
 				this.confirmDelete(deleteSpacer);
 			}
 			deleteSpacer = this.findNextListItem(deleteSpacer);
@@ -2569,7 +2569,7 @@ Mojo.Widget.List = Class.create({
 		
 		// In order to confirm, model must be marked deleted but not confirmed.
 		// This may help us avoid the chance of deleting the wrong item, or deleting the same one twice.
-		if(!this.isModelDeleted(model) || this.isModelDeleteConfirmed(model)) {
+		if (!this.isModelDeleted(model) || this.isModelDeleteConfirmed(model)) {
 			return;
 		}
 		
@@ -2608,12 +2608,12 @@ Mojo.Widget.List = Class.create({
 		action = buttonNode && buttonNode.getAttribute(this.kListDeleteCmdAttr);
 		
 		// Skip this if the tap wasn't on an action button.
-		if(action !== "undo" && action !== "delete") {
+		if (action !== "undo" && action !== "delete") {
 			return;
 		}
 		
 		// Do the right thing, depending on which action button was tapped.
-		if(action === "undo") {
+		if (action === "undo") {
 			// return item to normal & remove the delete spacer.
 			this.cleanupSwipeDelete(itemNode);
 			
@@ -2623,7 +2623,7 @@ Mojo.Widget.List = Class.create({
 			itemModel = this.listItems[itemNode._mojoListIndex];
 			this.markModelDeleted(itemModel, this.kDeletedItemCancelled);
 			
-		} else if(action === "delete") {
+		} else if (action === "delete") {
 			this.confirmDelete(itemNode._mojoDeleteSpacer);
 		}
 		
@@ -2644,7 +2644,7 @@ Mojo.Widget.List = Class.create({
 		
 		// Do not perform actual delete operation if the element has been removed from the DOM by the time the animation is complete.
 		// It will be re-rendered as deleted if appropriate, and the process can begin again.
-		if(!ancestor) {
+		if (!ancestor) {
 			return;
 		}
 		
@@ -2679,7 +2679,7 @@ Mojo.Widget.List = Class.create({
 		// The app should modify the model in response to this event, so in theory we could call modelChanged(this.controller.model, this),
 		// and we STILL would not have to re-render, but any other widgets using this model would be updated properly.
 		// Use of preventDefault() is supported to allow the app to provide it's own deletion code... it is not intended to prevent deletion of the item.
-		if(!deleteEvent.defaultPrevented) {
+		if (!deleteEvent.defaultPrevented) {
 			this.noticeRemovedItems(el._mojoListIndex+this.renderOffset, 1);
 		}
 	},
@@ -2729,7 +2729,7 @@ Mojo.Widget.List = Class.create({
 	replaceWithDeleteSpacer: function(itemNode) {
 		
 		// If this node has no delete spacer yet, then make a new one:
-		if(!itemNode._mojoDeleteSpacer) {
+		if (!itemNode._mojoDeleteSpacer) {
 			this.insertDeleteSpacer(itemNode);
 		}
 		
@@ -2738,12 +2738,12 @@ Mojo.Widget.List = Class.create({
 		itemNode._mojoDeleteSpacer._mojoListDividerLabel = itemNode._mojoListDividerLabel;
 		itemNode._mojoListIndex = undefined; // since it may not be valid anyways, if there's any reordering while its out of the DOM.
 		
-		if(itemNode.parentNode) {
+		if (itemNode.parentNode) {
 			itemNode.remove();
 		}
 		
 		// we need an event listener for the buttons if we're not autoconfirming.
-		if(!this.controller.attributes.autoconfirmDelete) {
+		if (!this.controller.attributes.autoconfirmDelete) {
 			itemNode._mojoDeleteSpacer.addEventListener(Mojo.Event.tap, this.handleSwipeDeleteTap.bindAsEventListener(this, itemNode), false);
 		}
 	},
@@ -2762,7 +2762,7 @@ Mojo.Widget.List = Class.create({
 		
 		spacer = itemNode._mojoDeleteSpacer;
 		// Put element "back to normal" so the oddities of dragging & deletion aren't exposed to other code.
-		if(spacer && spacer.parentNode) {
+		if (spacer && spacer.parentNode) {
 			spacer.parentNode.insertBefore(itemNode, spacer);
 			spacer.remove();
 		}
@@ -2819,12 +2819,12 @@ Mojo.Widget.List = Class.create({
 		// while hidden, which can yield odd results, and can result in the spacers being 
 		// messed up and the scroll position not properly preserved.  This check keeps things working 
 		// for many cases until list is fixed to deal better with display:none, however, and is pretty low risk
-		if(!this.maybeVisible) {
+		if (!this.maybeVisible) {
 			return;
 		}
 		
 		lastScrollY = this.lastScrollY;
-		if(lastScrollY === undefined || scrollEnding || Math.abs(lastScrollY - position.y) > this.scrollThreshold) {
+		if (lastScrollY === undefined || scrollEnding || Math.abs(lastScrollY - position.y) > this.scrollThreshold) {
 			this.adjustRenderWindow();
 			
 			// re-rendering items can cause trouble for the scroll adjustment threshold, since the spacers 
@@ -2835,7 +2835,7 @@ Mojo.Widget.List = Class.create({
 			this._adjustDelta = 0;
 		}
 		
-//		if(this._adjustDelta > 0 || scrollEnding) {
+//		if (this._adjustDelta > 0 || scrollEnding) {
 //			this.saveLastMoveTime.delay(0.001, time, this._adjustDelta, scrollEnding);
 //		}
 		
@@ -2847,7 +2847,7 @@ Mojo.Widget.List = Class.create({
 		this.savedMoveTimes = this.savedMoveTimes || [];
 		this.savedMoveTimes.push({time:(Date.now() - oldtime), count:count});
 				
-		if(report) {
+		if (report) {
 			console.log("FrameTimes: "+this.savedMoveTimes.map(function(elem) {return "{"+elem.count+": "+elem.time+"}";}).join());
 			delete this.savedMoveTimes;
 		}
@@ -2908,7 +2908,7 @@ Mojo.Widget.List = Class.create({
 //			Mojo.Log.info("anchorTop = "+anchorTop+", cumulativeTop="+Element.cumulativeOffset(anchorNode).top+ " new topIndex="+topIndex);
 
 			// And if it changed, move our window & update!		
-			if(topIndex != this.renderOffset) {
+			if (topIndex != this.renderOffset) {
 
 				this.log("topIndex=",topIndex,", updating!");
 				offsetDelta = topIndex - this.renderOffset;
@@ -2944,7 +2944,7 @@ Mojo.Widget.List = Class.create({
 	moveWindowIfInvalid: function() {
 		
 		// Move window back if it's past the end of the list... but not < 0.
-		if(this.renderOffset + this.renderLimit > this.bigItemsList.length) {
+		if (this.renderOffset + this.renderLimit > this.bigItemsList.length) {
 			return this.updateListItems(Math.max(0, this.bigItemsList.length - this.renderLimit));
 		}
 		
@@ -2968,7 +2968,7 @@ Mojo.Widget.List = Class.create({
 //		console.profile("UpdateListItems");
 		
 		// nuthin' to do if newRenderOffset is specified (i.e., being set) and the same as the current render offset.
-		if(this.renderOffset === newRenderOffset) {
+		if (this.renderOffset === newRenderOffset) {
 			return false;
 		}
 		
@@ -2977,7 +2977,7 @@ Mojo.Widget.List = Class.create({
 		
 		// Calculate the delta, if we got a new renderOffset.
 		// The new renderOffset will actually be set either below, or in applyDeltaToListItems().
-		if(newRenderOffset !== undefined) {
+		if (newRenderOffset !== undefined) {
 			delta = newRenderOffset - this.renderOffset;
 		} else {
 			newRenderOffset = this.renderOffset;
@@ -2989,7 +2989,7 @@ Mojo.Widget.List = Class.create({
 		// Update the list.  
 		// Once this is done, this.renderOffset and item node '_mojoListIndex' properties will once again match.
 		// We can apply an incremental render if the offset is such that we keep some of our existing items.
-		if(delta !== undefined && delta > -this.renderLimit && delta < this.renderLimit) {
+		if (delta !== undefined && delta > -this.renderLimit && delta < this.renderLimit) {
 			// If 'delta' is set, then we can just update the relevant items, and avoid re-rendering the others.
 			this.applyDeltaToListItems(delta);
 						
@@ -3021,14 +3021,14 @@ Mojo.Widget.List = Class.create({
 		var node;
 		
 		
-		if(!this.topSpacer) {
+		if (!this.topSpacer) {
 			return;
 		}
 		
 		// find first list item
 		node = this.findNextListItem();
 		
-		if(node) {
+		if (node) {
 			this.savedScrollPos.firstIndex = node._mojoListIndex + this.renderOffset;
 			this.savedScrollPos.firstTop = node.offsetTop;
 		} else {
@@ -3041,7 +3041,7 @@ Mojo.Widget.List = Class.create({
 		// find last list item
 		node = this.findPrevListItem();
 		
-		if(node) {
+		if (node) {
 			this.savedScrollPos.lastIndex = node && node._mojoListIndex + this.renderOffset;
 			this.savedScrollPos.lastTop = node && node.offsetTop;
 		} else {
@@ -3061,11 +3061,11 @@ Mojo.Widget.List = Class.create({
 		var topHeight, bottomHeight;
 		
 		// If we have a saved scroll position, then try to use it.
-		if(this.savedScrollPos.firstIndex !== undefined) {
+		if (this.savedScrollPos.firstIndex !== undefined) {
 			
 			// Search for one of the nodes whose position we saved:
 			newNode = this.getNodeByIndex(this.savedScrollPos.firstIndex);
-			if(newNode) {				
+			if (newNode) {				
 				oldTop = this.savedScrollPos.firstTop;
 			}
 			else {
@@ -3075,7 +3075,7 @@ Mojo.Widget.List = Class.create({
 		}
 		
 		// If we found one of the nodes we saved, then we can do an accurate spacer adjustment.
-		if(newNode) {
+		if (newNode) {
 			newTop = newNode.offsetTop;
 			this.topSpacerHeight -= newTop - oldTop;
 			this.log("List: updateSpacers using item ", (newNode._mojoListIndex+this.renderOffset));
@@ -3094,7 +3094,7 @@ Mojo.Widget.List = Class.create({
 		// In either case, we need to account for this by adjusting the scroll position.
 		// TODO: It might be simpler and more accurate to always set spacer height to (count * avgHeight) and then 
 		// adjust scroll position to prevent jumping.
-		if((this.renderOffset === 0 && this.topSpacerHeight !== 0) || this.topSpacerHeight < 0) {
+		if ((this.renderOffset === 0 && this.topSpacerHeight !== 0) || this.topSpacerHeight < 0) {
 			this.log('List.updateSpacers: Adjusting by', this.topSpacerHeight);
 			this.scroller.mojo.adjustBy(0, this.topSpacerHeight);
 			this.topSpacerHeight = 0;
@@ -3102,7 +3102,7 @@ Mojo.Widget.List = Class.create({
 		
 		// Enforce max top spacer height:
 		maxSpacerHeight = this.kMaxSpacerHeight;
-		if(this.topSpacerHeight > maxSpacerHeight) {
+		if (this.topSpacerHeight > maxSpacerHeight) {
 			this.log('Max exceeded, Adjusting by', (this.topSpacerHeight - maxSpacerHeight));
 			this.scroller.mojo.adjustBy(0, this.topSpacerHeight - maxSpacerHeight);
 			this.topSpacerHeight = maxSpacerHeight;
@@ -3160,10 +3160,10 @@ Mojo.Widget.List = Class.create({
 	measureItemHeights: function() {
 		var node, height;
 		
-		if(this.controller.attributes.fixedHeightItems) {
-			if(!this._measuredFixedItem) {
+		if (this.controller.attributes.fixedHeightItems) {
+			if (!this._measuredFixedItem) {
 				node = this.findNextListItem();
-				if(node) {
+				if (node) {
 					height = this._getTrueHeight(node);
 					if (height && height > 0) { //otherwise sometime must be hidden, so don't set the averageitemheight yet
 						this.averageItemHeight = height;
@@ -3181,14 +3181,14 @@ Mojo.Widget.List = Class.create({
 			
 			// Note that we currently only measure items once, even though it's possible that their model
 			// could change and they could grow larger.
-			if(node._mojoListIndex !== undefined) {
+			if (node._mojoListIndex !== undefined) {
 				
 				// Get node height, but only include it if it's > 0.
 				// When we're hidden, all items are 0 height, and this can seriously screw things up.
 				height = this._getTrueHeight(node);
-				if(height > 0) {					
+				if (height > 0) {					
 					// cap maximum samples, so items we haven't seen in awhile have less affect on the average.
-					if(this.heightSamples > 30) {
+					if (this.heightSamples > 30) {
 						this.heightSamples--;
 					}
 				

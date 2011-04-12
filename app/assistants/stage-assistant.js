@@ -3,15 +3,15 @@ function StageAssistant() {
 }
 
 StageAssistant.prototype.setup = function() {
-	if(Mojo.Environment.DeviceInfo.screenHeight === 800){
+	if (Mojo.Environment.DeviceInfo.screenHeight === 800){
 		this.controller.document.getElementsByTagName("body")[0].addClassName('pre3');
 	}
 
 	this.handleStageActivate = function(){
-		m.delegate("stageActivate");
+		koto.utilities.delegate("stageActivate");
 	}.bind(this);
 	this.handleStageDeactivate = function(){
-		m.delegate("stageDeactivate");
+		koto.utilities.delegate("stageDeactivate");
 	}.bind(this);	
 	
 	Mojo.Event.listen(this.controller.window.document, Mojo.Event.stageActivate, this.handleStageActivate);
@@ -22,11 +22,12 @@ StageAssistant.prototype.setup = function() {
 
 StageAssistant.prototype.cleanup = function(){
 	
-	if(m.prefs.closeDashboard){
-		m.nP["audioObj" + m.nP.cao].pause();
+	if (koto.preferences.obj.closeDashboard){
+		koto.nowPlaying.currentInfo.audioObj.pause();
 		Mojo.Controller.getAppController().closeStage("dashboardStage");
 		
 		m.saveNowPlaying();
+		m.cleanup();//1234354629114
 	}
 
 	

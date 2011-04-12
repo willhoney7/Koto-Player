@@ -1,6 +1,6 @@
 function ListAssistant(data) {
 	this.data = data;
-	this.items = m[this.data];
+	this.items = koto.content[this.data].array;
 	scene_helpers.addControlSceneMethods(this);
 }
 /*ListAssistant.prototype.aboutToActivate = function(callback){
@@ -27,15 +27,15 @@ ListAssistant.prototype.setup = function() {
 		delay: 500,
 		formatters: {
 			"info": function(value, model){
-				var objType = m.getObjType(model);
-				if(this.data === "favorites" || this.data === "playlists" || objType === "genre"){
-					if(model.total && model.total.tracks){
+				var objType = koto.utilities.getObjType(model);
+				if (this.data === "favorites" || this.data === "playlists" || objType === "genre"){
+					if (model.total && model.total.tracks){
 						var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
 						return tracks;
-					}else if(model.songs){
+					}else if (model.songs){
 						var tracks = (model.songs.length > 1)?model.songs.length + " Tracks": model.songs.length + " Track";
 						return tracks;
-					}/*else if(model.query){
+					}/*else if (model.query){
 						return "";
 					}*/
 				}
@@ -55,9 +55,9 @@ ListAssistant.prototype.setup = function() {
 				}
 			}.bind(this),
 			"title": function(value, model){
-				if(model.title || model.name){
-					if(this.data === "artists" || this.data === "albums" || this.data === "songs"){
-						return ((model.title) ? model.title : model.name).replace(m.sortRegex, "$2, $1");
+				if (model.title || model.name){
+					if (this.data === "artists" || this.data === "albums" || this.data === "songs"){
+						return ((model.title) ? model.title : model.name).replace(koto.utilities.sortRegex, "$2, $1");
 					} else {
 						return ((model.title) ? model.title : model.name);				
 					}
@@ -67,7 +67,7 @@ ListAssistant.prototype.setup = function() {
 				return "content-list";
 			}.bind(this),
 			"truncatingOption": function(value, model){
-				if(!m.prefs.truncateText){
+				if (!koto.preferences.obj.truncateText){
 					return "noTruncate";
 				}
 			}.bind(this),
@@ -84,14 +84,14 @@ ListAssistant.prototype.setup = function() {
 			//setup alpha divider
 			this.mainListAttrs.dividerTemplate = "list/divider";	
 			this.mainListAttrs.dividerFunction = function(itemModel){
-				if(!isNaN((this.data == "songs")?parseInt(itemModel.title.charAt(0)):parseInt(itemModel.name.charAt(0)))){
+				if (!isNaN((this.data === "songs")?parseInt(itemModel.title.charAt(0), 10):parseInt(itemModel.name.charAt(0), 10))){
 					return "#";
 				}
 				var specialCharRegex = /(['"!@#$%^&*\(\)_ \\\/-;:<>\{\}\[\]])/;
-				if(specialCharRegex.test((this.data == "songs")?itemModel.title.charAt(0):itemModel.name.charAt(0))){
+				if (specialCharRegex.test((this.data === "songs")?itemModel.title.charAt(0):itemModel.name.charAt(0))){
 					return "&";
 				}
-				return itemModel[(this.data === "songs") ? "title" : "name"].replace(m.sortRegex, "$2").toLowerCase().charAt(0);
+				return itemModel[(this.data === "songs") ? "title" : "name"].replace(koto.utilities.sortRegex, "$2").toLowerCase().charAt(0);
 			}.bind(this);
 			break;
 		case "playlists":
@@ -99,7 +99,7 @@ ListAssistant.prototype.setup = function() {
 			this.mainListAttrs.swipeToDelete = true;
 			this.mainListAttrs.preventDeleteProperty = "preventDelete";
 			this.mainListAttrs.formatters.nameClass = function(value, model){ //add formatter for single line items
-				if(model.type === "auto"){
+				if (model.type === "auto"){
 					return "title";
 				}
 			}.bind(this);
@@ -112,7 +112,7 @@ ListAssistant.prototype.setup = function() {
 			this.mainListAttrs.swipeToDelete = true;
 			this.mainListAttrs.reorderable = true;
 			this.mainListAttrs.formatters.nameClass = function(value, model){
-				if(model.type && model.type === "auto"){
+				if (model.type && model.type === "auto"){
 					return "title";
 				}
 			}.bind(this);
@@ -126,14 +126,14 @@ ListAssistant.prototype.setup = function() {
 	this.list = this.controller.get("results_list");
 	
 	/* If there's no items */
-	if(this.items.length === 0){
+	if (this.items.length === 0){
 		this.controller.get("no-items").show();//todo, get image
 	}
 	
 	/* Listeners */
 	this.listTapHandler = this.listTap.bind(this);
 	this.controller.listen(this.list, Mojo.Event.listTap, this.listTapHandler);
-	if(this.data === "favorites" || this.data === "playlists"){
+	if (this.data === "favorites" || this.data === "playlists"){
 		this.listReorderHandler = this.listReorder.bind(this);
 		this.listDeleteHandler = this.listDelete.bind(this);
 		this.controller.listen(this.list, Mojo.Event.listReorder, this.listReorderHandler);
@@ -147,7 +147,7 @@ ListAssistant.prototype.setup = function() {
 	//this.controller.setupWidget("alphaScrollerWidget", {}, {});	
 	
 	/* Alpha Scroller Stuff*/
-	if(this.data === "artists" || this.data === "albums" || this.data === "songs"){	
+	if (this.data === "artists" || this.data === "albums" || this.data === "songs"){	
 		this.setupAlphaScroller();
 	}
 	
@@ -160,12 +160,12 @@ ListAssistant.prototype.setup = function() {
 	this.controller.listen(this.controller.sceneElement, "mouseup", this.handleMeta);
 	this.scroller = this.controller.getSceneScroller();
 	this.controller.listen(this.scroller, Mojo.Event.flick, this.handleListScroll = function(event){
-		if(this.metaKey == true){
-			if(event.velocity.y > 0){
+		if (this.metaKey === true){
+			if (event.velocity.y > 0){
 				this.scroller.mojo.revealTop(0);
 				this.scroller.mojo.revealTop(0);
 			}
-			else if(event.velocity.y < 0){
+			else if (event.velocity.y < 0){
 				this.scroller.mojo.revealBottom();
 				this.scroller.mojo.revealBottom();
 			}
@@ -177,18 +177,18 @@ ListAssistant.prototype.setupAlphaScroller = function(event) {
 	var objHeading = (this.data === "songs")? "title" : "name", alphaListItems = [];
 	for(var i = 0; i < this.items.length; i++){
 		var specialCharRegex = /(['"!@#$%^&*\(\)_ \\\/-;:<>\{\}\[\]])/;
-		if(!isNaN(parseInt(this.items[i][objHeading].charAt(0)))){
-			if(!this.items[i-1] || (this.items[i-1][objHeading] && isNaN(parseInt(this.items[i-1][objHeading].charAt(0))))){
+		if (!isNaN(parseInt(this.items[i][objHeading].charAt(0), 10))){
+			if (!this.items[i-1] || (this.items[i-1][objHeading] && isNaN(parseInt(this.items[i-1][objHeading].charAt(0), 10)))){
 				alphaListItems.push({letter: "#", index: i});
 			}
 		}
-		else if(specialCharRegex.test(this.items[i][objHeading].charAt(0))){
-			if(!this.items[i-1] || (this.items[i-1][objHeading] && !specialCharRegex.test(this.items[i][objHeading].charAt(0)))){
+		else if (specialCharRegex.test(this.items[i][objHeading].charAt(0))){
+			if (!this.items[i-1] || (this.items[i-1][objHeading] && !specialCharRegex.test(this.items[i][objHeading].charAt(0)))){
 				alphaListItems.push({letter: "&", index: i});
 			}
 		} else {
-			if(!this.items[i-1] || (this.items[i-1][objHeading] && this.items[i-1][objHeading].replace(m.sortRegex, "$2").charAt(0).toUpperCase() !== this.items[i][objHeading].replace(m.sortRegex, "$2").charAt(0).toUpperCase())){
-				alphaListItems.push({letter: this.items[i][objHeading].replace(m.sortRegex, "$2").charAt(0).toUpperCase(), index: i});
+			if (!this.items[i-1] || (this.items[i-1][objHeading] && this.items[i-1][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase() !== this.items[i][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase())){
+				alphaListItems.push({letter: this.items[i][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase(), index: i});
 			}
 		}
 	}
@@ -200,14 +200,14 @@ ListAssistant.prototype.setupAlphaScroller = function(event) {
 	Element.insert(this.scroller, "<div class='alphaScroller-fade-top' x-mojo-scroll-fade='top'></div><div class='alpha-items'>" + renderedContent + "</div><div id='alphaScroller-fade-bottom' class='alphaScroller-fade-bottom' x-mojo-scroll-fade='bottom'></div>");
 	this.alphaScrollerBottomFade = this.controller.get("alphaScroller-fade-bottom");
 	this.controller.listen(this.scroller, Mojo.Event.tap, this.handleScroller = function(event){
-		this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", "")), false);
-		this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", "")), false);
+		this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", ""), 10), false);
+		this.list.mojo.revealItem(parseInt(event.target.id.replace("alphaScrollerItem", ""), 10), false);
 	}.bind(this));
 	
 	Mojo.Event.listen(this.controller.window, 'resize', this.handleResize = function(){
-		if(this.controller && this.controller.window){
+		if (this.controller && this.controller.window){
 			var height = this.controller.window.innerHeight;
-			if(this.panel.visible()){
+			if (this.panel.visible()){
 				this.scroller.setStyle({height: height + 28 - 180 + "px"});
 				this.alphaScrollerBottomFade.setStyle({bottom: "103px"});
 			} else {
@@ -218,29 +218,23 @@ ListAssistant.prototype.setupAlphaScroller = function(event) {
 	}.bind(this));
 	this.handleResize();
 	
-	if(m.prefs.alphaScroller === true){
+	if (koto.preferences.obj.alphaScroller === true){
 		this.showAlphaScroller();
-	} else if(m.prefs.alphaScroller === false) {
+	} else if (koto.preferences.obj.alphaScroller === false) {
 		this.hideAlphaScroller();
 	}
 }
-ListAssistant.prototype.hideAlphaScroller = function(event) {
-	this.scroller.hide();
-}
-ListAssistant.prototype.showAlphaScroller = function(event) {
-	this.scroller.show();
-}
 
 ListAssistant.prototype.activate = function(event) {
-	if(m.prefs.alphaScroller === true){
+	if (koto.preferences.obj.alphaScroller === true){
 		this.showAlphaScroller();
-	} else if(m.prefs.alphaScroller === false) {
+	} else if (koto.preferences.obj.alphaScroller === false) {
 		this.hideAlphaScroller();
 	}
 	this.activateCommon();
 	
-	//if(this.data === "playlists" || this.data === "favorites"){
-		this.list.mojo.noticeUpdatedItems(0, m[this.data]);
+	//if (this.data === "playlists" || this.data === "favorites"){
+		this.list.mojo.noticeUpdatedItems(0, koto.content[this.data].array);
 	//}
 	
 };
@@ -252,9 +246,9 @@ ListAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 	//loop through the original data set & get the this.subset of items that have the filterstring 
 	var i = 0;
 	while (i < this.items.length) {
-		if((this.items[i].name && this.items[i].name.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].title && this.items[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].album && this.items[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].artist && this.items[i].artist.toLowerCase().include(filterString.toLowerCase()))){
+		if ((this.items[i].name && this.items[i].name.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].title && this.items[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].album && this.items[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].artist && this.items[i].artist.toLowerCase().include(filterString.toLowerCase()))){
 			if (this.subset.length < count && totalSubsetSize >= offset){ 
-				if(this.items[i].title){
+				if (this.items[i].title){
 					this.items[i].unFilteredIndex = i;
 				}
 				this.subset.push(this.items[i]);
@@ -266,6 +260,7 @@ ListAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 	
 	//update the items in the list with the subset
 	listWidget.mojo.noticeUpdatedItems(offset, this.subset);
+	listWidget.mojo.noticeUpdatedItems(offset, this.subset);
 	
 	//set the list's lenght & count if we're not repeating the same filter string from an earlier pass
 	if (this.filter !== filterString) {
@@ -273,20 +268,20 @@ ListAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 		listWidget.mojo.setCount(totalSubsetSize);
 	}
 	this.filter = filterString;
-	if(filterString.length > 0){
+	if (filterString.length > 0){
 		this.hideAlphaScroller();
 	} else {
 		this.showAlphaScroller();
 	}
 	/*
-	//m.debugErr("filtering: " + filterString)
-	if(!this.filter || this.filter !== filterString){
+	//console.log("filtering: " + filterString)
+	if (!this.filter || this.filter !== filterString){
 		this.subset = [];
 		var totalSubsetSize = 0;
 	//loop through the original data set & get the this.subset of items that have the filterstring 
 		var i = 0;
 		while (i < this.items.length) {
-			if((this.items[i].name && this.items[i].name.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].title && this.items[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].album && this.items[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].artist && this.items[i].artist.toLowerCase().include(filterString.toLowerCase()))){
+			if ((this.items[i].name && this.items[i].name.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].title && this.items[i].title.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].album && this.items[i].album.toLowerCase().include(filterString.toLowerCase())) || (this.items[i].artist && this.items[i].artist.toLowerCase().include(filterString.toLowerCase()))){
 				if (this.subset.length < count && totalSubsetSize >= offset) 
 					this.subset.push(this.items[i]);
 				totalSubsetSize++;
@@ -302,7 +297,7 @@ ListAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 		listWidget.mojo.setCount(totalSubsetSize);
 
 		this.filter = filterString;
-		if(filterString.length > 0){
+		if (filterString.length > 0){
 			this.hideAlphaScroller();
 		} else {
 			this.showAlphaScroller();
@@ -311,52 +306,52 @@ ListAssistant.prototype.filterList = function(filterString, listWidget, offset, 
 }
 
 ListAssistant.prototype.listTap = function(event){
-	var obj = event.item; var objType = m.getObjType(obj);
+	var obj = event.item; var objType = koto.utilities.getObjType(obj);
 	
 	//popup
-	if(event.originalEvent.target.id && event.originalEvent.target.id == 'popup'){
+	if (event.originalEvent.target.id && event.originalEvent.target.id === 'popup'){
 		//build popup items
 		var items = [];
-		if(m.nP.songs.length > 0){
+		if (koto.nowPlaying.currentInfo.songs.length > 0){
 			items.push({label: $L('Play Next'), command: 'play-next'},{label: $L('Play Last'), command: 'play-last'});
 		}
-		if(objType !== "song"){
+		if (objType !== "song"){
 			items.unshift({label: $L('Play'), command: 'play'}, {label: $L("Shuffle Play"), command: "shuffle"});
-			if(objType === "playlist" && obj.type && obj.type === "custom"){
+			if (objType === "playlist" && obj.type && obj.type === "custom"){
 				items.push({label: $L('View & Edit Songs'), command: 'view-list'});
 			}
-			else if(objType === "playlist" || this.data === "favorites"){
+			else if (objType === "playlist" || this.data === "favorites"){
 				items.push({label: $L('View Songs'), command: 'view-list'});
 			}
 		} else {
-			if(!event.fromSongDetails){
+			if (!event.fromSongDetails){
 				items.push({label: $L("Song Details"), command: "details"});
 			} else {
 				//items.unshift({label: $L('Play'), command: 'play'});
 			}
-			if(this.data === "songs"){
+			if (this.data === "songs"){
 				items.push({label: $L("View Album"), command: "view-album"});
 			}
 		} 
-		if(((objType === "playlist" && (obj.type && obj.type !== "auto") || (!obj.type)) || objType !== "playlist") && (!event.fromSongDetails)){
+		if (((objType === "playlist" && (obj.type && obj.type !== "auto") || (!obj.type)) || objType !== "playlist") && (!event.fromSongDetails)){
 			items.push({label: $L('Add to Playlist'), command: 'add-to-playlist'});
 		}
 		items.push({label: $L('Favorite'), command: 'favorite'});
 		
 		this.controller.popupSubmenu({
 			onChoose: function(value){
-				if(value === "favorite"){
-					m.addToFavorites(obj);
-				} else if(value === "view-album"){
+				if (value === "favorite"){
+					koto.content.favorites.add(obj);
+				} else if (value === "view-album"){
 					m.view({type: "album", name: obj.album}); 
 				}
 				else{
 					var handleAction = function(songs){
 						switch(value){
 							case "play":
-								if(objType === "song"){
+								if (objType === "song"){
 									//todo fix...
-									if(this.subset.length > 0 && this.filter !== ""){
+									if (this.subset.length > 0 && this.filter !== ""){
 										m.playArray(this.subset, event.index);
 									} else {
 										m.playArray(this.items, event.index);
@@ -381,12 +376,13 @@ ListAssistant.prototype.listTap = function(event){
 								this.extraDiv.mojo.show("addToPlaylist", songs);
 								break;
 							case "details":
+								//console.log("albumArtist: " + this.items[event.index].albumArtist);
 								var quickItems = (this.subset.length > 0 && this.filter !== "") ? this.subset : this.items;
 								this.extraDiv.mojo.toggle("songDetails", quickItems, event.index);			
 								break;
 						};
 					}.bind(this);
-					m.getSongsOfObj(obj, handleAction);
+					koto.content.getSongsOfObj(obj, handleAction);
 				}
 			}.bind(this),
 			placeNear: event.originalEvent.target,
@@ -394,60 +390,62 @@ ListAssistant.prototype.listTap = function(event){
 		});
 	}
 	else {
-		if(objType === "song"){			
-			if(this.data === "favorites"){
+		if (objType === "song"){			
+			if (this.data === "favorites"){
 				function handleSongs(songs){
 					for(var i = 0; i < songs.length; i++){
-						if(songs[i]._id === obj._id){
+						if (songs[i]._id === obj._id){
 							m.playArray(songs, i);
 							break;
 						}
 					}
 				}
-				if(this.subset.length > 0 && this.filter !== ""){
+				if (this.subset.length > 0 && this.filter !== ""){
 					this.getSongsOfArray(this.subset, handleSongs.bind(this));
 				} else {
 					this.getSongsOfArray(this.items, handleSongs.bind(this));				
 				}
 			} else {
-				if(this.subset.length > 0 && this.filter !== "" && m.prefs.filterTap === "filtered"){
+				if (this.subset.length > 0 && this.filter !== "" && koto.preferences.obj.filterTap === "filtered"){
 					m.playArray(this.subset, event.index);
-				} else if(m.prefs.filterTap === "all"){
+				} else if (koto.preferences.obj.filterTap === "all"){
 					m.playArray(this.items, obj.unFilteredIndex);
 				} else {
 					m.playArray(this.items, event.index);				
 				}
 			}
-		} else if(objType === "artist" || objType === "album"){
+		} else if ((objType === "artist" || objType === "album") && koto.preferences.obj.favoriteTap === "view"){
 			m.view(obj);
 		} 
-		else if((objType === "playlist" && m.prefs.playlistTap === "play" && this.data !== "favorites") || (this.data === "favorites" && m.prefs.favoriteTap === "play")){
-			m.getSongsOfObj(obj, function(songs){
+		else if ((objType === "playlist" && koto.preferences.obj.playlistTap === "play" && this.data !== "favorites") || (this.data === "favorites" && koto.preferences.obj.favoriteTap === "play")){
+			koto.content.getSongsOfObj(obj, function(songs){
 				m.playArray(songs, 0);
 			}.bind(this), true);
 		}else {
-			m.getSongsOfObj(obj, function(songs){
+			koto.content.getSongsOfObj(obj, function(songs){
 				m.viewArray(obj, songs);							
 			}.bind(this), true);
 		}
 	}
 };
 ListAssistant.prototype.listReorder = function(event){
-	if(this.data === "favorites"){
-		m.favorites.splice(event.fromIndex, 1);
-		var item = m.favoriteIds[event.fromIndex];
-		m.favoriteIds.splice(event.fromIndex, 1);
-		m.favorites.splice(event.toIndex, 0, event.item);
-		m.favoriteIds.splice(event.toIndex, 0, item);
-		m.storeFavorites();
+	if (this.data === "favorites"){
+		koto.content.favorites.array.splice(event.fromIndex, 1);
+		//var item = koto.content.favoriteIds[event.fromIndex];
+		//koto.content.favoriteIds.splice(event.fromIndex, 1);
+		koto.content.favorites.array.splice(event.toIndex, 0, event.item);
+		//koto.content.favoriteIds.splice(event.toIndex, 0, item);
+		koto.content.favorites.store();
 	}
 }
 ListAssistant.prototype.listDelete = function(event){
-	if(this.data === "favorites"){
-		m.delFavorite(event.index);
+	if (this.data === "favorites"){
+		koto.content.favorites.del(event.index);
+		this.items = koto.content[this.data];
 	}
-	else 
-		m.delPlaylist(event.item.name, event.index);
+	else {
+		koto.content.playlists.deleteOne(event.item.name, event.index);
+	}
 	
 	this.setupTitle();
 }
@@ -460,11 +458,11 @@ ListAssistant.prototype.setupTitle = function(event){
 	title = null;
 }
 ListAssistant.prototype.titleBarTap = function(event){
-	if(event.target.id !== "more"){
-		var items = m.prefs.startItems.clone();
+	if (event.target.id !== "more"){
+		var items = koto.preferences.obj.startItems.clone();
 		
 		for(var i = 0; i< items.length; i++){
-			if(items[i].command === this.data){
+			if (items[i].command === this.data){
 				items[i].chosen = true;
 			}else {
 				items[i].chosen = false;
@@ -472,7 +470,7 @@ ListAssistant.prototype.titleBarTap = function(event){
 		}
 		this.controller.popupSubmenu({
 			onChoose: function(value){
-				if(value)
+				if (value)
 					this.controller.stageController.swapScene({name: "list", transition: Mojo.Transition.crossFade}, value);
 			}.bind(this),
 			placeNear: event.target,
@@ -485,7 +483,7 @@ ListAssistant.prototype.moreTap = function(event){
 		{label: $L('Play All'), command: 'play'},
 		{label: $L('Shuffle All'), command: 'shuffle'}
 	];
-	if(m.nP.songs.length > 0){
+	if (koto.nowPlaying.currentInfo.songs.length > 0){
 		items.splice(1, 0, {label: $L('Play All Next'), command: 'play-next'},{label: $L('Play All Last'), command: 'play-last'});
 	}
 	this.controller.popupSubmenu({
@@ -512,7 +510,7 @@ ListAssistant.prototype.moreTap = function(event){
 						break;
 				};
 			}.bind(this);
-			if(value){
+			if (value){
 				this.getSongs(handleAction);
 			}
 		}.bind(this),
@@ -521,56 +519,56 @@ ListAssistant.prototype.moreTap = function(event){
 	});
 };
 
-ListAssistant.prototype.getSongs = function(callBackFunc) {
+ListAssistant.prototype.getSongs = function(callback) {
 	switch(this.data){
 		case "artists":
 		case "albums":
 		case "genres":
-			m.getSongs(this.data.substring(0, this.data.length-1), callBackFunc);
+			koto.content.songs.get(this.data.substring(0, this.data.length-1), callback);
 			break;
 		case "songs":
-			if(this.subset.length > 0){
-				callBackFunc(this.subset)
+			if (this.subset.length > 0){
+				callback(this.subset)
 			} else {
-				callBackFunc(m.songs);
+				callback(koto.content.songs.array);
 			}
 			break;
 		case "playlists":
-			this.getSongsOfArray(m.playlists, callBackFunc);
+			this.getSongsOfArray(m.playlists, callback);
 			break;
 		case "favorites":
-			this.getSongsOfArray(m.favorites, callBackFunc);
+			this.getSongsOfArray(koto.content.favorites.array, callback);
 			break;
 	}
 }
-ListAssistant.prototype.getSongsOfArray = function(array, callBackFunc){
+ListAssistant.prototype.getSongsOfArray = function(array, callback){
 	var i = 0, songs = [];
 	function getSongsOfObj(item){
-		m.getSongsOfObj(item, function(songsOfObj){
+		koto.content.getSongsOfObj(item, function(songsOfObj){
 			i++;
 			songs = songs.concat(songsOfObj);
-			if(i < array.length){
+			if (i < array.length){
 				getSongsOfObj(array[i]);
 			} else {
-				callBackFunc(songs);
+				callback(songs);
 			}
 		}.bind(this));
 	};
-	if(i < array.length){
+	if (i < array.length){
 		getSongsOfObj(array[i])
 	} else {
-		callBackFunc(songs);
+		callback(songs);
 	}
 };
 ListAssistant.prototype.hideAlphaScroller = function(event) {
-	if(this.scroller){
+	if (this.scroller){
 		this.scroller.hide();
 		this.list.removeClassName("content-list");
 	}
 }
 
 ListAssistant.prototype.showAlphaScroller = function(event) {
-	if(this.scroller){
+	if (this.scroller && koto.preferences.obj.alphaScroller === true){
 		this.scroller.show();
 		this.list.addClassName("content-list");
 	}
@@ -584,7 +582,7 @@ ListAssistant.prototype.cleanup = function(event) {
 	this.controller.stopListening(this.controller.get("results_list"), Mojo.Event.listTap, this.listTapHandler);
 	this.controller.stopListening(this.controller.get("title-bar"), Mojo.Event.tap, this.titleBarTapHandler);
 	
-	if(this.data === "favorites" || this.data === "playlists"){
+	if (this.data === "favorites" || this.data === "playlists"){
 		this.controller.stopListening(this.list, Mojo.Event.listReorder, this.listReorderHandler);
 		this.controller.stopListening(this.list, Mojo.Event.listDelete, this.listDeleteHandler);
 	}	

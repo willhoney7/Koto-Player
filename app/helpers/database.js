@@ -46,10 +46,10 @@ function Database(dbName, dbVersion, showErrors, dbSize) {
 	this.name = dbName;
 	this.version = dbVersion;
 
-	if (dbSize == null)
+	if (dbSize === null)
 		dbSize = 65536;
 		
-	if (showErrors == null)
+	if (showErrors === null)
 		showErrors = false;
 
 	this.showErrorDialog = showErrors;

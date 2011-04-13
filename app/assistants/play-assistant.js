@@ -828,7 +828,7 @@ PlayAssistant.prototype.handleCommand = function(event){
 				if (koto.preferences.obj.twitter.authorized === true){
 					checkConnectivity(function(connected){
 						if (connected){
-							Twitter.generateTweet();
+							koto.twitter.generateTweet();
 						} else {
 							koto.utilities.bannerError("Not Connected to Internet");
 						}

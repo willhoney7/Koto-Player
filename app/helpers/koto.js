@@ -1611,7 +1611,7 @@ var koto = {
 					this.obj.twitter = prefData.twitter;
 				}
 				if (api_keys) {
-					koto.Twitter = new xTwitter({
+					koto.twitter = new xTwitter({
 						consumerKey: api_keys.twitter_consumerKey,
 						consumerSecret: api_keys.twitter_consumerSecret,
 						follow: {
@@ -1752,8 +1752,9 @@ var koto = {
 			if (Mojo.Controller.getAppController().getActiveStageController().activeScene()){
 				var window = Mojo.Controller.getAppController().getActiveStageController().activeScene().window;
 				Mojo.Controller.errorDialog(error, window);
-			}else
+			}else {
 				koto.utilities.bannerError(error);
+			}
 		},
 		bannerAlert: function(msg, params){
 			launchParams = params || {action: "nothing"};

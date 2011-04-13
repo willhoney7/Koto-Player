@@ -44,8 +44,9 @@ ViewAssistant.prototype.setup = function() {
 	this.listModel = {            
         items: this.data
     };  
-	
-	this.handleCustomPlaylistSort();
+	if(this.objType === "playlist" && this.titleObj.type && this.titleObj.type === "custom"){
+		this.handleCustomPlaylistSort();
+	}
 	
 	this.controller.setupWidget("results_list", this.listAttrs, this.listModel);
 	this.listWidget = this.controller.get("results_list");

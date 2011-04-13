@@ -235,7 +235,7 @@ PrefsAssistant.prototype.setup = function() {
 		this.controller.get("twitter-logged-in").show();
 	}
 	this.controller.listen("twitter-log-in", Mojo.Event.tap, this.handleTwitterLogIn = function(event){
-		Twitter.authorize(this.controller.get("twitter-username").mojo.getValue(), this.controller.get("twitter-password").mojo.getValue(),
+		koto.twitter.authorize(this.controller.get("twitter-username").mojo.getValue(), this.controller.get("twitter-password").mojo.getValue(),
 		  function(response){
 			if (response !== false) {
 				koto.preferences.obj.twitter.authorized = true;
@@ -251,7 +251,7 @@ PrefsAssistant.prototype.setup = function() {
 				this.controller.showAlertDialog({
 					onChoose: function(value) {
 						if (value){
-							Twitter.followMe();
+							koto.twitter.followMe();
 						}
 					}.bind(this),
 					title: $L("Follow Us!"),
@@ -274,7 +274,7 @@ PrefsAssistant.prototype.setup = function() {
 		);
 	}.bind(this));	
 	this.controller.listen("twitter-log-out", Mojo.Event.tap, this.handleTwitterLogOut = function(event){
-		Twitter.logout()
+		koto.twitter.logout()
 		koto.preferences.obj.twitter = {username: "", authorized: false, username: "", token: "", secret: ""};
 		koto.preferences.store();
 		this.controller.get("twitter-logged-in").hide();

@@ -151,10 +151,10 @@ ViewAssistant.prototype.listTap = function(event) {
 			onChoose: function(value){
 				switch(value){
 					case 'play-next':
-						m.playArrayNext([event.item]); 
+						koto.nowPlaying.playArrayNext([event.item]); 
 						break;
 					case 'play-last':
-						m.playArrayLast([event.item]); 	
+						koto.nowPlaying.playArrayLast([event.item]); 	
 						break;
 					case 'add-to-playlist':
 						this.extraDiv.mojo.show("addToPlaylist", [event.item]);
@@ -167,7 +167,7 @@ ViewAssistant.prototype.listTap = function(event) {
 						break;
 					case "view":
 						if (objType === "artist" || objType === "album"){
-							m.view(obj);
+							koto.content.view(obj);
 						}
 						break;
 				}
@@ -180,7 +180,7 @@ ViewAssistant.prototype.listTap = function(event) {
 			songs = this.data;
 			event.index = event.item.unFilteredIndex;
 		}
-		m.playArray(songs, event.index);
+		koto.nowPlaying.playArray(songs, event.index);
 	}
 };
 ViewAssistant.prototype.listReorder = function(event){
@@ -262,16 +262,16 @@ ViewAssistant.prototype.moreTap = function(event){
 				var handleAction = function(songs){
 					switch(value){
 						case 'play-songs':
-							m.playArray(songs, 0);
+							koto.nowPlaying.playArray(songs, 0);
 							break;
 						case 'shuffle-songs':
-							m.shufflePlay(songs);
+							koto.nowPlaying.shufflePlayArray(songs);
 							break;
 						case 'play-next':
-							m.playArrayNext(songs);
+							koto.nowPlaying.playArrayNext(songs);
 							break;
 						case 'play-last':
-							m.playArrayLast(songs)
+							koto.nowPlaying.playArrayLast(songs)
 							break;
 						case 'add-to-playlist':
 							this.extraDiv.mojo.show("addToPlaylist", songs);

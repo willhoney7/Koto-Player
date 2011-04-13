@@ -44,7 +44,7 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 				
 				}.bind(this));
 			} else {
-				m.bannerError("Not Connected to Internet");
+				koto.utilities.bannerError("Not Connected to Internet");
 				this.hide();
 			}
 		}.bind(this));
@@ -78,7 +78,7 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 	download: function(url){
 		checkConnectivity(function(connected){
 			if (connected){
-				m.bannerAlert("Downloading...");
+				koto.utilities.bannerAlert("Downloading...");
 				var fileName = this.artist + " - " + this.album;
 					fileName = fileName.replace(/[^A-z0-9_\s\-]/ig, "");//get rid of special chars
 					fileName += "_" + Math.round(Math.random()*10000) + url.match(/(.*)\/([^\/\\]+)(\.\w+)$/)[3];
@@ -93,12 +93,12 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 					},
 					onSuccess : function (resp){
 						if (resp.returnValue === true){
-							m.bannerAlert("Setting as Album Art");
+							koto.utilities.bannerAlert("Setting as Album Art");
 							koto.albumArt.set(this.album, this.artist, resp.target, function(response){
-								//m.bannerAlert("Done!");
+								//koto.utilities.bannerAlert("Done!");
 								this.controller.scene.assistant.extraDiv.mojo.hide();
 								var done = function done(){
-									m.bannerAlert("Done!");
+									koto.utilities.bannerAlert("Done!");
 									this.refreshList();//done with this scope of the scene.
 								}.bind(this.controller.scene.assistant);
 								setTimeout(done, 3500);
@@ -109,7 +109,7 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 					onFailure : function (e){Mojo.Log.error(Object.toJSON(e))}
 				});
 			} else {
-				m.bannerError("Not Connected to Internet");
+				koto.utilities.bannerError("Not Connected to Internet");
 			}
 		}.bind(this))
 	

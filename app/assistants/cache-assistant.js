@@ -22,7 +22,7 @@ CacheAssistant.prototype.cache = function() {
 			console.log("caching albums");
 			koto.justType.cacheArray(koto.content.albums.array, function(){
 				console.log("caching playlists");
-				koto.justType.cacheArray(m.playlists, function(){
+				koto.justType.cacheArray(koto.content.playlists.array, function(){
 					console.log("caching favorites");
 					koto.justType.cacheArray(koto.content.favorites.array, function(){
 						//this.commandMenuModel.visible = true;
@@ -30,7 +30,7 @@ CacheAssistant.prototype.cache = function() {
 							var d = new Date();
 						if (koto.content.songs.array.length > 0){
 							var oldStuff = Math.round(d.getTime()/60000) -2;//del stuff older than 2 minutes, since it no longer exists.
-							DB.del({"from":koto.appId + ".data:1", "where":[{"prop":"lastUpdate","op":"<","val":oldStuff}]});
+							db8.DB.del({"from":koto.appId + ".data:1", "where":[{"prop":"lastUpdate","op":"<","val":oldStuff}]});
 						}
 						//close stage
 						

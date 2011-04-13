@@ -75,7 +75,7 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 					break;
 				case "getNowPlayingData"://todo
 					if (!cardStageController){
-						m.setupHandleLaunchStage(launchParams);
+						koto.utilities.setupHandleLaunchStage(launchParams);
 					} else {
 						if (launchParams.callback  && launchParams.callback.id && launchParams.callback.action){
 							if (koto.nowPlaying.currentInfo.songs.length > 0){
@@ -118,8 +118,12 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 					cardStageController.activate();
 				else {
 					var pushMainScene = function(stageController){
-						m.isDbSearch = true;
 						stageController.pushScene('main');
+						try {
+							koto.setup({action: "setup", delayResume: true});
+						}catch(e){
+							stageController.swapScene({name: "error", transition: Mojo.Transition.crossFade}, e);
+						}
 					};	
 					var stageArgs = {
 						name: 'cardStage',
@@ -131,14 +135,14 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 				var obj = results[0];
 				var objType = koto.utilities.getObjType(obj);
 				if (objType === "artist" || objType === "album"){
-					m.view(obj);
+					koto.content.view(obj);
 				}
 				koto.content.getSongsOfObj(obj, function(songs, index_){
 					var index = index_ || 0;
 					if (objType === "song" || objType === "playlist"){
-						m.playArray(songs, index);
+						koto.nowPlaying.playArray(songs, index);
 					} else if (objType === "genre"){
-						m.viewArray(obj, songs);
+						koto.content.viewArray(obj, songs);
 					}
 				}.bind(this), true);//pass true so it returns all songs by artist if it's a song
 			}.bind(this));
@@ -152,8 +156,12 @@ AppAssistant.prototype.launchFromDash = function(){
 		cardStageController.activate();
 	} else {
 		var pushMainScene = function(stageController){
-			m.launchPlayer = true;
 			stageController.pushScene('main');
+			try {
+				koto.setup({action: "fromDashboard"});
+			}catch(e){
+				stageController.swapScene({name: "error", transition: Mojo.Transition.crossFade}, e);
+			}
 		};	
 		var stageArgs = {
 			name: 'cardStage',
@@ -187,7 +195,7 @@ AppAssistant.prototype.handleCommand = function (event) {
 					koto.justType.setupIndexingDashboard();
 					break;
 				case "resume-now-playing":
-					m.resumeNowPlaying();
+					koto.nowPlaying.load();
 					break;
 				case "playground":
 					this.controller.getActiveStageController().pushScene("playground");				

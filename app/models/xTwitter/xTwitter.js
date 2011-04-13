@@ -293,9 +293,9 @@ xTwitter.prototype.generateTweet = function(){
 	var suffix = " via @Koto_Player for webOS!";
 	this.tweet(tweet + suffix, function(returnValue){
 		if (returnValue){
-			m.bannerAlert("Song Tweeted!");
+			koto.utilities.bannerAlert("Song Tweeted!");
 		} else {
-			m.bannerError("Failed to Tweet");		
+			koto.utilities.bannerError("Failed to Tweet");		
 		}
 	});
 }

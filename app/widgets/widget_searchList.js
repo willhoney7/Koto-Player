@@ -120,19 +120,19 @@ Mojo.Widget.SearchList = Class.create({
 							var handleAction = function(songs){
 								switch(value){
 									case "play":
-										m.playArray(songs, 0);
+										koto.nowPlaying.playArray(songs, 0);
 										break;
 									case "shuffle":
-										m.shufflePlay(songs, 0);
+										koto.nowPlaying.shufflePlayArray(songs, 0);
 										break;
 									case "view":
-										m.viewArray(songs, obj);
+										koto.content.viewArray(songs, obj);
 										break;
 									case "play-next":
-										m.playArrayNext(songs);
+										koto.nowPlaying.playArrayNext(songs);
 										break;
 									case "play-last":
-										m.playArrayLast(songs);
+										koto.nowPlaying.playArrayLast(songs);
 										break;
 									case "add-to-playlist":
 										this.controller.scene.assistant.extraDiv.mojo.show("addToPlaylist", songs);
@@ -150,12 +150,12 @@ Mojo.Widget.SearchList = Class.create({
 			else {
 				if ((objType === "song" || objType === "playlist") || (this.data === "favorites" && koto.preferences.obj.favoriteTap === "play")){
 					koto.content.getSongsOfObj(obj, function(songs){
-						m.playArray(songs, 0);
+						koto.nowPlaying.playArray(songs, 0);
 					}.bind(this), false);
 				}else {
 					koto.content.getSongsOfObj(obj, function(songs){
 						var focus = (objType === "album") ? obj.name : undefined;
-						m.viewArray(songs, obj, focus);
+						koto.content.viewArray(songs, obj, focus);
 					}.bind(this), true);//pass true so it returns formatted songs
 				}
 			}

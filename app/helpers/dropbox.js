@@ -9,7 +9,6 @@ dropbox = ({
 			},
 			onSuccess: function(transport){
 				console.log(transport.responseText);
-				m.debugObj(transport.responseJSON);
 			}.bind(this),
 			onFailure: function(transport){
 				callback({error: "Failed"});		

@@ -114,14 +114,14 @@ Mojo.Widget.NowPlayingPanel = Class.create({
 			}
 		}*/
 		//lastfm.scrobble(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]);
-		//m.incrementPlayCount(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]._id);
-		//m.playNext(true);
+		//koto.justType.incrementPlayCount(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]._id);
+		//koto.nowPlaying.playNext(true);
 	},
 	hasSetup: false,
 	ended: function(){
 		//moved to "ended" event.. should work better
 		lastfm.scrobble(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]);
-		m.incrementPlayCount(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]._id);
+		koto.justType.incrementPlayCount(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]._id);
 	},
 	show: function(){
 		this.updateSong(true);

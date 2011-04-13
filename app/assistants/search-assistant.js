@@ -118,25 +118,25 @@ SearchAssistant.prototype.listTap = function(event){
 					if (value === "favorite"){
 						koto.content.favorites.add(obj);
 					} else if (value === "view" && (objType === "artist" || objType === "album")){
-						m.view(obj);
+						koto.content.view(obj);
 					}
 					else{
 						var handleAction = function(songs){
 							switch(value){
 								case "play":
-									m.playArray(songs, 0);
+									koto.nowPlaying.playArray(songs, 0);
 									break;
 								case "shuffle":
-									m.shufflePlay(songs, 0);
+									koto.nowPlaying.shufflePlayArray(songs, 0);
 									break;
 								case "view":
-									m.viewArray(obj, songs);							
+									koto.content.viewArray(obj, songs);							
 									break;
 								case "play-next":
-									m.playArrayNext(songs);
+									koto.nowPlaying.playArrayNext(songs);
 									break;
 								case "play-last":
-									m.playArrayLast(songs);
+									koto.nowPlaying.playArrayLast(songs);
 									break;
 								case "add-to-playlist":
 									this.extraDiv.mojo.show("addToPlaylist", songs);
@@ -154,15 +154,15 @@ SearchAssistant.prototype.listTap = function(event){
 			});
 		}
 		else if (objType === "artist" || objType === "album"){
-			m.view(obj);
+			koto.content.view(obj);
 		} 
 		else {
 			koto.content.getSongsOfObj(obj, function(songs, index_){
 				var index = index_ || 0;
 				if (objType === "song" || objType === "playlist"){
-					m.playArray(songs, index);
+					koto.nowPlaying.playArray(songs, index);
 				} else if (objType === "genre"){
-					m.viewArray(obj, songs);
+					koto.content.viewArray(obj, songs);
 				}
 			}.bind(this), true);//pass true so it returns all songs by artist if it's a song
 		}

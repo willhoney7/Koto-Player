@@ -26,8 +26,7 @@ StageAssistant.prototype.cleanup = function(){
 		koto.nowPlaying.currentInfo.audioObj.pause();
 		Mojo.Controller.getAppController().closeStage("dashboardStage");
 		
-		m.saveNowPlaying();
-		m.cleanup();//1234354629114
+		koto.nowPlaying.save();
 	}
 
 	

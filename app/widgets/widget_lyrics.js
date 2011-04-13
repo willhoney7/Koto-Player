@@ -49,7 +49,7 @@ Mojo.Widget.Lyrics = Class.create({
 				if (connected){
 					lyrics.searchForLyrics(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index], handleLyrics.bind(this));
 				} else {
-					m.bannerError("Not Connected to Internet");
+					koto.utilities.bannerError("Not Connected to Internet");
 					this.hide();
 				}
 			}.bind(this))
@@ -63,7 +63,7 @@ Mojo.Widget.Lyrics = Class.create({
 			}
 			else {
 				this.controller.scene.assistant.extraDiv.mojo.hide();
-				m.bannerError(response.error);
+				koto.utilities.bannerError(response.error);
 			}
 		}
 	},

@@ -20,11 +20,11 @@ var koto = {
 			koto.albumArt.loadCustom(function () {
 				//if auto resume is on, resume this stuff
 				if(koto.preferences.obj.saveAndResume === true && (!arg || (arg && !arg.delayResume))){
-					m.resumeNowPlaying();
+					koto.nowPlaying.load();
 				}
 				//getPermissions for media
 				koto.setupFunctions.getPermissions(function () {
-					//now load
+					//now load content
 					koto.content.load();
 
 				});
@@ -70,7 +70,7 @@ var koto = {
 						
 					}
 					else if (response.errorCode !== -1) {
-						m.dialogError("The app can not access your music... " + Object.toJSON(response));	
+						koto.utilities.dialogError("The app can not access your music... " + Object.toJSON(response));	
 					}
 				}.bind(this)  
 			});
@@ -80,18 +80,18 @@ var koto = {
 				console.log("event sent: " + event.type);
 				switch(event.type){
 					case "pause":
-						m.handlePause();
+						koto.nowPlaying.handlePause();
 						break;
 					case "play":
-						m.handlePlay();
+						koto.nowPlaying.handlePlay();
 						break;
 					case "timeupdate":
 						koto.utilities.delegate("_updateProgress");
 						break;
 					case "ended":
 						var currentId = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]._id, currentObj = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index];
-						m.playNext(true);
-						m.incrementPlayCount(currentId);
+						koto.nowPlaying.playNext(true);
+						koto.justType.incrementPlayCount(currentId);
 						lastfm.scrobble(currentObj);
 						break;
 				
@@ -125,14 +125,14 @@ var koto = {
 					if (koto.nowPlaying.currentInfo.songs.length > 0 && button.state){
 						if (button.state === "single_click"){
 							if (koto.nowPlaying.currentInfo.playing === true){
-								m.pause();
+								koto.nowPlaying.pause();
 							}
 							else{
-								m.resume();
+								koto.nowPlaying.resume();
 							}
 						}
 						if (button.state === "double_click"){
-							m.playNext();
+							koto.nowPlaying.playNext();
 						}
 					}
 				}.bind(this)
@@ -146,16 +146,16 @@ var koto = {
 					if (button && button.state && button.state === "down" && koto.nowPlaying.currentInfo.songs.length > 0){
 						switch (button.key) {
 							case "play":
-								m.resume();
+								koto.nowPlaying.resume();
 								break;
 							case "pause":
-								m.pause();
+								koto.nowPlaying.pause();
 								break;	
 							case "next":
-								m.playNext();
+								koto.nowPlaying.playNext();
 								break;
 							case "prev":
-								m.playPrevious();
+								koto.nowPlaying.playPrevious();
 								break;											
 						}
 					}
@@ -242,7 +242,7 @@ var koto = {
 						
 					} else {
 						console.log("Well you're in trouble.");
-						m.bannerError("Error: No Songs by Artist");
+						koto.utilities.bannerError("Error: No Songs by Artist");
 					}
 				}.bind(this));*/
 				koto.content.artists.getAlbumsOfOne(artist, function(albums){
@@ -337,7 +337,7 @@ var koto = {
 								
 							} else {
 								console.log("Well you're in trouble.");
-								m.bannerError("Error: No Songs by Artist");
+								koto.utilities.bannerError("Error: No Songs by Artist");
 							}
 						}.bind(this));
 					}
@@ -347,8 +347,16 @@ var koto = {
 				var query = {"select" : ["name", "artist", "total.tracks", "_id", "_kind", "thumbnails"], "where" : [{"prop":"artist","op":"=","val":artist}], "from":"com.palm.media.audio.album:1" };
 				db8.exec(query, callback.bind(this));
 			},
+			viewOne: function(artist){
+				koto.content.artists.getFormattedSongsOfOne(artist, function(formattedSongs, songs, error){
+					if (!error){
+						Mojo.Controller.getAppController().getStageController("cardStage").pushScene("artist-view", {name: artist, albums: formattedSongs, songs: songs, _kind: "com.palm.media.audio.artist:1"}, focus);
+					} else if (error) {
+					
+					}
+				}.bind(this));
+			}
 		},
-
 		albums: {
 			array: [],
 			load: function (callback) {
@@ -428,6 +436,15 @@ var koto = {
 					}.bind(this));
 				}*/
 			},
+			viewOne: function(album_){
+				var album = (album_.artist) ? album_ : koto.content.albums.getOne({name: album_.name || album_, artist: ""});
+				console.log("album.artist " + album.artist);
+				koto.content.albums.getSongsOfOne({album: album.name, albumArtist: album.artist}, function(songs){
+					album.songs = songs;
+					album.open = true;
+					Mojo.Controller.getAppController().getStageController("cardStage").pushScene("artist-view", {name: album.artist, albums: [album], songs: songs, _kind: "com.palm.media.audio.artist:1"});
+				});
+			},
 		},
 		songs: {
 			array: [],
@@ -505,9 +522,9 @@ var koto = {
 							array[i].preventDelete = true;
 						}
 						koto.content.playlists[array[i].type + "Array"].push(array[i]);
-						//m.playlists.push(array[i]);
+						//koto.content.playlists.array.push(array[i]);
 					}
-					//m.playlists = array.clone();
+					//koto.content.playlists.array = array.clone();
 					
 					koto.content.playlists.array = koto.content.playlists.autoArray.concat(koto.content.playlists.customArray);
 					//this.getM3UPlaylists();
@@ -559,13 +576,13 @@ var koto = {
 			deleteOne: function(name, i){
 				db8.del({"from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":name}]});
 				if (i){
-					m.playlists.splice(i, 1);
+					koto.content.playlists.array.splice(i, 1);
 					koto.content.playlists.customArray.splice(i-3, 1);
 				}
 				else {
-					for(var j = 0; j < m.playlists.length; j++){
-						if (m.playlists[j].name === name){
-							m.playlists.slice(j, 1);
+					for(var j = 0; j < koto.content.playlists.array.length; j++){
+						if (koto.content.playlists.array[j].name === name){
+							koto.content.playlists.array.slice(j, 1);
 							koto.content.playlists.customArray.splice(j-3, 1);
 						}
 					}
@@ -630,14 +647,14 @@ var koto = {
 				var obj = Object.clone(object);
 				for(var i = 0; i <= koto.content.favorites.array.length; i++){
 					if (i > 0 && i !== koto.content.favorites.array.length && obj["_id"] && obj["_id"] === koto.content.favorites.array[i]._id){
-						m.bannerError("You already added this!");
+						koto.utilities.bannerError("You already added this!");
 						break;
 					}
 					if (i === (koto.content.favorites.array.length-1) || koto.content.favorites.array.length === 0){
 						db8.put({"_kind": koto.appId + ".favorites:1", "id": obj["_id"], "position": koto.content.favorites.array.length}, function(){
 							koto.content.favorites.array.push(obj);
 							koto.justType.cacheSearchData(obj, true);
-							m.bannerAlert("Added to Favorites", {action: "pushScene", scene: "list", data: "favorites"});
+							koto.utilities.bannerAlert("Added to Favorites", {action: "pushScene", scene: "list", data: "favorites"});
 							koto.content.favorites.store();						
 						});	
 						break;
@@ -674,8 +691,8 @@ var koto = {
 										Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();		
 									} catch(e){ console.log(e)};
 									
-									if (m.songCountCookie.get()){
-										koto.justType.checkJustType.defer(m.songCountCookie.get());
+									if (koto.justType.songCountCookie.get()){
+										koto.justType.checkJustType.defer(koto.justType.songCountCookie.get());
 									} else {
 										koto.justType.checkJustType.defer();
 									}
@@ -714,7 +731,20 @@ var koto = {
 					console.log("Error! Object does not have a type");
 					break;
 			}
-		}
+		},
+		view: function(obj, array){
+			var objType = obj.type || koto.utilities.getObjType(obj);
+			if (objType ==="artist"){
+				koto.content.artists.viewOne(obj.name);
+			} else if (objType === "album"){
+				koto.content.albums.viewOne(obj);
+			} else {
+				koto.content.viewArray(obj, array);
+			}
+		},
+		viewArray: function(titleObj, array){
+			Mojo.Controller.getAppController().getStageController("cardStage").pushScene("view", titleObj, array);
+		},
 	},
 	nowPlaying: {
 		currentInfo: {
@@ -725,17 +755,341 @@ var koto = {
 			repeat: 2,
 			audioObj: new Audio()
 		},
-		playSong: function (path, time, args) {
+		/* * * * * * * * * * * * * * * * * * * * * * * * * 
+		 * * * Functions with currently playing songs* * *
+		 * * * * * * * * * * * * * * * * * * * * * * * * */
+		resume: function(){
+			if (getFileInfo(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path).extension !== ".m4p"){
+				koto.nowPlaying.currentInfo.audioObj.play();
+			}			
+		},
+		handlePlay: function(){	
+			//this is the function that gets added as the listener to playevents
+			koto.nowPlaying.currentInfo.playing = true;
+			koto.utilities.delegate("_resume");
+			koto.dashboard.update();
+		},
+		pause: function(){
+			koto.nowPlaying.currentInfo.audioObj.pause();	
+		},
+		handlePause: function(){
+			koto.nowPlaying.currentInfo.playing = false;
+			koto.utilities.delegate("_pause");
+			koto.dashboard.update();
+		},
+		playSong: function(path, time, play, previousOrNext){
+			if (koto.nowPlaying.currentInfo.audioObj.currentSrc){
+				koto.nowPlaying.currentInfo.audioObj.pause();
+				koto.nowPlaying.currentInfo.audioObj.src = null;
+			}
+			var extension = getFileInfo(path).extension;
+			if (extension === ".m4p"){
+				setTimeout(function(){
+					if (previousOrNext && previousOrNext === "previous"){
+						koto.nowPlaying.playPrevious(true);
+					} else {
+						koto.nowPlaying.playNext(false, true);
+					}
+				}, 500);
+				return;
+			}
+			koto.nowPlaying.currentInfo.audioObj.src = path;
+			koto.nowPlaying.currentInfo.audioObj.load();
+			if (((play !== undefined && play !== false) || play === undefined)){
+				koto.nowPlaying.currentInfo.audioObj.play();
+				koto.nowPlaying.currentInfo.playing = true;
+			}
+
+			var changeCurrentTime = function(){
+				if (time){
+					koto.nowPlaying.currentInfo.audioObj.currentTime = time;
+				}else {
+					koto.nowPlaying.currentInfo.audioObj.currentTime = 0;
+				}
+				if (play !== undefined && play === false){
+					koto.utilities.delegate("_updateProgress");
+				}
+				koto.nowPlaying.currentInfo.audioObj.removeEventListener("loadeddata", changeCurrentTime);
+			}.bind(this);
+			
+			koto.nowPlaying.currentInfo.audioObj.addEventListener("loadeddata", changeCurrentTime);
+			//koto.nowPlaying.currentInfo.audioObj.addEventListener("error", koto.nowPlaying.playNext.bind(this), true);
+
+			//if (koto.preferences.obj.lastfm.sessionKey !== "" && koto.preferences.obj.lastfm.scrobble === true){
+			//	lastfm.scrobble(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]);
+			//}
+			if (koto.preferences.obj.lastfm.sessionKey !== "" && koto.preferences.obj.lastfm.scrobble === true){
+				lastfm.updateNowPlaying();
+			}
+			  
+		},
+		playNext: function (ended, play) {
+			var oldIndex = koto.nowPlaying.currentInfo.index;
+			if (koto.nowPlaying.currentInfo.index !== koto.nowPlaying.currentInfo.songs.length-1){
+				koto.nowPlaying.currentInfo.index++;
+			}else {
+				koto.nowPlaying.currentInfo.index = 0;
+			}
+			koto.utilities.delegate("_playNext", ended);
+			if (koto.nowPlaying.currentInfo.playing === true){
+				if (oldIndex === koto.nowPlaying.currentInfo.songs.length-1 && ended){
+					if (koto.nowPlaying.currentInfo.repeat > 0){
+						koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path, 0, play, "next");
+						if (koto.nowPlaying.currentInfo.repeat === 1){
+							koto.nowPlaying.currentInfo.repeat = 0;
+						}	
+					}else {
+						koto.nowPlaying.stop();
+					}
+				} 
+				else {
+					try {
+						koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path, 0, play, "next");
+					}catch(e){console.log("tried to play song: " + e)};
+				}
+			}else {
+				try {
+					koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path, 0, (play !== undefined)? play: false, "next");
+				}catch(e){console.log("tried to play song: " + e)};
+			}
+			if (ended){
+				koto.dashboard.update();
+			}
+			//koto.nowPlaying.currentInfo.audioObj.removeEventListener("error", koto.nowPlaying.playNext.bind(this), true);
+		},
+		playPrevious: function(){
+			if (koto.nowPlaying.currentInfo.audioObj.currentTime > 5){
+				koto.nowPlaying.currentInfo.audioObj.currentTime = 0;
+				if (koto.nowPlaying.currentInfo.playing === false){
+					koto.utilities.delegate("_updateProgress");//just in case
+				}
+			}
+			else{
+				//koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = undefined;
+				if (koto.nowPlaying.currentInfo.index > 0){
+					koto.nowPlaying.currentInfo.index--;
+				}else {
+					koto.nowPlaying.currentInfo.index = koto.nowPlaying.currentInfo.songs.length-1;
+				}
+				//koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = true;
+				try {
+					koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path, undefined, undefined, "previous");
+				}catch(e){console.log(e)};
+
+				koto.utilities.delegate("_playPrevious");
+			}
+			//koto.nowPlaying.currentInfo.audioObj.removeEventListener("error", koto.nowPlaying.playNext.bind(this), true);
+		
+		},
+		stop: function(){
+			koto.nowPlaying.currentInfo.audioObj.pause();
+			//koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = undefined;
+			koto.nowPlaying.currentInfo.index = 0;
+			//koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = true;
+			koto.nowPlaying.currentInfo.audioObj.src = koto.nowPlaying.currentInfo.songs[0].path;
+			koto.nowPlaying.currentInfo.audioObj.load();
+			koto.nowPlaying.currentInfo.audioObj.pause();
+			//koto.nowPlaying.currentInfo.audioObj.currentTime = 0;
+			koto.nowPlaying.currentInfo.playing = false;
+			koto.utilities.delegate("_stop");
+		},
+		shuffle: function(){
+			koto.nowPlaying.currentInfo.unshuffledSongs.clear();
+			Object.extend(koto.nowPlaying.currentInfo.unshuffledSongs, koto.nowPlaying.currentInfo.songs.clone());
+			var nowPlayingItem = koto.nowPlaying.currentInfo.songs.splice(koto.nowPlaying.currentInfo.index, 1)[0];
+			var newSongs = koto.nowPlaying.currentInfo.songs.clone();
+			koto.nowPlaying.currentInfo.songs.clear();
+			Object.extend(koto.nowPlaying.currentInfo.songs, koto.utilities.shuffle(newSongs));
+			koto.nowPlaying.currentInfo.songs.unshift(nowPlayingItem);
+			koto.nowPlaying.currentInfo.index = 0;
 			
 		},
-		playNext: function (previousHasEnded) {
-		
+		unshuffle: function(){
+			var currentSong = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index];
+			koto.nowPlaying.currentInfo.songs.clear();
+			Object.extend(koto.nowPlaying.currentInfo.songs, koto.nowPlaying.currentInfo.unshuffledSongs.clone());
+			for(var i = 0; i < koto.nowPlaying.currentInfo.songs.length; i++){
+				if (currentSong.title === koto.nowPlaying.currentInfo.songs[i].title && currentSong.artist === koto.nowPlaying.currentInfo.songs[i].artist && currentSong.album === koto.nowPlaying.currentInfo.songs[i].album){
+					koto.nowPlaying.currentInfo.index = i;
+					//koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = true;
+					koto.nowPlaying.currentInfo.unshuffledSongs.clear();
+					break;
+				}
+			}
 		},
-		playPrevious: function () {
-		
+		liteCheck: function(){
+			if (koto.appId === "com.tibfib.app.koto.lite"){
+				if (koto.nowPlaying.currentInfo.songs.length > 10){
+					if (koto.nowPlaying.currentInfo.index >= 1){
+						if (koto.nowPlaying.currentInfo.songs.length-1 - koto.nowPlaying.currentInfo.index >= 9){
+							koto.nowPlaying.currentInfo.songs = koto.nowPlaying.currentInfo.songs.slice(koto.nowPlaying.currentInfo.index - 1, koto.nowPlaying.currentInfo.index + 9);
+							koto.nowPlaying.currentInfo.index = 1;
+						} else {
+							var oldLength = koto.nowPlaying.currentInfo.songs.length;
+							koto.nowPlaying.currentInfo.songs = koto.nowPlaying.currentInfo.songs.slice(-10);
+							koto.nowPlaying.currentInfo.index = 9 - (oldLength-1 - koto.nowPlaying.currentInfo.index);
+						}
+					}else {
+						koto.nowPlaying.currentInfo.songs = koto.nowPlaying.currentInfo.songs.slice(koto.nowPlaying.currentInfo.index, koto.nowPlaying.currentInfo.index + 10);
+						koto.nowPlaying.currentInfo.index = 0;
+					}
+				}
+			}
+		},	
+		/* * * * * * * * * * * * * *
+		 * * * Array Functions * * *
+		 * * * * * * * * * * * * * */
+		playArray: function(array, index, arg){
+			//var d = new Date();
+			//milliseconds = d.getTime();
+
+			if (koto.nowPlaying.currentInfo.songs.length > 0){
+				//koto.nowPlaying.save();//save old songs
+				koto.nowPlaying.deferSave();
+				koto.nowPlaying.hasSaved = true;
+			}
+			
+			//var d = new Date();
+			//console.log((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after deffering save now playing");	
+
+			if (koto.appId === "com.tibfib.app.koto.lite"){
+				if (array.length > 10){
+					if (index >= 1){
+						if (array.length-1 - index >= 9){
+							array = array.slice(index - 1, index + 9);
+							index = 1;
+						} else {
+							var oldLength = array.length;
+							array = array.slice(-10);
+							index = 9 - (oldLength-1 - index);
+						}
+					}else {
+						array = array.slice(index, index + 10);
+						index = 0;
+					}
+				}			
+			}
+			
+			if (array.length < 1){ 
+				koto.utilities.bannerError("Error Playing: No Songs");
+				return;
+			}
+			koto.nowPlaying.currentInfo.unshuffledSongs.clear();
+			if (arg && arg.shuffled && arg.unshuffledSongs){
+				Object.extend(koto.nowPlaying.currentInfo.unshuffledSongs, arg.unshuffledSongs);
+			}
+			
+			//var d = new Date();
+			//console.log((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after setting up unshuffled songs");	
+			
+			koto.nowPlaying.currentInfo.songs.clear();
+			
+			Object.extend(koto.nowPlaying.currentInfo.songs, array);
+			koto.nowPlaying.currentInfo.index = index;
+			koto.nowPlaying.currentInfo.playing = true;
+			koto.nowPlaying.currentInfo.repeat = koto.preferences.obj.defaultRepeat;
+			
+			//var d = new Date();
+			//console.log((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after setting up nP object");	
+			
+			koto.nowPlaying.pushPlay();
+			//var d = new Date();
+			//console.log((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after pushing play");			
+			if (arg && arg.time){
+				koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path, arg.time);
+			}
+			else {
+				koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path);
+			}
+			
+			//var d = new Date();
+			//console.log((parseInt(d.getTime()) - parseInt(milliseconds)) + " milliseconds after playing song");	
+			
+		},
+		shufflePlayArray: function(array){
+			if (koto.appId === "com.tibfib.app.koto.lite"){
+				array = array.slice(0, 10);
+			}
+			koto.nowPlaying.playArray(koto.utilities.shuffle(array.clone()), 0, {shuffled: true, unshuffledSongs: array});
+		},
+		playArrayNext: function(array){
+			var firstArray = koto.nowPlaying.currentInfo.songs.slice(0, koto.nowPlaying.currentInfo.index+1);
+			var secondArray = koto.nowPlaying.currentInfo.songs.slice(koto.nowPlaying.currentInfo.index+1);
+			koto.nowPlaying.currentInfo.songs.clear();
+			Object.extend(koto.nowPlaying.currentInfo.songs, firstArray.concat(array, secondArray));
+			koto.nowPlaying.liteCheck();
+		},
+		playArrayLast: function(array){
+			var origSongs = koto.nowPlaying.currentInfo.songs.clone();
+			koto.nowPlaying.currentInfo.songs.clear();
+			Object.extend(koto.nowPlaying.currentInfo.songs, origSongs.concat(array));
+			koto.nowPlaying.liteCheck();
+			
+		},
+		/* * * * * * * * * * * * * * * * * *
+		 * * * Save/Resume Now Playing * * *
+		 * * * * * * * * * * * * * * * * * */
+		hasSaved: false,
+		save: function(){
+			db8.merge({"from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, {
+				time: koto.nowPlaying.currentInfo.audioObj.currentTime,
+				songs: koto.nowPlaying.currentInfo.songs,
+				unshuffledSongs: koto.nowPlaying.currentInfo.unshuffledSongs,
+				index: koto.nowPlaying.currentInfo.index
+			});
+		},
+		deferSave: function(){
+			var time = koto.nowPlaying.currentInfo.audioObj.currentTime, songs = koto.nowPlaying.currentInfo.songs.clone(), unshuffledSongs = koto.nowPlaying.currentInfo.unshuffledSongs.clone(), index = koto.nowPlaying.currentInfo.index;
+			db8.merge.defer({"from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, {
+				time: time,
+				songs: songs,
+				unshuffledSongs: unshuffledSongs,
+				index: index
+			});
+		},
+		load: function(){
+			//if (m.isDbSearch === false && m.launchPlayer === false){
+				db8.exec({"select" : ["name", "time","songs", "index", "unshuffledSongs"], "from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, 
+				function(results){
+					if (results[0].songs.length > 0){
+						koto.nowPlaying.playArray(results[0].songs, results[0].index, {time: results[0].time, shuffled: (results[0].unshuffledSongs.length > 0), unshuffledSongs: results[0].unshuffledSongs.clone()});
+					}
+				}.bind(this));
+			//} else if (m.launchPlayer === true){
+			//	koto.nowPlaying.pushPlay(true);
+			//}
+			//m.isDbSearch = false;
+		},
+		// Push the play scene
+		pushPlay: function(justPush){
+			var stageController = Mojo.Controller.getAppController().getStageController("cardStage");
+			if (justPush){
+				stageController.pushScene("play");
+			} else {
+				if (stageController.activeScene().sceneName !== "play"){
+					var playPushed, scenes = stageController.getScenes();
+					for(var i = 0; i < scenes.length; i++){
+						if (scenes[i].sceneName === "play"){
+							playPushed = true;
+							break;
+						}
+					}
+					if (playPushed !== true){
+						stageController.pushScene("play");
+					}else {
+						stageController.popScenesTo("play");
+						stageController.swapScene({name: "play", transition: Mojo.Transition.zoomFade});
+
+					}
+				}
+				else {
+					stageController.swapScene({name: "play", transition: Mojo.Transition.crossFade});		
+				}	
+			}		
 		}
 	},
 	justType: {
+		songCountCookie: new Mojo.Model.Cookie("songCount_KotoPlayer"),		
 		setup: function(){
 			var permObj = [{"type":"db.kind","object":koto.appId + ".data:1", "caller":"com.palm.launcher", "operations":{"read":"allow"}}];
 			koto.serviceRequest.request("palm://com.palm.db/", {
@@ -871,7 +1225,7 @@ var koto = {
 			obj.id = origObj._id;
 			obj.lastUpdate = Math.round(d.getTime()/60000);
 			
-			DB.find({"select" : ["_id", "id"], "from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":obj.id}]}, false, false).then(function(future) {
+			db8.DB.find({"select" : ["_id", "id"], "from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":obj.id}]}, false, false).then(function(future) {
 				var result = future.result;
 				if (result.returnValue === true){ // Success
 					if (result.results.length < 1){
@@ -902,13 +1256,13 @@ var koto = {
 		checkJustType: function(count){
 			//called from getAllSongs.
 			var query = {"select" : ["_id"], "from":"com.palm.media.audio.file:1", "where":[{"prop":"isRingtone","op":"=","val":false}], "limit": 1};
-			DB.find(query, true, true).then(function(future) {
+			db8.DB.find(query, true, true).then(function(future) {
 				var result = future.result;
 				if (result.count){
 					if ((count && result.count !== count) || !count){
 						koto.justType.setupIndexingDashboard();
 					}
-					m.songCountCookie.put(result.count);
+					koto.justType.songCountCookie.put(result.count);
 				}
 				if (result.fired){
 					koto.justType.setupIndexingDashboard();
@@ -929,13 +1283,86 @@ var koto = {
 				}
 			}.bind(this), true);*/
 		},
-		setupCacheDashboard: function(){
+		setupIndexingDashboard: function(){
 			dashboardStage = Mojo.Controller.getAppController().getStageController("cacheStage");
 			pushDashboard = function (stageController) {
 				stageController.pushScene('cache');
 			};
 			Mojo.Controller.getAppController().createStageWithCallback({name: "cacheStage", lightweight: true, clickableWhenLocked: true}, pushDashboard, 'dashboard');
 		
+		},
+		// Now for the rating/bookmarks/playcount functions
+		getSongData: function(id, callback){
+			var query = {"select" : ["rating", "playCount", "lastPlayed", "bookmarks"], "from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":id}]};	
+			db8.exec(query, function(results){
+				if (results.length > 0){
+					callback(results[0]);
+				} else {
+					callback({playCount: 0, rating: 0, bookmarks: [], lastPlayed: "n/a"});
+					//koto.utilities.bannerError("Song details not found");
+				}
+			}.bind(this));
+		},
+		incrementPlayCount: function(id){
+			var query = {"select" : ["rating", "playCount", "bookmarks"], "from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":id}]};
+			db8.DB.find(query, false, false).then(function(future) {
+				//console.log("results " + Object.toJSON(future.result.results));
+				if (future.result.returnValue === true){ // Success
+					var d = new Date();
+					if (future.result.results.length < 1){
+						db8.getObjsById([id], function(results){
+							if (results.length > 1){			
+								results[0].playCount = 1;
+								results[0].lastPlayed = d.getTime();
+								results[0].bookmarks = [];
+								
+								koto.justType.cacheSearchData(results[0]);
+								console.log("Updated Playcount for " + results[0].display);
+							}
+						}.bind(this))
+						
+					}
+					else {
+						var obj = {
+							lastPlayed: d.getTime(),
+							playCount: future.result.results[0].playCount += 1
+						}
+						db8.merge({"from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":id}]}, obj);	
+						console.log("Updated Playcount");
+					}
+				}
+				else // Failure
+					Mojo.Log.error("find failure: Err code=" + future.exception.errorCode + "Err message=" + future.exception.message); 
+				
+			}.bind(this));
+		},
+		setRating: function(id, rating, callback){
+			var query = {"select" : ["rating", "playCount", "bookmarks"], "from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":id}]};
+			db8.DB.find(query, false, false).then(function(future) {
+				//console.log("results " + Object.toJSON(future.result.results));
+				if (future.result.returnValue === true){ // Success
+					var d = new Date();
+					if (future.result.results.length < 1){
+						db8.getObjsById([id], function(results){
+							if (results.length > 0){
+								results[0].rating = rating;							
+								koto.justType.cacheSearchData(results[0], callback);
+								console.log("Set Rating at " + rating + " for " + results[0].display);
+							}
+						}.bind(this));
+					}
+					else {
+						obj = {
+							rating: rating
+						}
+						db8.merge({"from":koto.appId + ".data:1", "where":[{"prop":"id","op":"=","val":id}]}, obj, callback);	
+						console.log("Set Rating at " + rating);
+					}
+				}
+				else // Failure
+					console.log("find failure: Err code=" + future.exception.errorCode + "Err message=" + future.exception.message); 
+				
+			}.bind(this));
 		},
 	},
 	albumArt: {
@@ -1064,6 +1491,29 @@ var koto = {
 			} else {
 				return false;
 			}
+		}
+	},
+	dashboard: {
+		show: function(){
+			if (koto.preferences.obj.useDashboard){
+				dashboardStage = Mojo.Controller.getAppController().getStageController("dashboardStage");
+				if (dashboardStage) 
+					dashboardStage.delegateToSceneAssistant("displayDashboard");
+				else{
+					pushDashboard = function (stageController) {
+						stageController.pushScene('dashboard');
+					};
+					Mojo.Controller.getAppController().createStageWithCallback({name: "dashboardStage", lightweight: true, clickableWhenLocked: true}, pushDashboard, 'dashboard');
+				}
+			}
+		},
+		update: function(){
+			if (Mojo.Controller.getAppController().getStageController("dashboardStage")){
+				Mojo.Controller.getAppController().getStageController("dashboardStage").delegateToSceneAssistant("displayDashboard");
+			}
+		},
+		hide: function(){
+			Mojo.Controller.getAppController().closeStage("dashboardStage");
 		}
 	},
 	preferences: {
@@ -1211,6 +1661,16 @@ var koto = {
 		showingPlayer: function(){
 			return (Mojo.Controller.getAppController().getStageController("cardStage").activeScene().sceneName === "play");
 		},
+		buyKoto: function(){
+			var launchParams = {
+				id: "com.palm.app.findapps",
+				params: {'target': "http://developer.palm.com/appredirect/?packageid=com.tibfib.app.koto"}
+			};
+			koto.serviceRequest.request('palm://com.palm.applicationManager',{
+				method: 'open',
+				parameters: launchParams
+			});
+		},
 		shuffle: function(array) {
 			var tmp, current, top = array.length;
 			if (top) while(--top) {
@@ -1277,6 +1737,31 @@ var koto = {
 			}, this);*/
 			array.sort(sortFunction);
 			uniqArray(array);
+		},
+		setupHandleLaunchStage: function(arg){
+			pushScene = function (stageController) {
+				stageController.pushScene('handleLaunch', arg);
+			};
+			Mojo.Controller.getAppController().createStageWithCallback({name: "handleLaunchStage", lightweight: true, clickableWhenLocked: true}, pushScene, 'card');
+		
+		},	
+		dialogAlert: function(alert){
+		
+		},
+		dialogError: function(error){
+			if (Mojo.Controller.getAppController().getActiveStageController().activeScene()){
+				var window = Mojo.Controller.getAppController().getActiveStageController().activeScene().window;
+				Mojo.Controller.errorDialog(error, window);
+			}else
+				koto.utilities.bannerError(error);
+		},
+		bannerAlert: function(msg, params){
+			launchParams = params || {action: "nothing"};
+			Mojo.Controller.getAppController().showBanner({messageText: msg}, launchParams, "notification");	
+		},
+		bannerError: function(error, params){
+			launchParams = params || {action: "nothing"};
+			Mojo.Controller.getAppController().showBanner({messageText: error, icon: 'images/error-icon.png'}, launchParams, "error");	
 		}
 	}
 };

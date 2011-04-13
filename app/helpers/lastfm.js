@@ -75,9 +75,9 @@ lastfm = ({
 				}
 				else {
 					if (response.error === 4)
-						m.bannerError("Wrong Username/Password");
+						koto.utilities.bannerError("Wrong Username/Password");
 					else 
-						m.bannerError(response.message);
+						koto.utilities.bannerError(response.message);
 				}
 			}
 		}.bind(this);

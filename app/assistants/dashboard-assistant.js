@@ -47,18 +47,18 @@ DashboardAssistant.prototype.controlTap = function (event) {
 	if (event.target.id === "play_pause"){
 		if (koto.nowPlaying.currentInfo.playing === true){
 			this.playPauseDiv.removeClassName("pause");
-			m.pause();
+			koto.nowPlaying.pause();
 			this.playPauseDiv.addClassName("play");
 		}
 		else{
 			this.playPauseDiv.removeClassName("play");
-			m.resume();
+			koto.nowPlaying.resume();
 			this.playPauseDiv.addClassName("pause");
 		}
 	}else if (event.target.id === "previous"){
-		m.playPrevious();
+		koto.nowPlaying.playPrevious();
 	}else if (event.target.id === "next"){
-		m.playNext();
+		koto.nowPlaying.playNext();
 	}
 };
  
@@ -69,6 +69,6 @@ DashboardAssistant.prototype.cleanup = function (event) {
 	
 	if (!koto.preferences.obj.closeDashboard && !Mojo.Controller.getAppController().getStageController("cardStage")){
 		koto.nowPlaying.currentInfo.audioObj.pause();		
-		m.saveNowPlaying();
+		koto.nowPlaying.save();
 	}
 };

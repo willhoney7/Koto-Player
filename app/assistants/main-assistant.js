@@ -1,7 +1,7 @@
 function MainAssistant(fromStartUp) {
 	this.loadedOnActivate = fromStartUp || false;	
 	if(koto.preferences.obj.saveAndResume === true && this.loadedOnActivate){
-		m.resumeNowPlaying();
+		koto.nowPlaying.load();
 	}
 	
 	scene_helpers.addControlSceneMethods(this);
@@ -64,7 +64,7 @@ MainAssistant.prototype.moreTap = function(event){
 	this.controller.popupSubmenu({
 		onChoose: function(value){
 			if (value){
-				m.shufflePlay(koto.content.songs.array);
+				koto.nowPlaying.shufflePlayArray(koto.content.songs.array);
 			}
 		}.bind(this),
 		placeNear: event.target,
@@ -87,7 +87,7 @@ MainAssistant.prototype.loaded = function(event){
 
 MainAssistant.prototype.listTap = function(event) {
 	if (event.item.command === "upgrade"){
-		m.buyKoto();
+		koto.utilities.buyKoto();
 	} else {
 		this.controller.stageController.pushScene("list", event.item.command);
 	}

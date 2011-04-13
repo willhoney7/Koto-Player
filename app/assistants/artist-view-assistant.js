@@ -105,10 +105,10 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 				if (objType === "song"){
 					switch(value){
 						case 'play-next':
-							m.playArrayNext([event.item]); 
+							koto.nowPlaying.playArrayNext([event.item]); 
 							break;
 						case 'play-last':
-							m.playArrayLast([event.item]); 	
+							koto.nowPlaying.playArrayLast([event.item]); 	
 							break;
 						case 'add-to-playlist':
 							this.extraDiv.mojo.show("addToPlaylist", [event.item]);
@@ -132,16 +132,16 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 				}else if (objType === "album"){
 					switch(value){
 						case "shuffle-play":
-							m.shufflePlay(event.item.songs);
+							koto.nowPlaying.shufflePlayArray(event.item.songs);
 							break;
 						case 'play-now':
-							m.playArray(event.item.songs, 0);
+							koto.nowPlaying.playArray(event.item.songs, 0);
 							break;
 						case 'play-next':
-							m.playArrayNext(event.item.songs); 
+							koto.nowPlaying.playArrayNext(event.item.songs); 
 							break;
 						case 'play-last':
-							m.playArrayLast(event.item.songs); 	
+							koto.nowPlaying.playArrayLast(event.item.songs); 	
 							break;
 						case 'add-to-playlist':
 							this.extraDiv.mojo.show("addToPlaylist", event.item.songs);
@@ -185,7 +185,7 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 		this.controller.modelChanged(event.item);
 	}
 	else if (objType === "song"){
-		m.playArray(event.model.songs, event.index);
+		koto.nowPlaying.playArray(event.model.songs, event.index);
 	}
 };
 
@@ -208,16 +208,16 @@ ArtistViewAssistant.prototype.moreTap = function(event){
 		onChoose: function(value){
 			switch(value){
 				case 'play-songs':
-					m.playArray(this.artist.songs, 0);
+					koto.nowPlaying.playArray(this.artist.songs, 0);
 					break;
 				case 'shuffle-songs':
-					m.shufflePlay(this.artist.songs);
+					koto.nowPlaying.shufflePlayArray(this.artist.songs);
 					break;
 				case 'play-next':
-					m.playArrayNext(this.artist.songs);
+					koto.nowPlaying.playArrayNext(this.artist.songs);
 					break;
 				case 'play-last':
-					m.playArrayLast(this.artist.songs)
+					koto.nowPlaying.playArrayLast(this.artist.songs)
 					break;
 				case 'add-to-playlist':
 					this.extraDiv.mojo.show("addToPlaylist", this.artist.songs);

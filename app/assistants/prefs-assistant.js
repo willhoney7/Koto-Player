@@ -268,7 +268,7 @@ PrefsAssistant.prototype.setup = function() {
 					token: '',
 					secret: ''
 				};
-				m.bannerError('Invalid login credentials')
+				koto.utilities.bannerError('Invalid login credentials')
 			}
 		  }.bind(this)
 		);

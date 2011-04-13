@@ -67,10 +67,10 @@ PlayAssistant.prototype.setup = function () {
 	this.handleAlbumArtTap = function albumArtTap(){
 		if (!this.albumArtScroller.visible()){
 			if (koto.nowPlaying.currentInfo.playing === true && this.canPause){
-				m.pause();
+				koto.nowPlaying.pause();
 			}
 			else {
-				m.resume();
+				koto.nowPlaying.resume();
 				
 			}
 		}
@@ -272,13 +272,13 @@ PlayAssistant.prototype.albumArtFlick = function(event){
 	if (event.velocity.x > 600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
 		if (this.canFlick){
 			this.canPause = false;
-			m.playPrevious();
+			koto.nowPlaying.playPrevious();
 		}
 	}
 	else if (event.velocity.x < -600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
 		if (this.canFlick){
 			this.canPause = false;
-			m.playNext();
+			koto.nowPlaying.playNext();
 		}
 	}
 	else if (event.velocity.y < -1000 && (Math.abs(event.velocity.y) > Math.abs(event.velocity.x))){
@@ -392,7 +392,7 @@ PlayAssistant.prototype.albumArtScrollerFlick = function(event){
 					koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = true;
 					this.list.mojo.invalidateItems(oldIndex, 1);
 					this.list.mojo.invalidateItems(koto.nowPlaying.currentInfo.index, 1);
-					m.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path);
+					koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path);
 					this.renderProgressNum();
 					this.panel.mojo.updateSong();
 				}
@@ -462,7 +462,7 @@ PlayAssistant.prototype.listTap = function(event) {
 						koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = true;
 						this.list.mojo.invalidateItems(index, 1);
 						this.list.mojo.invalidateItems(koto.nowPlaying.currentInfo.index, 1);
-						m.playSong(event.item.path);
+						koto.nowPlaying.playSong(event.item.path);
 						this.renderNowPlayingItem();
 						this.renderProgressNum();
 						this.panel.mojo.updateSong();
@@ -507,7 +507,7 @@ PlayAssistant.prototype.listTap = function(event) {
 						this.continueAlbum();
 						break;
 					case 'view-album':
-						m.view({name: event.item.album, type: "album"});
+						koto.content.view({name: event.item.album, type: "album"});
 						break;
 					case 'add-to-playlist':
 						this.extraDiv.mojo.show("addToPlaylist", [event.item]);
@@ -532,7 +532,7 @@ PlayAssistant.prototype.listTap = function(event) {
 			koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].active = true;
 			this.list.mojo.invalidateItems(index, 1);
 			this.list.mojo.invalidateItems(koto.nowPlaying.currentInfo.index, 1);
-			m.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path);
+			koto.nowPlaying.playSong(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].path);
 			this.focusSong(true);
 			this.renderNowPlayingItem();
 			this.renderProgressNum();
@@ -557,7 +557,7 @@ PlayAssistant.prototype.listReorder = function(event){
 }
 PlayAssistant.prototype.listDelete = function(event){
 	if (koto.nowPlaying.currentInfo.songs.length === 1){
-		m.stop();
+		koto.nowPlaying.stop();
 	}
 	koto.nowPlaying.currentInfo.songs.splice(event.index, 1);
 	if (koto.nowPlaying.currentInfo.songs.length === 0){
@@ -568,7 +568,7 @@ PlayAssistant.prototype.listDelete = function(event){
 			koto.nowPlaying.currentInfo.index--;
 		else if (event.index === koto.nowPlaying.currentInfo.index){
 			koto.nowPlaying.currentInfo.index--;
-			m.playNext();
+			koto.nowPlaying.playNext();
 			
 			setTimeout(function(){
 				this.list.mojo.invalidateItems(koto.nowPlaying.currentInfo.index, 1);
@@ -595,7 +595,7 @@ PlayAssistant.prototype._playPrevious = function(){
 	//this.renderNowPlayingItem();
 	this.controller.get("album-art-container").addClassName("previous");
 	this.canFlick = false;
-	m.resume();
+	koto.nowPlaying.resume();
 
 	setTimeout(function(){
 		this.renderNowPlayingItem();
@@ -620,7 +620,7 @@ PlayAssistant.prototype._playNext = function(dontPlay){
 		this.extraDiv.mojo.show("songDetails", koto.nowPlaying.currentInfo.songs, koto.nowPlaying.currentInfo.index);
 	}
 	if (!dontPlay){
-		//m.resume();
+		//koto.nowPlaying.resume();
 	}
 	this.renderProgressNum();
 	//this.renderNowPlayingItem();
@@ -720,10 +720,10 @@ PlayAssistant.prototype.handleCommand = function(event){
 		}.bind(this);
 		switch(event.command){
 			case "more":
-				m.view({name: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].artist, type: "artist"});
+				koto.content.view({name: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].artist, type: "artist"});
 				break;
 			case "view":
-				m.view({name: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].album, type: "album"});
+				koto.content.view({name: koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index].album, type: "album"});
 				break;
 			case "share-playlist":
 				var text = "I'm using Koto Player for webOS. Check out <a href='http://kotoplayer.com'>http://kotoplayer.com</a> for more info!";
@@ -753,25 +753,25 @@ PlayAssistant.prototype.handleCommand = function(event){
 				break;
 			case 'play_pause':
 				if (koto.nowPlaying.currentInfo.playing === true){
-					m.pause();
+					koto.nowPlaying.pause();
 				}
 				else{
-					m.resume();
+					koto.nowPlaying.resume();
 				}
 				break;
 			case 'previous':
 				if (this.canFlick){
-					m.playPrevious();
+					koto.nowPlaying.playPrevious();
 				}
 				break;
 			case 'next':
 				if (this.canFlick){
-					m.playNext();
+					koto.nowPlaying.playNext();
 				}
 				break;
 			case 'shuffle':
 				if (koto.nowPlaying.currentInfo.unshuffledSongs.length > 0){
-					m.unshuffleNowPlaying();
+					koto.nowPlaying.unshuffle();
 					
 					this.cmdMenuModel.items[1].items[4].icon = "music-shuffle";
 					this.controller.modelChanged(this.cmdMenuModel);
@@ -788,7 +788,7 @@ PlayAssistant.prototype.handleCommand = function(event){
 					}
 				}
 				else {
-					koto.utilities.shuffleNowPlaying();
+					koto.utilities.shuffle();
 					
 					this.cmdMenuModel.items[1].items[4].icon = "music-shuffle-active";
 					this.controller.modelChanged(this.cmdMenuModel);
@@ -830,11 +830,11 @@ PlayAssistant.prototype.handleCommand = function(event){
 						if (connected){
 							Twitter.generateTweet();
 						} else {
-							m.bannerError("Not Connected to Internet");
+							koto.utilities.bannerError("Not Connected to Internet");
 						}
 					}.bind(this));
 				}else {
-					m.bannerError("Not Logged Into Twitter!", {action: "pushScene", scene: "prefs"});
+					koto.utilities.bannerError("Not Logged Into Twitter!", {action: "pushScene", scene: "prefs"});
 				}
 				break;
 			case 'repeat-2':

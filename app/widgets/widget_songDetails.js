@@ -20,7 +20,7 @@ Mojo.Widget.SongDetails = Class.create({
 		this.controller.stopListening(this.songDetailsTrackStatsDiv, Mojo.Event.tap, this.ratingTapHandler);
 	},	
 	renderContent: function(){
-		m.getSongData(this.array[this.index]._id, function(result){
+		koto.justType.getSongData(this.array[this.index]._id, function(result){
 			//console.log("results " + Object.toJSON(result));
 			renderedContent = Mojo.View.render({
 				object: result,
@@ -76,13 +76,13 @@ Mojo.Widget.SongDetails = Class.create({
 	},
 	songDetailsTap: function(event){
 		if (event.target.id === "clear_rating"){
-			m.setRating(this.array[this.index]._id, 0, function(){
+			koto.justType.setRating(this.array[this.index]._id, 0, function(){
 				this.renderContent();
 			}.bind(this));
 		} else {
 			var rating = parseInt(event.target.id, 10);
 			if (!isNaN(rating)){
-				m.setRating(this.array[this.index]._id, rating, function(){
+				koto.justType.setRating(this.array[this.index]._id, rating, function(){
 					this.renderContent();
 				}.bind(this));
 			}
@@ -140,11 +140,11 @@ Mojo.Widget.SongDetails = Class.create({
 		}
 	},
 	incrementRating: function(){
-		m.getSongData(this.array[this.index]._id, function(result){
+		koto.justType.getSongData(this.array[this.index]._id, function(result){
 			var rating = result.rating || 0;
 			if (rating < 5){
 				rating += 1;
-				m.setRating(this.array[this.index]._id, rating, function(){
+				koto.justType.setRating(this.array[this.index]._id, rating, function(){
 					this.renderContent();
 				}.bind(this));
 			}
@@ -152,11 +152,11 @@ Mojo.Widget.SongDetails = Class.create({
 	
 	},
 	decrementRating: function(){
-		m.getSongData(this.array[this.index]._id, function(result){
+		koto.justType.getSongData(this.array[this.index]._id, function(result){
 			var rating = result.rating || 0;
 			if (rating > 0){
 				rating -= 1;
-				m.setRating(this.array[this.index]._id, rating, function(){
+				koto.justType.setRating(this.array[this.index]._id, rating, function(){
 					this.renderContent();
 				}.bind(this));
 			}

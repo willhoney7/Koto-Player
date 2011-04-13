@@ -36,11 +36,11 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 					Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "play_pause"});
 					break;
 				case 46://.
-					m.playNext();
+					koto.nowPlaying.playNext();
 					break;
 				case 64://@
 				case 48:
-					m.playPrevious();
+					koto.nowPlaying.playPrevious();
 					break;
 				case 118://v
 				case 86:
@@ -118,7 +118,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			assistant.panel.removeClassName("shown");
 			assistant.panel.mojo.updateSong();
 		} 
-		if (m.hasSavedOldNowPlaying){
+		if (koto.nowPlaying.hasSaved){
 			if ((((arg && !arg.nowPlaying) || !arg) && assistant.appMenuModel.items[0].items.length < 2) || ((arg && arg.nowPlaying)  && assistant.appMenuModel.items[1].items.length < 2)){
 				assistant.appMenuModel.items[0].items.push({label: $L("Recover Now Playing"), command: "resume-now-playing"});
 				assistant.controller.modelChanged(assistant.appMenuModel);
@@ -140,7 +140,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			assistant.panel.mojo.hideMarquee();
 		}
 		if (koto.nowPlaying.currentInfo.songs.length > 0){
-			m.showDashboard();
+			koto.dashboard.show();
 		}
 	};
 	assistant.stageActivate = function(){
@@ -150,7 +150,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			
 		}
 		assistant.checkCmdMenu();
-		m.hideDashboard();
+		koto.dashboard.hide();
 	};
 	assistant.initAppMenu = function(opts) {
 		var default_items = [                        //commands are in app-assistant
@@ -162,7 +162,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			{ label: $L('About Koto'),							command: 'do-about' },
 			{ label: $L('Help'),								command: Mojo.Menu.helpCmd },
 		];
-		if (m.hasSavedOldNowPlaying === true){
+		if (koto.nowPlaying.hasSaved === true){
 			default_items[0].items.push({label: $L("Recover Now Playing"), command: "resume-now-playing"});
 		}
 		if (opts){
@@ -272,22 +272,22 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			if (event.type === Mojo.Event.command) {
 				switch(event.command){
 					case 'pushNowPlaying':
-						m.pushPlay();
+						koto.nowPlaying.pushPlay();
 						break;					
 					case 'play_pause':
 						if (koto.nowPlaying.currentInfo.playing === true){
-							m.pause();
+							koto.nowPlaying.pause();
 						}
 						else{
-							m.resume();
+							koto.nowPlaying.resume();
 						}
 						break;
 					
 					case 'previous':
-						m.playPrevious();
+						koto.nowPlaying.playPrevious();
 						break;
 					case 'next':
-						m.playNext();
+						koto.nowPlaying.playNext();
 						break;
 					case 'showDetails':
 						assistant.panel.mojo.toggleVisibility();
@@ -300,11 +300,11 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			if (event.type === Mojo.Event.forward){
 				/*if (assistant.controller.sceneName === "list" || assistant.controller.sceneName === "view"){//list scene
 					assistant.getSongs(function(songs){
-						m.playArray(songs, 0);
+						koto.nowPlaying.playArray(songs, 0);
 					}.bind(assistant));
 				}//main scene
 				else if (assistant.controller.sceneName === "main") {
-					m.shufflePlay(koto.content.songs.array, 0);
+					koto.nowPlaying.shufflePlayArray(koto.content.songs.array, 0);
 				};*/
 				if ((arg && !arg.search) || !arg){
 					assistant.controller.stageController.pushScene("search");
@@ -383,10 +383,10 @@ scene_helpers.addCommonSceneMethods = function(assistant, sceneName) {
 	}
 	assistant.stageDeactivate = function(){
 		if (koto.nowPlaying.currentInfo.songs.length > 0){
-			m.showDashboard();
+			koto.dashboard.show();
 		}
 	};
 	assistant.stageActivate = function(){
-		m.hideDashboard();
+		koto.dashboard.hide();
 	};
 }

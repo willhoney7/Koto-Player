@@ -46,7 +46,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 								this.playlistTextFieldModel.value = "";
 								this.controller.modelChanged(this.playlistTextFieldModel);
 								
-								m.bannerAlert("Playlist Saved");
+								koto.utilities.bannerAlert("Playlist Saved");
 							}.bind(this)
 						);
 					}
@@ -85,7 +85,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 					}.bind(currentScene));
 				}
 				this.controller.scene.assistant.extraDiv.mojo.hide();					
-				m.bannerAlert("Playlist Saved");
+				koto.utilities.bannerAlert("Playlist Saved");
 			}.bind(this)
 		);
 		

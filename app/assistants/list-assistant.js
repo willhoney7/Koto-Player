@@ -233,10 +233,9 @@ ListAssistant.prototype.activate = function(event) {
 	}
 	this.activateCommon();
 	
-	//if (this.data === "playlists" || this.data === "favorites"){
+	if (this.data === "playlists" || this.data === "favorites"){
 		this.list.mojo.noticeUpdatedItems(0, koto.content[this.data].array);
-	//}
-	
+	}
 };
 
 ListAssistant.prototype.filterList = function(filterString, listWidget, offset, count){
@@ -343,7 +342,7 @@ ListAssistant.prototype.listTap = function(event){
 				if (value === "favorite"){
 					koto.content.favorites.add(obj);
 				} else if (value === "view-album"){
-					m.view({type: "album", name: obj.album}); 
+					koto.content.view({type: "album", name: obj.album}); 
 				}
 				else{
 					var handleAction = function(songs){
@@ -352,25 +351,25 @@ ListAssistant.prototype.listTap = function(event){
 								if (objType === "song"){
 									//todo fix...
 									if (this.subset.length > 0 && this.filter !== ""){
-										m.playArray(this.subset, event.index);
+										koto.nowPlaying.playArray(this.subset, event.index);
 									} else {
-										m.playArray(this.items, event.index);
+										koto.nowPlaying.playArray(this.items, event.index);
 									}
 								} else {
-									m.playArray(songs, 0);
+									koto.nowPlaying.playArray(songs, 0);
 								}
 								break;
 							case "shuffle":
-								m.shufflePlay(songs, 0);
+								koto.nowPlaying.shufflePlayArray(songs, 0);
 								break;
 							case "view-list":
-								m.view(obj, songs);							
+								koto.content.view(obj, songs);							
 								break;
 							case "play-next":
-								m.playArrayNext(songs);
+								koto.nowPlaying.playArrayNext(songs);
 								break;
 							case "play-last":
-								m.playArrayLast(songs);
+								koto.nowPlaying.playArrayLast(songs);
 								break;
 							case "add-to-playlist":
 								this.extraDiv.mojo.show("addToPlaylist", songs);
@@ -395,7 +394,7 @@ ListAssistant.prototype.listTap = function(event){
 				function handleSongs(songs){
 					for(var i = 0; i < songs.length; i++){
 						if (songs[i]._id === obj._id){
-							m.playArray(songs, i);
+							koto.nowPlaying.playArray(songs, i);
 							break;
 						}
 					}
@@ -407,23 +406,23 @@ ListAssistant.prototype.listTap = function(event){
 				}
 			} else {
 				if (this.subset.length > 0 && this.filter !== "" && koto.preferences.obj.filterTap === "filtered"){
-					m.playArray(this.subset, event.index);
+					koto.nowPlaying.playArray(this.subset, event.index);
 				} else if (koto.preferences.obj.filterTap === "all"){
-					m.playArray(this.items, obj.unFilteredIndex);
+					koto.nowPlaying.playArray(this.items, obj.unFilteredIndex);
 				} else {
-					m.playArray(this.items, event.index);				
+					koto.nowPlaying.playArray(this.items, event.index);				
 				}
 			}
 		} else if ((objType === "artist" || objType === "album") && koto.preferences.obj.favoriteTap === "view"){
-			m.view(obj);
+			koto.content.view(obj);
 		} 
 		else if ((objType === "playlist" && koto.preferences.obj.playlistTap === "play" && this.data !== "favorites") || (this.data === "favorites" && koto.preferences.obj.favoriteTap === "play")){
 			koto.content.getSongsOfObj(obj, function(songs){
-				m.playArray(songs, 0);
+				koto.nowPlaying.playArray(songs, 0);
 			}.bind(this), true);
 		}else {
 			koto.content.getSongsOfObj(obj, function(songs){
-				m.viewArray(obj, songs);							
+				koto.content.viewArray(obj, songs);							
 			}.bind(this), true);
 		}
 	}
@@ -491,19 +490,19 @@ ListAssistant.prototype.moreTap = function(event){
 			var handleAction = function(songs){
 				switch(value){
 					case "play":
-						m.playArray(songs, 0);
+						koto.nowPlaying.playArray(songs, 0);
 						break;
 					case "shuffle":
-						m.shufflePlay(songs, 0);
+						koto.nowPlaying.shufflePlayArray(songs, 0);
 						break;
 					case "view":
-						m.viewArray(event.item, songs);							
+						koto.content.viewArray(event.item, songs);							
 						break;
 					case "play-next":
-						m.playArrayNext(songs);
+						koto.nowPlaying.playArrayNext(songs);
 						break;
 					case "play-last":
-						m.playArrayLast(songs);
+						koto.nowPlaying.playArrayLast(songs);
 						break;
 					case "add-to-playlist":
 						this.extraDiv.mojo.show("addToPlaylist", songs);
@@ -534,7 +533,7 @@ ListAssistant.prototype.getSongs = function(callback) {
 			}
 			break;
 		case "playlists":
-			this.getSongsOfArray(m.playlists, callback);
+			this.getSongsOfArray(koto.content.playlists.array, callback);
 			break;
 		case "favorites":
 			this.getSongsOfArray(koto.content.favorites.array, callback);

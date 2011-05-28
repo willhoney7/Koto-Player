@@ -525,12 +525,41 @@ var koto = {
 						//koto.content.playlists.array.push(array[i]);
 					}
 					//koto.content.playlists.array = array.clone();
+					var query = { "select" : ["name", "path", "songIds", "_id"], "orderBy": "name", "from":"com.palm.media.playlist.object:1"};
 					
-					koto.content.playlists.array = koto.content.playlists.autoArray.concat(koto.content.playlists.customArray);
-					//this.getM3UPlaylists();
-					if(callback){
-						callback();
-					}
+					db8.exec(query, function(array){
+						console.error("got m3u playlists", array.length);
+						var i = 0;//Dunno if this works....
+						function addSongs(obj){
+							db8.getObjsById(obj.songIds, function(songs){
+								obj.songs = songs;
+								obj.preventDelete = true;
+								i++;
+								if (i < array.length){
+									addSongs(array[i]);
+								} else {
+									Object.extend(koto.content.playlists.m3uArray, array);
+									koto.content.playlists.array = [].concat(koto.content.playlists.m3uArray, koto.content.playlists.autoArray, koto.content.playlists.customArray);
+									
+									if(callback){
+										console.error("calling back");
+										callback();
+									}
+								}
+							}.bind(this)); 
+						}
+						if(i < array.length){						
+							addSongs(array[i]);
+						} else {
+							Object.extend(koto.content.playlists.m3uArray, array);		
+							koto.content.playlists.array = [].concat(koto.content.playlists.m3uArray, koto.content.playlists.autoArray, koto.content.playlists.customArray);
+							
+							if(callback){
+								console.error("calling back");
+								callback();
+							}
+						}
+					}.bind(this));
 				}.bind(this));
 			},
 			getOne: function(name, callback){
@@ -1654,9 +1683,10 @@ var koto = {
 			}
 		},
 		delegate: function(funcName, arg){
-			try {
-				Mojo.Controller.getAppController().getStageController("cardStage").delegateToSceneAssistant(funcName, arg);
-			}catch(e){};//so it errors silently when you swipe card off
+			var stageController;
+			if(Mojo.Controller.getAppController() && stageController = Mojo.Controller.getAppController().getStageController("cardStage")){{
+				stageController.delegateToSceneAssistant(funcName, arg);
+			}
 		},
 		showingPlayer: function(){
 			return (Mojo.Controller.getAppController().getStageController("cardStage").activeScene().sceneName === "play");

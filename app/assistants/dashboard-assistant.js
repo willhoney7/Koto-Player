@@ -62,7 +62,9 @@ DashboardAssistant.prototype.controlTap = function (event) {
 	}
 };
  
-DashboardAssistant.prototype.activate = function (event) {};
+DashboardAssistant.prototype.activate = function (event) {
+	this.displayDashboard();
+};
 DashboardAssistant.prototype.deactivate = function (event) {};
 DashboardAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("dashboard-contents", Mojo.Event.tap, this.switchHandler);

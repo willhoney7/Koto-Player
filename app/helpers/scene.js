@@ -33,7 +33,7 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 			//Mojo.Log.error(event.originalEvent.keyCode);
 			switch(event.originalEvent.keyCode){
 				case 32://spacebar
-					Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "play_pause"});
+					koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "play_pause"});
 					break;
 				case 46://.
 					koto.nowPlaying.playNext();
@@ -45,43 +45,43 @@ scene_helpers.addControlSceneMethods = function(assistant, arg) {
 				case 118://v
 				case 86:
 					if (arg && arg.nowPlaying){
-						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "view"});
+						koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "view"});
 					}
 					break;
 				case 109://m
 				case 77:
 					if (arg && arg.nowPlaying){
-						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "more"});
+						koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "more"});
 					}
 					break;
 				case 112://p
 				case 80:
 					if (arg && arg.nowPlaying){
-						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "playlist-popup"});
+						koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "playlist-popup"});
 					}
 					break;
 				case 108://l
 				case 76:
 					if (arg && arg.nowPlaying){
-						//Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "lyrics"});				
+						//koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "lyrics"});				
 					}
 					break;
 				case 100://d
 				case 68: 
 					if (arg && arg.nowPlaying){
-						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "details"});														
+						koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "details"});														
 					}
 					break;
 				case 99:
 				case 67://c
 					if (arg && arg.nowPlaying){
-						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "continue-album"});								
+						koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "continue-album"});								
 					}
 					break;
 				case 102://f
 				case 70:
 					if (arg && arg.nowPlaying){
-						Mojo.Controller.getAppController().getStageController("cardStage").sendEventToCommanders({'type':Mojo.Event.command, command: "favorite-song"});								
+						koto.cardController.sendEventToCommanders({'type':Mojo.Event.command, command: "favorite-song"});								
 					}
 					break;
 					

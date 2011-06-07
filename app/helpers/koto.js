@@ -1,4 +1,3 @@
-//This will be the new library. Improving and fleshing it out for future ... stuff :)
 /*jslint white: false, onevar: true, undef: true, nomen: false, regexp: true, plusplus: true, bitwise: true, newcap: true, maxerr: 100, indent: 4 */
 /*global Mojo m console Audio api_keys xTwitter db8 Metrix ServiceRequestWrapper AjaxRequestWrapper*/
 var koto = {
@@ -7,15 +6,21 @@ var koto = {
 	metrix: new Metrix(),
 	serviceRequest: new ServiceRequestWrapper(),
 	ajaxRequest: new AjaxRequestWrapper(),
+	appController: {},
+	cardController: {},
 	setup: function (arg) {
 		if ((arg && arg.action === "setup") || !arg) {
 			
 			//setup stuff
 			db8.setup();
 			koto.preferences.get();
-
+			
+			//setup global references to the controllers
+			koto.appController = Mojo.Controller.getAppController();
+			koto.cardController = koto.appController.getStageController("cardStage");
+			
 			//set stylesheet
-			Mojo.Controller.getAppController().getStageController("cardStage").loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
+			koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
 			
 			koto.albumArt.loadCustom(function () {
 				//if auto resume is on, resume this stuff
@@ -44,7 +49,8 @@ var koto = {
 			
 		} else if (arg && arg.action === "fromDashboard") {
 			//set stylesheet
-			Mojo.Controller.getAppController().getStageController("cardStage").loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
+			koto.cardController = koto.appController.getStageController("cardStage");
+			koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
 			//don't do anything else I guess.
 		}
 	},
@@ -350,7 +356,7 @@ var koto = {
 			viewOne: function(artist){
 				koto.content.artists.getFormattedSongsOfOne(artist, function(formattedSongs, songs, error){
 					if (!error){
-						Mojo.Controller.getAppController().getStageController("cardStage").pushScene("artist-view", {name: artist, albums: formattedSongs, songs: songs, _kind: "com.palm.media.audio.artist:1"}, focus);
+						koto.cardController.pushScene("artist-view", {name: artist, albums: formattedSongs, songs: songs, _kind: "com.palm.media.audio.artist:1"}, focus);
 					} else if (error) {
 					
 					}
@@ -442,7 +448,7 @@ var koto = {
 				koto.content.albums.getSongsOfOne({album: album.name, albumArtist: album.artist}, function(songs){
 					album.songs = songs;
 					album.open = true;
-					Mojo.Controller.getAppController().getStageController("cardStage").pushScene("artist-view", {name: album.artist, albums: [album], songs: songs, _kind: "com.palm.media.audio.artist:1"});
+					koto.cardController.pushScene("artist-view", {name: album.artist, albums: [album], songs: songs, _kind: "com.palm.media.audio.artist:1"});
 				});
 			},
 		},
@@ -717,7 +723,7 @@ var koto = {
 								koto.content.playlists.load(function(){
 									console.log("done loading everything");
 									try {
-										Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();		
+										koto.cardController.getScenes()[0].assistant.loaded();		
 									} catch(e){ console.log(e)};
 									
 									if (koto.justType.songCountCookie.get()){
@@ -772,7 +778,7 @@ var koto = {
 			}
 		},
 		viewArray: function(titleObj, array){
-			Mojo.Controller.getAppController().getStageController("cardStage").pushScene("view", titleObj, array);
+			koto.cardController.pushScene("view", titleObj, array);
 		},
 	},
 	nowPlaying: {
@@ -1091,12 +1097,11 @@ var koto = {
 		},
 		// Push the play scene
 		pushPlay: function(justPush){
-			var stageController = Mojo.Controller.getAppController().getStageController("cardStage");
 			if (justPush){
-				stageController.pushScene("play");
+				koto.cardController..pushScene("play");
 			} else {
-				if (stageController.activeScene().sceneName !== "play"){
-					var playPushed, scenes = stageController.getScenes();
+				if (koto.cardController.activeScene().sceneName !== "play"){
+					var playPushed, scenes = koto.cardController.getScenes();
 					for(var i = 0; i < scenes.length; i++){
 						if (scenes[i].sceneName === "play"){
 							playPushed = true;
@@ -1104,15 +1109,15 @@ var koto = {
 						}
 					}
 					if (playPushed !== true){
-						stageController.pushScene("play");
+						koto.cardController.pushScene("play");
 					}else {
-						stageController.popScenesTo("play");
-						stageController.swapScene({name: "play", transition: Mojo.Transition.zoomFade});
+						koto.cardController.popScenesTo("play");
+						koto.cardController.swapScene({name: "play", transition: Mojo.Transition.zoomFade});
 
 					}
 				}
 				else {
-					stageController.swapScene({name: "play", transition: Mojo.Transition.crossFade});		
+					koto.cardController.swapScene({name: "play", transition: Mojo.Transition.crossFade});		
 				}	
 			}		
 		}
@@ -1684,12 +1689,12 @@ var koto = {
 		},
 		delegate: function(funcName, arg){
 			var stageController;
-			if(Mojo.Controller.getAppController() && stageController = Mojo.Controller.getAppController().getStageController("cardStage")){{
+			if(koto.appController && koto.cardController){
 				stageController.delegateToSceneAssistant(funcName, arg);
 			}
 		},
 		showingPlayer: function(){
-			return (Mojo.Controller.getAppController().getStageController("cardStage").activeScene().sceneName === "play");
+			return (koto.cardController.activeScene().sceneName === "play");
 		},
 		buyKoto: function(){
 			var launchParams = {

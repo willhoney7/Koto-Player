@@ -74,10 +74,11 @@ lastfm = ({
 					callback();
 				}
 				else {
-					if (response.error === 4)
+					if (response.error === 4){
 						koto.utilities.bannerError("Wrong Username/Password");
-					else 
+					} else {
 						koto.utilities.bannerError(response.message);
+					}
 				}
 			}
 		}.bind(this);

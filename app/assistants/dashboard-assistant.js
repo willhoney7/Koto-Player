@@ -69,7 +69,7 @@ DashboardAssistant.prototype.deactivate = function (event) {};
 DashboardAssistant.prototype.cleanup = function (event) {
 	this.controller.stopListening("dashboard-contents", Mojo.Event.tap, this.switchHandler);
 	
-	if (!koto.preferences.obj.closeDashboard && !Mojo.Controller.getAppController().getStageController("cardStage")){
+	if (!koto.preferences.obj.closeDashboard && !koto.cardController){
 		koto.nowPlaying.currentInfo.audioObj.pause();		
 		koto.nowPlaying.save();
 	}

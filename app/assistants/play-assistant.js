@@ -36,7 +36,7 @@ PlayAssistant.prototype.setup = function () {
 				if (!koto.preferences.obj.truncateText){
 					return "noTruncate";
 				}
-			}.bind(this)
+			}
 		},
 		hasNoWidgets: true,
 		swipeToDelete:true, 
@@ -81,7 +81,7 @@ PlayAssistant.prototype.setup = function () {
 	this.controller.listen(this.nowPlayingItem, Mojo.Event.hold, this.handleAlbumArtHold);
 	this.controller.listen(this.nowPlayingItem, Mojo.Event.flick, this.handleAlbumArtFlick);
 	
-	this.renderNowPlayingItem();
+	//this.renderNowPlayingItem();
 	
 	//Scroller
 	this.controller.setupWidget("albumart-scroller",
@@ -265,9 +265,6 @@ PlayAssistant.prototype.renderNowPlayingItem = function(){
 	renderContent();
 }
 
-PlayAssistant.prototype.getIndex = function(){
-
-};
 PlayAssistant.prototype.albumArtFlick = function(event){
 	if (event.velocity.x > 600 && (Math.abs(event.velocity.x) > Math.abs(event.velocity.y))){
 		if (this.canFlick){
@@ -320,7 +317,7 @@ PlayAssistant.prototype.albumArtHold = function(event){
 }
 PlayAssistant.prototype.renderAlbumArtScrollerItems = function(){
 	var start = ((koto.nowPlaying.currentInfo.index+1) > koto.preferences.obj.albumArtScrollerNum)? koto.nowPlaying.currentInfo.index - koto.preferences.obj.albumArtScrollerNum : 0;
-	var end = ((koto.nowPlaying.currentInfo.songs.length - koto.nowPlaying.currentInfo.index+1) > parseInt(koto.preferences.obj.albumArtScrollerNum, 10)) ?koto.nowPlaying.currentInfo.index + parseInt(koto.preferences.obj.albumArtScrollerNum, 10) : koto.nowPlaying.currentInfo.songs.length-1 ;
+	var end = ((koto.nowPlaying.currentInfo.songs.length - koto.nowPlaying.currentInfo.index) > parseInt(koto.preferences.obj.albumArtScrollerNum, 10)) ?koto.nowPlaying.currentInfo.index + parseInt(koto.preferences.obj.albumArtScrollerNum, 10) : koto.nowPlaying.currentInfo.songs.length;
 	var array = koto.nowPlaying.currentInfo.songs.slice(start, end);
 	
 	for(var i = 0; i < array.length; i++){
@@ -703,7 +700,7 @@ PlayAssistant.prototype.handleCommand = function(event){
 	}
 	else if (event.type === Mojo.Event.command){
 		var setupChosenRepeat = function(){
-			this.sendMenuModel.items[1].items[koto.nowPlaying.currentInfo.repeat].chosen = true;
+			this.sendMenuModel.items[3].items[koto.nowPlaying.currentInfo.repeat].chosen = true;
 			this.controller.modelChanged(this.sendMenuModel);
 		}.bind(this);
 		var launchEmail = function(text){
@@ -788,7 +785,7 @@ PlayAssistant.prototype.handleCommand = function(event){
 					}
 				}
 				else {
-					koto.utilities.shuffle();
+					koto.nowPlaying.shuffle();
 					
 					this.cmdMenuModel.items[1].items[4].icon = "music-shuffle-active";
 					this.controller.modelChanged(this.cmdMenuModel);

@@ -30,12 +30,13 @@ StartupAssistant.prototype.setup = function() {
 	
 	var changelog = [
 		{
-			"version": "0.7.7",
+			"version": "0.8.0",
 			"log":
 				[
 					"<b>Improvement:</b> Added banner error for trying to play a blank array (like an auto playlist)",
 					"<b>Bug Fix:</b> The Preference for Favorite Tap is now honored",
-					"<b>Bug Fix:</b> Twitter Features",
+					"<b>Bug Fix:</b> Last song on album art scroller not showing up properly.",
+					"<b>Bug Fix:</b> Repeat",
 				]
 		},
 		{

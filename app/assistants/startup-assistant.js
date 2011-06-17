@@ -33,7 +33,9 @@ StartupAssistant.prototype.setup = function() {
 			"version": "0.8.0",
 			"log":
 				[
+					"<b>New Feature:</b> M3U Playlists",
 					"<b>Improvement:</b> Added banner error for trying to play a blank array (like an auto playlist)",
+					"<b>Improvement:</b> Backend completely refactored and is now more efficient.",
 					"<b>Bug Fix:</b> The Preference for Favorite Tap is now honored",
 					"<b>Bug Fix:</b> Last song on album art scroller not showing up properly.",
 					"<b>Bug Fix:</b> Repeat",

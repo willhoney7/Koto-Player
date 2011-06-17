@@ -531,15 +531,15 @@ var koto = {
 						//koto.content.playlists.array.push(array[i]);
 					}
 					//koto.content.playlists.array = array.clone();
-					var query = { "select" : ["name", "path", "songIds", "_id"], "orderBy": "name", "from":"com.palm.media.playlist.object:1"};
+					var query = { "select" : ["name", "path", "songIds", "_id", "_kind"], "orderBy": "name", "from":"com.palm.media.playlist.object:1"};
 					
 					db8.exec(query, function(array){
-						console.error("got m3u playlists", array.length);
 						var i = 0;//Dunno if this works....
 						function addSongs(obj){
-							db8.getObjsById(obj.songIds, function(songs){
-								obj.songs = songs;
+							//db8.getObjsById(obj.songIds, function(songs){
+								obj.songs = obj.songIds;
 								obj.preventDelete = true;
+								obj.type = "M3U";
 								i++;
 								if (i < array.length){
 									addSongs(array[i]);
@@ -548,11 +548,10 @@ var koto = {
 									koto.content.playlists.array = [].concat(koto.content.playlists.m3uArray, koto.content.playlists.autoArray, koto.content.playlists.customArray);
 									
 									if(callback){
-										console.error("calling back");
 										callback();
 									}
 								}
-							}.bind(this)); 
+							//}.bind(this)); 
 						}
 						if(i < array.length){						
 							addSongs(array[i]);
@@ -561,7 +560,6 @@ var koto = {
 							koto.content.playlists.array = [].concat(koto.content.playlists.m3uArray, koto.content.playlists.autoArray, koto.content.playlists.customArray);
 							
 							if(callback){
-								console.error("calling back");
 								callback();
 							}
 						}
@@ -763,7 +761,7 @@ var koto = {
 					}
 					break;
 				default:
-					console.log("Error! Object does not have a type");
+					console.error("Error! Object does not have a type");
 					break;
 			}
 		},
@@ -1098,7 +1096,7 @@ var koto = {
 		// Push the play scene
 		pushPlay: function(justPush){
 			if (justPush){
-				koto.cardController..pushScene("play");
+				koto.cardController.pushScene("play");
 			} else {
 				if (koto.cardController.activeScene().sceneName !== "play"){
 					var playPushed, scenes = koto.cardController.getScenes();
@@ -1667,8 +1665,8 @@ var koto = {
 		}
 	},
 	utilities: {
-		getObjType: function (obj) {
-			if (obj && obj.title) { //USED in LOTS of stuff, mostly in list-assistant.js
+		getObjType: function (obj) { //USED in LOTS of stuff, mostly in list-assistant.js
+			if (obj && obj.title) { 
 				return "song";
 			} else if (obj && obj._kind) {
 				switch (obj._kind) {
@@ -1684,13 +1682,15 @@ var koto = {
 					case "com.palm.media.playlist.object:1":
 					case koto.appId + ".playlists:1":
 						return "playlist";
+					default: 
+						console.error("Obj has no type");
+						break;
 				}
 			}
 		},
 		delegate: function(funcName, arg){
-			var stageController;
 			if(koto.appController && koto.cardController){
-				stageController.delegateToSceneAssistant(funcName, arg);
+				koto.cardController.delegateToSceneAssistant(funcName, arg);
 			}
 		},
 		showingPlayer: function(){

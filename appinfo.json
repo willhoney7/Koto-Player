@@ -1,6 +1,6 @@
 {
 	"id": "com.tibfib.app.koto.alt",
-	"version": "0.7.8",
+	"version": "0.7.9",
 	"vendor": "Will Honey (Tibfib)",
 	"type": "web",
 	"main": "index.html",

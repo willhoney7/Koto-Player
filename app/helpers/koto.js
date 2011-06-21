@@ -721,8 +721,12 @@ var koto = {
 								koto.content.playlists.load(function(){
 									console.log("done loading everything");
 									try {
-										koto.cardController.getScenes()[0].assistant.loaded();		
-									} catch(e){ console.log(e)};
+										if(koto.cardController){
+											koto.cardController.getScenes()[0].assistant.loaded();
+										} else {
+											Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();
+										}
+									} catch(e){ console.error(e)};
 									
 									if (koto.justType.songCountCookie.get()){
 										koto.justType.checkJustType.defer(koto.justType.songCountCookie.get());

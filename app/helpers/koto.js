@@ -9,15 +9,17 @@ var koto = {
 	appController: {},
 	cardController: {},
 	setup: function (arg) {
+
+		//setup global references to the controllers
+		koto.appController = Mojo.Controller.getAppController();
+		koto.cardController = koto.appController.getStageController("cardStage");
+			
 		if ((arg && arg.action === "setup") || !arg) {
 			
 			//setup stuff
 			db8.setup();
 			koto.preferences.get();
 			
-			//setup global references to the controllers
-			koto.appController = Mojo.Controller.getAppController();
-			koto.cardController = koto.appController.getStageController("cardStage");
 			
 			//set stylesheet
 			koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
@@ -49,9 +51,8 @@ var koto = {
 			
 		} else if (arg && arg.action === "fromDashboard") {
 			//set stylesheet
-			koto.cardController = koto.appController.getStageController("cardStage");
 			koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
-			//don't do anything else I guess.
+			//nothing else to do...
 		}
 	},
 	setupFunctions: {
@@ -721,8 +722,16 @@ var koto = {
 								koto.content.playlists.load(function(){
 									console.log("done loading everything");
 									try {
-										if(koto.cardController){
-											koto.cardController.getScenes()[0].assistant.loaded();
+										if(koto.showContinueButton){
+											koto.showContinueButton();
+										} else if(koto.cardController){
+											if(koto.cardController.getScenes().length > 0){
+												koto.cardController.getScenes()[0].assistant.loaded();	
+											} else {
+												setTimeout(function(){
+													koto.cardController.getScenes()[0].assistant.loaded();	
+												}, 1000);
+											}
 										} else {
 											Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();
 										}

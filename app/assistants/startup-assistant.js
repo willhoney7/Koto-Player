@@ -19,9 +19,6 @@ function StartupAssistant(arg) {
 			//Mojo.Controller.getAppController().getStageController("cardStage").swapScene({name: "error", transition: Mojo.Transition.none}, e);
 		}
 	}
-	koto.showContinueButton = function(){
-		this.loaded();
-	}.bind(this);
 }
 
 StartupAssistant.prototype.setup = function() {

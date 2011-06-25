@@ -26,6 +26,8 @@ AppAssistant.prototype.handleLaunch = function(launchParams){
 				var pushMainScene = function(stageController){
 					var versionCookie = new Mojo.Model.Cookie('appVersion_mojoPlayer');
 					if (!versionCookie.get()){
+						stageController.pushScene("startup", "new");
+
 						try {
 							koto.setup({action: "setup", delayResume: true});
 						}catch(e){

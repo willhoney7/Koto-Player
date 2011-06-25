@@ -18,7 +18,7 @@ MainAssistant.prototype.setup = function() {
 			"info": function(value, model){
 				if (model.label && this.loadedBool && model.command !== "upgrade"){
 					var length = (koto.content[model.label.toLowerCase()]) ? koto.content[model.label.toLowerCase()].array.length : 0;
-					var label = (length === 1)?model.label.slice(0, length-1):model.label;
+					var label = (length === 1)?model.label.slice(0, model.label.length-1):model.label;
 					return length + " " + label;
 				}
 			}.bind(this)

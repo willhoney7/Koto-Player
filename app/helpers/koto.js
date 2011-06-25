@@ -721,21 +721,7 @@ var koto = {
 							koto.content.genres.load(function(){
 								koto.content.playlists.load(function(){
 									console.log("done loading everything");
-									try {
-										if(koto.showContinueButton){
-											koto.showContinueButton();
-										} else if(koto.cardController){
-											if(koto.cardController.getScenes().length > 0){
-												koto.cardController.getScenes()[0].assistant.loaded();	
-											} else {
-												setTimeout(function(){
-													koto.cardController.getScenes()[0].assistant.loaded();	
-												}, 1000);
-											}
-										} else {
-											Mojo.Controller.getAppController().getStageController("cardStage").getScenes()[0].assistant.loaded();
-										}
-									} catch(e){ console.error(e)};
+									koto.cardController.getScenes()[0].assistant.loaded();
 									
 									if (koto.justType.songCountCookie.get()){
 										koto.justType.checkJustType.defer(koto.justType.songCountCookie.get());

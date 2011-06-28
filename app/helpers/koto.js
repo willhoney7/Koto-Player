@@ -77,7 +77,7 @@ var koto = {
 						
 					}
 					else if (response.errorCode !== -1) {
-						koto.utilities.dialogError("The app can not access your music... " + Object.toJSON(response));	
+						koto.utilities.dialogError($L({value:"The app can not access your music... ", key:"error_accessmusic"}) + Object.toJSON(response));	
 					}
 				}.bind(this)  
 			});
@@ -1230,7 +1230,7 @@ var koto = {
 						"orderKey": "j",
 						"searchKey": origObj.name + " " + origObj.artist,
 						"display": origObj.name,
-						"secondary": objType.capitalize() + " - " + origObj.artist + " - " + origObj.total.tracks + " Track(s)"
+						"secondary": objType.capitalize() + " - " + origObj.artist + " - " + origObj.total.tracks + $L(" Track(s)")
 					};
 					if (origObj.albumArt){
 						obj.albumArt = origObj.albumArt;
@@ -1241,34 +1241,34 @@ var koto = {
 						"orderKey": "i",
 						"searchKey": origObj.name,
 						"display": origObj.name,
-						"secondary": objType.capitalize() + " - " + origObj.total.albums + " Album(s)" + " - " + origObj.total.tracks + " Track(s)"
+						"secondary": objType.capitalize() + " - " + origObj.total.albums + $L(" Album(s)") + " - " + origObj.total.tracks + $L(" Track(s)")
 					};
 					break;
 				case "playlist":
 					obj = {
 						"orderKey": "g",
-						"searchKey": origObj.name + " Playlists",
+						"searchKey": origObj.name + $L(" Playlists"),
 						"display": origObj.name
 					}
 					if (origObj.songs){
-						obj["secondary"] = objType.capitalize() + " - " + origObj.songs.length + " Track(s)";
+						obj["secondary"] = objType.capitalize() + " - " + origObj.songs.length + $L(" Track(s)");
 					}else {
-						obj["secondary"] = "Auto Playlist";
+						obj["secondary"] = $L("Auto Playlist");
 					}
 					break;
 				case "genre":
 					obj = {
 						"orderKey": "m",
-						"searchKey": origObj.name + " Genres",
+						"searchKey": origObj.name + $L(" Genres"),
 						"display": origObj.name,
-						"secondary": objType.capitalize() + " - " + origObj.total.tracks + " Track(s)"
+						"secondary": objType.capitalize() + " - " + origObj.total.tracks + $L(" Track(s)")
 					}
 					break;
 			}
 			if (favorite){
 				obj.orderKey = "a"; //make it show up first
-				obj.searchKey += " Favorites";
-				obj.secondary = "Favorite " + obj.secondary;
+				obj.searchKey += $L(" Favorites");
+				obj.secondary = $L("Favorite ") + obj.secondary;
 			}
 			obj.objType = objType[0] + objType[1];
 			obj._kind = koto.appId + ".data:1";

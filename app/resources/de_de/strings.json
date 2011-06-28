@@ -1,12 +1,20 @@
 {
   "Artists": "Interpreten",
   "Albums": "Alben",
+  " Album(s)": " Album/Alben",
   "Songs": "Titel",
+  " Track(s)": " Titel",
   "Genres": "Genres",
+  " Genres": " Genres",
   "Playlists": "Wiedergabelisten",
+  " Playlists": " Wiedergabeliste(n)",
+  "Auto Playlist": "Autom. Wiedergabeliste",
   "Favorites": "Favoriten",
+  " Favorites": " Favoriten",
+  "Favorite ": "Lieblings-",
   "error_nosongs": "Wiedergabefehler: Keine Titel",
   "error_noartistsongs": "Fehler: Keine Titel für Künstler",
   "error_alreadyadded": "Fehler: Wurde schon hinzugefügt.",
+  "error_accessmusic": "Das Programm kann nicht auf Ihre Musik zugreifen... ",
   "Added to Favorites": "Zu Favoriten hinzugefügt"
 }

@@ -344,7 +344,7 @@ var koto = {
 								
 							} else {
 								console.log("Well you're in trouble.");
-								koto.utilities.bannerError($L({value:"Error: No Songs by Artist", key:"error_noartistsongs"});
+								koto.utilities.bannerError($L({value:"Error: No Songs by Artist", key:"error_noartistsongs"}));
 							}
 						}.bind(this));
 					}
@@ -686,14 +686,14 @@ var koto = {
 				var obj = Object.clone(object);
 				for(var i = 0; i <= koto.content.favorites.array.length; i++){
 					if (i > 0 && i !== koto.content.favorites.array.length && obj["_id"] && obj["_id"] === koto.content.favorites.array[i]._id){
-						koto.utilities.bannerError("You already added this!");
+						koto.utilities.bannerError($L({value:"You already added this!", key:"error_alreadyadded"}));
 						break;
 					}
 					if (i === (koto.content.favorites.array.length-1) || koto.content.favorites.array.length === 0){
 						db8.put({"_kind": koto.appId + ".favorites:1", "id": obj["_id"], "position": koto.content.favorites.array.length}, function(){
 							koto.content.favorites.array.push(obj);
 							koto.justType.cacheSearchData(obj, true);
-							koto.utilities.bannerAlert("Added to Favorites", {action: "pushScene", scene: "list", data: "favorites"});
+							koto.utilities.bannerAlert($L("Added to Favorites"), {action: "pushScene", scene: "list", data: "favorites"});
 							koto.content.favorites.store();						
 						});	
 						break;
@@ -1008,7 +1008,7 @@ var koto = {
 			}
 			
 			if (array.length < 1){ 
-				koto.utilities.bannerError($L({value:"Error Playing: No Songs", key:"error_nosongs"});
+				koto.utilities.bannerError($L({value:"Error Playing: No Songs", key:"error_nosongs"}));
 				return;
 			}
 			koto.nowPlaying.currentInfo.unshuffledSongs.clear();

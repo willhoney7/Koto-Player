@@ -6,5 +6,7 @@
   "Playlists": "Wiedergabelisten",
   "Favorites": "Favoriten",
   "error_nosongs": "Wiedergabefehler: Keine Titel",
-  "error_noartistsongs": "Fehler: Keine Titel für Künstler"
+  "error_noartistsongs": "Fehler: Keine Titel für Künstler",
+  "error_alreadyadded": "Fehler: Wurde schon hinzugefügt.",
+  "Added to Favorites": "Zu Favoriten hinzugefügt"
 }

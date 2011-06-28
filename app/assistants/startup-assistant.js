@@ -39,6 +39,7 @@ StartupAssistant.prototype.setup = function() {
 					"<b>Bug Fix:</b> The Preference for Favorite Tap is now honored",
 					"<b>Bug Fix:</b> Last song on album art scroller not showing up properly.",
 					"<b>Bug Fix:</b> Repeat",
+					"<b>Bug Fix:</b> Play Next/Last with shuffled songs",
 				]
 		},
 		{

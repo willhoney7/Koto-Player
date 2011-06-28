@@ -1048,13 +1048,27 @@ var koto = {
 			var firstArray = koto.nowPlaying.currentInfo.songs.slice(0, koto.nowPlaying.currentInfo.index+1);
 			var secondArray = koto.nowPlaying.currentInfo.songs.slice(koto.nowPlaying.currentInfo.index+1);
 			koto.nowPlaying.currentInfo.songs.clear();
-			Object.extend(koto.nowPlaying.currentInfo.songs, firstArray.concat(array, secondArray));
+			Object.extend(koto.nowPlaying.currentInfo.songs, [].concat(firstArray, array, secondArray));
+			if(koto.nowPlaying.currentInfo.unshuffledSongs.length > 0){
+				var newUnshuffledSongs =  [].concat(koto.nowPlaying.currentInfo.unshuffledSongs, array);
+				if (koto.appId === "com.tibfib.app.koto.lite"){
+					newUnshuffledSongs = newUnshuffledSongs.slice(0, 10);
+				}
+				Object.extend(koto.nowPlaying.currentInfo.unshuffledSongs, newUnshuffledSongs);
+			}
 			koto.nowPlaying.liteCheck();
 		},
 		playArrayLast: function(array){
 			var origSongs = koto.nowPlaying.currentInfo.songs.clone();
 			koto.nowPlaying.currentInfo.songs.clear();
 			Object.extend(koto.nowPlaying.currentInfo.songs, origSongs.concat(array));
+			if(koto.nowPlaying.currentInfo.unshuffledSongs.length > 0){
+				var newUnshuffledSongs =  [].concat(koto.nowPlaying.currentInfo.unshuffledSongs, array);
+				if (koto.appId === "com.tibfib.app.koto.lite"){
+					newUnshuffledSongs = newUnshuffledSongs.slice(0, 10);
+				}
+				Object.extend(koto.nowPlaying.currentInfo.unshuffledSongs, newUnshuffledSongs);
+			}
 			koto.nowPlaying.liteCheck();
 			
 		},

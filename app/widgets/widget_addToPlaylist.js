@@ -8,7 +8,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 		this.controller.element.innerHTML = content;
 		
 		//Textfield
-		this.controller.scene.setupWidget("playlist-textfield", {hintText: "New Playlist", changeOnKeyPress: true}, this.playlistTextFieldModel = {value: ""});
+		this.controller.scene.setupWidget("playlist-textfield", {hintText: $L("New Playlist"), changeOnKeyPress: true}, this.playlistTextFieldModel = {value: ""});
 		this.playlistTextFieldDiv = this.controller.get("playlist-textfield");
 		
 		//List of Playlists
@@ -19,7 +19,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 			formatters: {
 				"info": function(value, model){
 					if (model.songs)
-						return model.songs.length + " Track(s)";
+						return model.songs.length + $L(" Track(s)");
 				}
 			}
 		}, {items: koto.content.playlists.customArray});
@@ -46,7 +46,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 								this.playlistTextFieldModel.value = "";
 								this.controller.modelChanged(this.playlistTextFieldModel);
 								
-								koto.utilities.bannerAlert("Playlist Saved");
+								koto.utilities.bannerAlert($L("Playlist Saved"));
 							}.bind(this)
 						);
 					}
@@ -85,7 +85,7 @@ Mojo.Widget.AddToPlaylist = Class.create({
 					}.bind(currentScene));
 				}
 				this.controller.scene.assistant.extraDiv.mojo.hide();					
-				koto.utilities.bannerAlert("Playlist Saved");
+				koto.utilities.bannerAlert($L("Playlist Saved"));
 			}.bind(this)
 		);
 		

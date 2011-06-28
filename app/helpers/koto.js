@@ -263,12 +263,12 @@ var koto = {
 								}
 								//add songs 
 								albums[i].songs = songs;
-								artistSongs = artistSongs.concat(songs);
+								artistSongs = [].concat(artistSongs, songs);
 								i++;
 								if (i < albums.length){
 									getAlbumSongs(albums[i]);
 								} else {
-									callback(albums, songs);
+									callback(albums, artistSongs);
 								}
 							});
 						}
@@ -352,7 +352,12 @@ var koto = {
 			},
 			getAlbumsOfOne: function(artist, callback){
 				var query = {"select" : ["name", "artist", "total.tracks", "_id", "_kind", "thumbnails"], "where" : [{"prop":"artist","op":"=","val":artist}], "from":"com.palm.media.audio.album:1" };
-				db8.exec(query, callback.bind(this));
+				db8.exec(query, function(albums){
+					albums.sort(function(a, b){
+						return a.name - b.name;
+					});
+					callback(albums);
+				}.bind(this));
 			},
 			viewOne: function(artist){
 				koto.content.artists.getFormattedSongsOfOne(artist, function(formattedSongs, songs, error){
@@ -1097,7 +1102,7 @@ var koto = {
 			//if (m.isDbSearch === false && m.launchPlayer === false){
 				db8.exec({"select" : ["name", "time","songs", "index", "unshuffledSongs"], "from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, 
 				function(results){
-					if (results[0].songs.length > 0){
+					if (results[0] && results[0].songs.length > 0){
 						koto.nowPlaying.playArray(results[0].songs, results[0].index, {time: results[0].time, shuffled: (results[0].unshuffledSongs.length > 0), unshuffledSongs: results[0].unshuffledSongs.clone()});
 					}
 				}.bind(this));

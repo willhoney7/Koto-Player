@@ -1,6 +1,6 @@
 {
-	"id": "com.tibfib.app.koto",
-	"version": "0.7.90",
+	"id": "com.tibfib.app.koto.alt",
+	"version": "0.8.0",
 	"vendor": "Will Honey (Tibfib)",
 	"type": "web",
 	"main": "index.html",
@@ -13,11 +13,11 @@
 	"universalSearch":{
 		"dbsearch" : {
 			"displayName":"Koto Player",
-			"url":"com.tibfib.app.koto",
+			"url":"com.tibfib.app.koto.alt",
 			"launchParam":"justTypeTap",
 			"launchParamDbField":"id",
 			"displayFields":["display","secondary"],
-			"dbQuery":{"from":"com.tibfib.app.koto.data:1","where":[{"prop":"searchKey","op":"?","val":"", "collate": "primary"}], "orderBy": "orderKey", "limit":40} 
+			"dbQuery":{"from":"com.tibfib.app.koto.alt.data:1","where":[{"prop":"searchKey","op":"?","val":"", "collate": "primary"}], "orderBy": "orderKey", "limit":40} 
 		}                                                
 	}
 }

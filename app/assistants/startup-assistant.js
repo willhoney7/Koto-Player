@@ -40,6 +40,9 @@ StartupAssistant.prototype.setup = function() {
 					"<b>Bug Fix:</b> Last song on album art scroller not showing up properly.",
 					"<b>Bug Fix:</b> Repeat",
 					"<b>Bug Fix:</b> Play Next/Last with shuffled songs",
+					"<b>Bug Fix:</b> Play All from Artist view (Thanks @screwdestiny!)",
+					"<b>Bug Fix:</b> FavoriteTap settings affecting artist and album views (Thanks @screwdestiny!)",
+					"<b>Bug Fix:</b> Sort albums alphabetically in artist view just in case."
 				]
 		},
 		{

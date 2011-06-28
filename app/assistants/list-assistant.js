@@ -413,7 +413,7 @@ ListAssistant.prototype.listTap = function(event){
 					koto.nowPlaying.playArray(this.items, event.index);				
 				}
 			}
-		} else if ((objType === "artist" || objType === "album") && koto.preferences.obj.favoriteTap === "view"){
+		} else if ((objType === "artist" || objType === "album") && (this.data !== "favorites" || (this.data == "favorite" && koto.preferences.obj.favoriteTap === "view"))){
 			koto.content.view(obj);
 		} 
 		else if ((objType === "playlist" && koto.preferences.obj.playlistTap === "play" && this.data !== "favorites") || (this.data === "favorites" && koto.preferences.obj.favoriteTap === "play")){

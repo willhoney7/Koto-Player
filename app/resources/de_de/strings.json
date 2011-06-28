@@ -1,0 +1,10 @@
+{
+  "Artists": "Interpreten",
+  "Albums": "Alben",
+  "Songs": "Titel",
+  "Genres": "Genres",
+  "Playlists": "Wiedergabelisten",
+  "Favorites": "Favoriten",
+  "error_nosongs": "Wiedergabefehler: Keine Titel",
+  "error_noartistsongs": "Fehler: Keine Titel für Künstler"
+}

@@ -1,0 +1,247 @@
+<div class='palm-header'>
+	Preferences & Accounts
+</div>
+<div style='height: 50px'></div>
+<div class='palm-group'>
+	<div class='palm-group-title'>Theme</div>
+	<div class='palm-list'>
+		<div class="palm-row single">
+			<div class="palm-row-wrapper list-selector">
+				<div id="theme" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div> 
+    </div>
+</div>
+<div class='palm-group'>
+	<div class='palm-group-title'>Save/Resume Now Playing</div>
+	<div class='palm-list'>
+		<div class="palm-row single">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Resume Songs on Start
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='auto-resume-nowPlaying'></div>
+			</div>
+		</div> 
+    </div>
+</div>
+<div class='palm-group'>
+	<div class='palm-group-title'>Now Playing</div>
+	<div class='palm-list'>
+		<div class="palm-row first">
+			<div class="palm-row-wrapper list-selector">
+				<div id="default-repeat-mode" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div> 
+		<div class="palm-row">
+			<div class="palm-row-wrapper list-selector">
+				<div id="number-of-album-art-scroller" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div> 
+		<div class="palm-row last">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Marquee Long Text
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='marquee-toggle'></div>
+			</div>
+		</div> 
+    </div>
+</div>
+
+<div class='palm-group'>
+	<div class='palm-group-title'>Browsing Music</div>
+	<div class='palm-list'>
+		<div class="palm-row first">
+			<div class="palm-row-wrapper list-selector">
+				<div id="playlist-tap-selector" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div>
+		<div class="palm-row">
+			<div class="palm-row-wrapper list-selector">
+				<div id="favorite-tap-selector" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div>
+		<div class="palm-row">
+			<div class="palm-row-wrapper list-selector">
+				<div id="filter-tap-selector" x-mojo-element="ListSelector"></div>   
+			</div>
+		</div>
+		<div class="palm-row">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Alpha Scroller
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='alphaScroller-toggle'></div>
+			</div>
+		</div> 
+		<div class="palm-row last">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Truncate Long Text
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='truncate-toggle'></div>
+			</div>
+		</div> 
+    </div>
+</div>
+
+<div class='palm-group'>
+	<div class='palm-group-title'>Dashboards</div>
+	<div class='palm-list'>
+		<div class="palm-row first">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Dashboard
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='use-dashboard-toggle'></div>
+			</div>
+		</div>
+		<div class="palm-row last">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Auto Close Dashboard
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='close-dashboard-toggle'></div>
+			</div>
+		</div>
+    </div>
+</div>
+
+<div class='palm-group'>
+	<div class='palm-group-title'>Just Type</div>
+	<div class='palm-list'>
+		<div class="palm-row single">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Index Songs by Album
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='indexSongsByAlbum'></div>
+				<div class='palm-info-text' style='padding-top: 8px; font-size: 12px;'>
+					Whether or not you want songs to show up if their album matches the search string.
+				</div>
+			</div>
+		</div> 
+    </div>
+</div>
+
+
+<div class='palm-group'>
+	<div class='palm-group-title'>Misc.</div>
+	<div class='palm-list'>
+		<div class="palm-row single">
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Send Anonymous Stats
+				</div>
+				<div x-mojo-element='ToggleButton' class='toggle-text' id='metrixToggleWidget'></div>
+				<div class='palm-info-text' style='padding-top: 8px; font-size: 12px;'>
+					Koto Player uses <a href='http://metrix.webosroundup.com'>Metrix</a> to keep track of app downloads and OS versions being used. <b>No personal information is tracked with Metrix.</b>
+				</div>
+			</div>
+		</div> 
+    </div>
+</div>
+
+<div class="palm-group">
+	<div class="palm-group-title">Last.fm</div>
+	<div style='padding: 0px 15px 15px 15px;' class="palm-list">
+		<div id='not-logged-in'>
+			<div class='description'>
+				<a href='http://last.fm'>Last.fm</a> is an online music site. Log into your account to scrobble all the songs you listen to in Koto. If you are concerned about entering your password, see the <a onclick='Mojo.Controller.stageController.pushScene("about")'>About Page</a>.
+			</div>
+			<div class='palm-row-wrapper'>
+				<div class='textfield-group prefs'>
+					<div class='title prefs'>
+						<div id='lastfm-username' class='black' x-mojo-element='TextField'></div>
+					</div>
+				</div>
+			</div>
+			<div style='padding: 5px 0px 10px 0px' class='palm-row-wrapper'>
+				<div class='textfield-group prefs'>
+					<div class='title prefs'>
+						<div id='lastfm-password' class='black' x-mojo-element='PasswordField' ></div>
+					</div>
+				</div>
+			</div>
+			<div x-mojo-touch-feedback='immediate' id='log-in' class='palm-button small-button'>Log-In</div>
+		</div>
+		<div id='logged-in' style='display: none'>
+			<div class='description'>
+				You are currently logged into <a href='http://last.fm'>Last.fm</a> as <span id='username'></span>.
+			</div>
+			<div class="palm-row-wrapper toggle-section">
+				<div class='toggle-label'>
+					Song Scrobbling
+				</div>
+				<div id='lastfm-toggle' x-mojo-element='ToggleButton' class='toggle-text'></div>
+			</div>
+			<div x-mojo-touch-feedback='immediate' id='log-out' class='palm-button small-button'>Log-Out</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="palm-group">
+	<div class="palm-group-title">Twitter</div>
+	<div style='padding: 0px 15px 15px 15px;' class="palm-list">
+		<div id='twitter-not-logged-in'>
+			<div class='description'>
+				Log into your twitter account to tweet out the songs you are listening to! If you are concerned about entering your password, see the <a onclick='Mojo.Controller.stageController.pushScene("about")'>About Page</a>.
+			</div>
+			<div class='palm-row-wrapper'>
+				<div class='textfield-group prefs'>
+					<div class='title prefs'>
+						<div id='twitter-username' class='black' x-mojo-element='TextField'></div>
+					</div>
+				</div>
+			</div>
+			<div style='padding: 5px 0px 10px 0px' class='palm-row-wrapper'>
+				<div class='textfield-group prefs'>
+					<div class='title prefs'>
+						<div id='twitter-password' class='black' x-mojo-element='PasswordField' ></div>
+					</div>
+				</div>
+			</div>
+			<div x-mojo-touch-feedback='immediate' id='twitter-log-in' class='palm-button small-button'>Log-In</div>
+		</div>
+		<div id='twitter-logged-in' style='display: none'>
+			<div class='description'>
+				You are currently logged into <a href='http://twitter.com'>Twitter</a> as <span id='twitter-logged-in-username'></span>.
+			</div>
+			<div x-mojo-touch-feedback='immediate' id='twitter-log-out' class='palm-button small-button'>Log-Out</div>
+		</div>
+	</div>
+</div>
+
+<!--<div class="palm-group">
+	<div class="palm-group-title">Dropbox</div>
+	<div style='padding: 0px 15px 15px 15px;' class="palm-list">
+		<div id='dropbox-not-logged-in'>
+			<div class='description'>
+				Log into your dropbox account to listen to the songs you have uploaded and upload your songs on Koto! If you are concerned about entering your password, see the <a onclick='Mojo.Controller.stageController.pushScene("about")'>About Page</a>.
+			</div>
+			<div class='palm-row-wrapper'>
+				<div class='textfield-group prefs'>
+					<div class='title prefs'>
+						<div id='dropbox-username' class='black' x-mojo-element='TextField'></div>
+					</div>
+				</div>
+			</div>
+			<div style='padding: 5px 0px 10px 0px' class='palm-row-wrapper'>
+				<div class='textfield-group prefs'>
+					<div class='title prefs'>
+						<div id='dropbox-password' class='black' x-mojo-element='PasswordField' ></div>
+					</div>
+				</div>
+			</div>
+			<div x-mojo-touch-feedback='immediate' id='dropbox-log-in' class='palm-button small-button'>Log-In</div>
+		</div>
+		<div id='dropbox-logged-in' style='display: none'>
+			<div class='description'>
+				You are currently logged into <a href='http://dropbox.com'>Dropbox</a> as <span id='dropbox-logged-in-username'></span>.
+			</div>
+			<div x-mojo-touch-feedback='immediate' id='dropbox-log-out' class='palm-button small-button'>Log-Out</div>
+		</div>
+	</div>
+</div>-->

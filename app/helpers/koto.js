@@ -344,7 +344,7 @@ var koto = {
 								
 							} else {
 								console.log("Well you're in trouble.");
-								koto.utilities.bannerError("Error: No Songs by Artist");
+								koto.utilities.bannerError($L({value:"Error: No Songs by Artist", key:"error_noartistsongs"});
 							}
 						}.bind(this));
 					}
@@ -1008,7 +1008,7 @@ var koto = {
 			}
 			
 			if (array.length < 1){ 
-				koto.utilities.bannerError("Error Playing: No Songs");
+				koto.utilities.bannerError($L({value:"Error Playing: No Songs", key:"error_nosongs"});
 				return;
 			}
 			koto.nowPlaying.currentInfo.unshuffledSongs.clear();
@@ -1599,12 +1599,12 @@ var koto = {
 				secret: ''
 			},*/
 			startItems: [ //items on main page
-				{label: "Artists", command: "artists"},
-				{label: "Albums", command: "albums"},
-				{label: "Songs", command: "songs"},
-				{label: "Genres", command: "genres"},
-				{label: "Playlists", command: "playlists"},
-				{label: "Favorites", command: "favorites"}
+				{label: $L("Artists"), command: "artists"},
+				{label: $L("Albums"), command: "albums"},
+				{label: $L("Songs"), command: "songs"},
+				{label: $L("Genres"), command: "genres"},
+				{label: $L("Playlists"), command: "playlists"},
+				{label: $L("Favorites"), command: "favorites"}
 			]
 		},
 		cookie: new Mojo.Model.Cookie("preferences_KotoPlayer"),

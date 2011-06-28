@@ -1,0 +1,35 @@
+<div id='toggle-bar' class="palm-header left truncating-text">
+	<div class="palm-header-wrapper">
+		<div class="toggle-inlay">
+			<div id="toggle-albumart-view" class="toggle-albumart-view depressed" x-mojo-tap-highlight="immediate">
+				<img src="images/play/album-view-header-icon.png" />
+			</div>
+			<div id="toggle-list-view" class="toggle-list-view" x-mojo-tap-highlight="immediate">
+				<img src="images/play/list-view-header-icon.png" />
+			</div>
+		</div>
+		<div id="progressNum" class="name"></div>
+		<div id='title' class="truncating-text"></div>
+	</div>
+</div>
+<div id='extra-title' class='palm-header opacityTransition' style='display: none' x-mojo-tap-highlight="immediate"></div>
+<div style='height: 50px'></div>
+<div id='list' style='display: none'>
+	<div id="results_list" name="list" x-mojo-element="List"></div>
+	<div style='height: 50px'></div>
+	<div class="scene-fade top" x-mojo-scroll-fade="top"></div>
+	<div class="scene-fade bottom" x-mojo-scroll-fade="bottom"></div>
+</div>
+
+<div id='albumart'>
+	<div id='nowPlayingItem' style='position: relative;'></div>
+	<div x-mojo-element="Scroller" id="albumart-scroller" class='album-art-scroller'>
+		<table>
+			<tr>
+				<div id='albumart-scroller-content'></div>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div id='panel' x-mojo-element='NowPlayingPanel'></div>

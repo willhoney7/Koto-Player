@@ -451,9 +451,9 @@ ListAssistant.prototype.listDelete = function(event){
 
 //Tapping the title bar
 ListAssistant.prototype.setupTitle = function(event){
-	this.initViewMenu(this.data.capitalize()); //view menu
+	this.initViewMenu($L(this.data.capitalize())); //view menu
 	var title = (this.items.length === 1) ? this.data.slice(0, this.data.length-1) : this.data;
-	this.controller.get("title-secondary").innerHTML = this.items.length + " " + title.capitalize();
+	this.controller.get("title-secondary").innerHTML = this.items.length + " " + $L(title.capitalize());
 	title = null;
 }
 ListAssistant.prototype.titleBarTap = function(event){

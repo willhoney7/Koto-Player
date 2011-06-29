@@ -63,7 +63,7 @@ Mojo.Widget.SongDetails = Class.create({
 				formatters: {
 					"tracks": function(value, model){
 						var trackNum = parseInt(this.index, 10) + 1;
-						return $L("Track ") + trackNum + $L(" of ") + this.array.length;
+						return $L("Track") + " " + trackNum + " " + $L("of") + " " + this.array.length;
 							//return "Track " + model.track.position + " of " + model.track.total;
 						
 					}.bind(this),

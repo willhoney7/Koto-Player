@@ -30,6 +30,14 @@ StartupAssistant.prototype.setup = function() {
 	
 	var changelog = [
 		{
+			"version": "0.8.1",
+			"log":
+				[
+					"<b>Improvement:</b> German Localization (Thanks hombresiniestro!)",
+					"<b>Improvement:</b> New Rounded Circle behind the icon. (Thanks hombresiniestro!)"
+				]
+		},
+		{
 			"version": "0.8.0",
 			"log":
 				[

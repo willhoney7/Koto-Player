@@ -2,7 +2,7 @@ function PlayAssistant() {
 	scene_helpers.addControlSceneMethods(this, {nowPlaying: true});
 }
 PlayAssistant.prototype.setup = function () {
-	this.initViewMenu("Now Playing");
+	this.initViewMenu($L("Now Playing"));
 	this.setupCommon();
 	this.initAppMenu({items: [
 		{label: "Share via Email", items: [

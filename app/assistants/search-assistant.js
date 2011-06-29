@@ -3,7 +3,7 @@ function SearchAssistant(e) {
 }
 var filterString = "";
 SearchAssistant.prototype.setup = function() {
-	this.initViewMenu("Search");
+	this.initViewMenu($L("Search"));
 	this.initCmdMenu();
 	this.setupCommon();
 		

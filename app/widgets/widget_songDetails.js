@@ -37,16 +37,16 @@ Mojo.Widget.SongDetails = Class.create({
 					},
 					"playCount": function(value, model){
 						if (model.playCount && model.playCount > 0){
-							return "Played " + ((model.playCount === 1)?model.playCount + " Time":model.playCount + " Times");
+							return $L("Played ") + ((model.playCount === 1)?model.playCount + $L(" Time"):model.playCount + $L(" Times"));
 						} else {
-							return "Played 0 Times";
+							return $L("Played 0 Times");
 						}
 					},
 					"lastPlayed": function(value, model){
 						if (model.lastPlayed && model.lastPlayed !== "n/a"){
 							var d = new Date();
 							d.setTime(model.lastPlayed);
-							return "Last Played " + koto.utilities.formatDate(d);
+							return $L("Last Played ") + koto.utilities.formatDate(d);
 						}
 					},
 				},
@@ -63,7 +63,7 @@ Mojo.Widget.SongDetails = Class.create({
 				formatters: {
 					"tracks": function(value, model){
 						var trackNum = parseInt(this.index, 10) + 1;
-						return "Track " + trackNum + " of " + this.array.length;
+						return $L("Track ") + trackNum + $L(" of ") + this.array.length;
 							//return "Track " + model.track.position + " of " + model.track.total;
 						
 					}.bind(this),

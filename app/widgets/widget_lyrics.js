@@ -49,7 +49,7 @@ Mojo.Widget.Lyrics = Class.create({
 				if (connected){
 					lyrics.searchForLyrics(koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index], handleLyrics.bind(this));
 				} else {
-					koto.utilities.bannerError("Not Connected to Internet");
+					koto.utilities.bannerError($L("Not Connected to Internet"));
 					this.hide();
 				}
 			}.bind(this))

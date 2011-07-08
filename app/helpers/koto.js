@@ -15,31 +15,33 @@ var koto = {
 		koto.cardController = koto.appController.getStageController("cardStage");
 			
 		if ((arg && arg.action === "setup") || !arg) {
-			
-			//setup stuff
-			db8.setup();
-			koto.preferences.get();
-			
-			
-			//set stylesheet
-			koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
-			
-			koto.albumArt.loadCustom(function () {
-				//if auto resume is on, resume this stuff
-				if(koto.preferences.obj.saveAndResume === true && (!arg || (arg && !arg.delayResume))){
-					koto.nowPlaying.load();
-				}
-				//getPermissions for media
-				koto.setupFunctions.getPermissions(function () {
-					//now load content
-					koto.content.load();
+			try {	
+				//setup stuff
+				db8.setup();
+				koto.preferences.get();
+				
+					//set stylesheet
+					koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
+					
+					koto.albumArt.loadCustom(function () {
+						//if auto resume is on, resume this stuff
+						if(koto.preferences.obj.saveAndResume === true && (!arg || (arg && !arg.delayResume))){
+							koto.nowPlaying.load();
+						}
+						//getPermissions for media
+						koto.setupFunctions.getPermissions(function () {
+							//now load content
+							koto.content.load();
 
-				});
-			});
-			
-			koto.justType.setup();
-			koto.setupFunctions.setupAudioObj();
-			koto.setupFunctions.setupControlListeners();
+						});
+					});
+				
+				koto.justType.setup();
+				koto.setupFunctions.setupAudioObj();
+				koto.setupFunctions.setupControlListeners();
+			} catch(e){
+				koto.cardController.swapScene("error", e, false);
+			}
 			
 		} else if (arg && arg.action === "load") {
 			//we just want to load, no setup
@@ -1102,7 +1104,7 @@ var koto = {
 			//if (m.isDbSearch === false && m.launchPlayer === false){
 				db8.exec({"select" : ["name", "time","songs", "index", "unshuffledSongs"], "from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, 
 				function(results){
-					if (results[0] && results[0].songs.length > 0){
+					if (results[0] && results[0].songs && results[0].songs.length > 0){
 						koto.nowPlaying.playArray(results[0].songs, results[0].index, {time: results[0].time, shuffled: (results[0].unshuffledSongs.length > 0), unshuffledSongs: results[0].unshuffledSongs.clone()});
 					}
 				}.bind(this));
@@ -1779,17 +1781,17 @@ var koto = {
 		sortContentList: function(array){
 			if (array.length > 0){
 				var sortBy = array[0].title ? "title" : "name";
+				function sortFunction(a,b) {
+					var x = a[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase()
+					var y = b[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase();
+					return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+				}
+				/*array = array.sortBy(function(obj){
+					return obj[sortBy].replace(regex, "");
+				}, this);*/
+				array.sort(sortFunction);
+				uniqArray(array);
 			}
-			function sortFunction(a,b) {
-				var x = a[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase()
-				var y = b[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase();
-				return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-			}
-			/*array = array.sortBy(function(obj){
-				return obj[sortBy].replace(regex, "");
-			}, this);*/
-			array.sort(sortFunction);
-			uniqArray(array);
 		},
 		setupHandleLaunchStage: function(arg){
 			pushScene = function (stageController) {

@@ -158,7 +158,7 @@ AppAssistant.prototype.launchFromDash = function(){
 		cardStageController.activate();
 	} else {
 		var pushMainScene = function(stageController){
-			stageController.pushScene('main');
+			stageController.pushScene('main', true);
 			try {
 				koto.setup({action: "fromDashboard"});
 			}catch(e){

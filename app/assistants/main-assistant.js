@@ -1,5 +1,5 @@
-function MainAssistant(fromStartUp) {
-	this.loadedOnActivate = fromStartUp || false;	
+function MainAssistant(loadedOnActivate) {
+	this.loadedOnActivate = loadedOnActivate || false;	
 	if(koto.preferences.obj.saveAndResume === true && this.loadedOnActivate){
 		koto.nowPlaying.load();
 	}

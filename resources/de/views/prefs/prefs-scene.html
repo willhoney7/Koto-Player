@@ -1,9 +1,9 @@
 <div class='palm-header'>
-	Preferences & Accounts
+	Einstellungen und Konten
 </div>
 <div style='height: 50px'></div>
 <div class='palm-group'>
-	<div class='palm-group-title'>Theme</div>
+	<div class='palm-group-title'>Thema</div>
 	<div class='palm-list'>
 		<div class="palm-row single">
 			<div class="palm-row-wrapper list-selector">
@@ -13,12 +13,12 @@
     </div>
 </div>
 <div class='palm-group'>
-	<div class='palm-group-title'>Save/Resume Now Playing</div>
+	<div class='palm-group-title'>Aktuelle Wiedergabe speichern/fortsetzen</div>
 	<div class='palm-list'>
 		<div class="palm-row single">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Resume Songs on Start
+					Wiedergabe beim Start fortsetzen
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='auto-resume-nowPlaying'></div>
 			</div>
@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class='palm-group'>
-	<div class='palm-group-title'>Now Playing</div>
+	<div class='palm-group-title'>Aktuelle Wiedergabe</div>
 	<div class='palm-list'>
 		<div class="palm-row first">
 			<div class="palm-row-wrapper list-selector">
@@ -41,7 +41,7 @@
 		<div class="palm-row last">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Marquee Long Text
+					Langen Text rollen
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='marquee-toggle'></div>
 			</div>
@@ -50,7 +50,7 @@
 </div>
 
 <div class='palm-group'>
-	<div class='palm-group-title'>Browsing Music</div>
+	<div class='palm-group-title'>Musik durchsuchen</div>
 	<div class='palm-list'>
 		<div class="palm-row first">
 			<div class="palm-row-wrapper list-selector">
@@ -70,7 +70,7 @@
 		<div class="palm-row">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Alpha Scroller
+					Alphabetisches scrollen
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='alphaScroller-toggle'></div>
 			</div>
@@ -78,7 +78,7 @@
 		<div class="palm-row last">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Truncate Long Text
+					Langen Text abschneiden
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='truncate-toggle'></div>
 			</div>
@@ -100,7 +100,7 @@
 		<div class="palm-row last">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Auto Close Dashboard
+					Dashboard autom. schließen
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='close-dashboard-toggle'></div>
 			</div>
@@ -109,16 +109,16 @@
 </div>
 
 <div class='palm-group'>
-	<div class='palm-group-title'>Just Type</div>
+	<div class='palm-group-title'>Einfach lostippen</div>
 	<div class='palm-list'>
 		<div class="palm-row single">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Index Songs by Album
+					Titel nach Alben indizieren
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='indexSongsByAlbum'></div>
 				<div class='palm-info-text' style='padding-top: 8px; font-size: 12px;'>
-					Whether or not you want songs to show up if their album matches the search string.
+					Entscheided ob ein Titel erscheint, wenn die Suchanfrage dem Album entspricht.
 				</div>
 			</div>
 		</div> 
@@ -127,16 +127,16 @@
 
 
 <div class='palm-group'>
-	<div class='palm-group-title'>Misc.</div>
+	<div class='palm-group-title'>Verschiedenes</div>
 	<div class='palm-list'>
 		<div class="palm-row single">
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Send Anonymous Stats
+					Anonyme Statistiken senden
 				</div>
 				<div x-mojo-element='ToggleButton' class='toggle-text' id='metrixToggleWidget'></div>
 				<div class='palm-info-text' style='padding-top: 8px; font-size: 12px;'>
-					Koto Player uses <a href='http://metrix.webosroundup.com'>Metrix</a> to keep track of app downloads and OS versions being used. <b>No personal information is tracked with Metrix.</b>
+					Koto Player verwendet <a href='http://metrix.webosroundup.com'>Metrix</a> um zu messen wie oft und mit welchem Betriebssystem die App heruntegeladen wurde. <b>Persönliche Informationen werden mit Metrix nicht erhoben.</b>
 				</div>
 			</div>
 		</div> 
@@ -148,7 +148,7 @@
 	<div style='padding: 0px 15px 15px 15px;' class="palm-list">
 		<div id='not-logged-in'>
 			<div class='description'>
-				<a href='http://last.fm'>Last.fm</a> is an online music site. Log into your account to scrobble all the songs you listen to in Koto. If you are concerned about entering your password, see the <a onclick='Mojo.Controller.stageController.pushScene("about")'>About Page</a>.
+				<a href='http://last.fm'>Last.fm</a> ist eine Website für Online-Musik. Melden Sie sich an, um alle Titel, die Sie in Koto anhören zu scrobbeln. Wenn Sie Bedenken haben, Ihr Passwort anzugeben, lesen Sie bitte die <a onclick='Mojo.Controller.stageController.pushScene("about")'>Beschreibungsseite</a>.
 			</div>
 			<div class='palm-row-wrapper'>
 				<div class='textfield-group prefs'>
@@ -164,19 +164,19 @@
 					</div>
 				</div>
 			</div>
-			<div x-mojo-touch-feedback='immediate' id='log-in' class='palm-button small-button'>Log-In</div>
+			<div x-mojo-touch-feedback='immediate' id='log-in' class='palm-button small-button'>Anmelden</div>
 		</div>
 		<div id='logged-in' style='display: none'>
 			<div class='description'>
-				You are currently logged into <a href='http://last.fm'>Last.fm</a> as <span id='username'></span>.
+				Sie sind im Moment bei <a href='http://last.fm'>Last.fm</a> als <span id='username'></span> angemeldet.
 			</div>
 			<div class="palm-row-wrapper toggle-section">
 				<div class='toggle-label'>
-					Song Scrobbling
+					Titel-Scrobbeln
 				</div>
 				<div id='lastfm-toggle' x-mojo-element='ToggleButton' class='toggle-text'></div>
 			</div>
-			<div x-mojo-touch-feedback='immediate' id='log-out' class='palm-button small-button'>Log-Out</div>
+			<div x-mojo-touch-feedback='immediate' id='log-out' class='palm-button small-button'>Abmelden</div>
 
 		</div>
 	</div>
@@ -187,7 +187,7 @@
 	<div style='padding: 0px 15px 15px 15px;' class="palm-list">
 		<div id='twitter-not-logged-in'>
 			<div class='description'>
-				Log into your twitter account to tweet out the songs you are listening to! If you are concerned about entering your password, see the <a onclick='Mojo.Controller.stageController.pushScene("about")'>About Page</a>.
+				Melden Sie sich bei Twitter an und twittern Sie die Titel, die Sie gerade hören! Wenn Sie Bedenken haben, Ihr Passwort anzugeben, lesen Sie bitte die <a onclick='Mojo.Controller.stageController.pushScene("about")'>Beschreibungsseite</a>.
 			</div>
 			<div class='palm-row-wrapper'>
 				<div class='textfield-group prefs'>
@@ -203,13 +203,13 @@
 					</div>
 				</div>
 			</div>
-			<div x-mojo-touch-feedback='immediate' id='twitter-log-in' class='palm-button small-button'>Log-In</div>
+			<div x-mojo-touch-feedback='immediate' id='twitter-log-in' class='palm-button small-button'>Anmelden</div>
 		</div>
 		<div id='twitter-logged-in' style='display: none'>
 			<div class='description'>
-				You are currently logged into <a href='http://twitter.com'>Twitter</a> as <span id='twitter-logged-in-username'></span>.
+				Sie sind im Moment bei <a href='http://twitter.com'>Twitter</a> als <span id='twitter-logged-in-username'></span> angemeldet.
 			</div>
-			<div x-mojo-touch-feedback='immediate' id='twitter-log-out' class='palm-button small-button'>Log-Out</div>
+			<div x-mojo-touch-feedback='immediate' id='twitter-log-out' class='palm-button small-button'>Abmelden</div>
 		</div>
 	</div>
 </div>

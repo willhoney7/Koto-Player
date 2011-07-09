@@ -1,8 +1,8 @@
 function StartupAssistant(arg) {
 	if (arg === "new"){
-		this.message = "In a few moments, you will be prompted to give Koto access to your music. If you say no, you won't be able to use the app! <br/><br/>Once you give the app permission, it will launch a dashboard to cache your songs for Just Type. <b>It takes about 30 seconds per 500 songs depending on your device</b>. Please DO NOT close this dashboard! Make sure you add Koto to your application searches so you can type to play any song or playlist and view any artist/album/genre. Tap here to launch the Just Type Preferences, then tap \"Add Application Searches\", then \"Koto Player\".";
+		this.message = $L({value: "In a few moments, you will be prompted to give Koto access to your music. If you say no, you won't be able to use the app! <br/><br/>Once you give the app permission, it will launch a dashboard to cache your songs for Just Type. <b>It takes about 30 seconds per 500 songs depending on your device</b>. Please DO NOT close this dashboard! Make sure you add Koto to your application searches so you can type to play any song or playlist and view any artist/album/genre. Tap here to launch the Just Type Preferences, then tap \"Add Application Searches\", then \"Koto Player\".", key: "message_access"});
 	}else if (arg === "update"){
-		this.message = "Thanks for updating! The changelog is below!";
+		this.message = $L("Thanks for updating! The changelog is below!");
 	}else if (arg === "changelog" || !arg){
 		this.message = "";
 	}
@@ -25,7 +25,7 @@ StartupAssistant.prototype.setup = function() {
 
 	this.setupCommon();
 	if (this.arg === "new")
-		this.initViewMenu("Welcome to Koto!");
+		this.initViewMenu($L("Welcome to Koto!"));
 	
 	
 	var changelog = [
@@ -398,7 +398,7 @@ StartupAssistant.prototype.setup = function() {
 			koto.preferences.obj.metrixToggle = event.value;
 			koto.preferences.store();
 		}.bind(this));
-		this.controller.setupWidget(Mojo.Menu.commandMenu, {menuClass: 'no-fade'}, this.commandMenuModel = {visible: false, items:[{},{label: "Continue", command: "swapMain-fromStartUp"},{}]});	
+		this.controller.setupWidget(Mojo.Menu.commandMenu, {menuClass: 'no-fade'}, this.commandMenuModel = {visible: false, items:[{},{label: $L("Continue"), command: "swapMain-fromStartUp"},{}]});	
 		
 	}
 	this.controller.get("changelog").innerHTML = html;

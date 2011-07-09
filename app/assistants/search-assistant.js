@@ -170,11 +170,11 @@ SearchAssistant.prototype.listTap = function(event){
 }
 SearchAssistant.prototype.moreTap = function(event) {
 	var items = [
-		{label: $L("All"), command: "all"},
-		{label: $L("Artists"), command: "artists"},
-		{label: $L("Albums"), command: "albums"},
-		{label: $L("Songs"), command: "songs"},
-		{label: $L("Playlists"), command: "playlists"}
+		{label: "All", command: "all"},
+		{label: "Artists", command: "artists"},
+		{label: "Albums", command: "albums"},
+		{label: "Songs", command: "songs"},
+		{label: "Playlists", command: "playlists"}
 		
 	]
 	for(var i = 0; i< items.length; i++){

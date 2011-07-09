@@ -30,7 +30,7 @@ MainAssistant.prototype.setup = function() {
         items: this.listItems
     };    
 	if (koto.appId !== "com.tibfib.app.koto" && koto.appId !== "com.tibfib.app.koto.alt"){
-		this.listModel.items.unshift({label: $L("<center>Upgrade to Full Version!</center>"), command: "upgrade"});
+		this.listModel.items.unshift({label: "<center>Upgrade to Full Version!</center>", command: "upgrade"});
 	}
     this.controller.setupWidget('results_list', this.mainListAttrs, this.listModel);
 	this.list = this.controller.get('results_list');
@@ -41,7 +41,7 @@ MainAssistant.prototype.setup = function() {
 	
 	this.crappedOutTimeout = setTimeout(function(){
 		if (koto.content.songs.array.length === 0){
-			this.controller.stageController.swapScene("error", $L({value: "Error: No permission from Media Indexer", key: "error_indexer"}), true);
+			this.controller.stageController.swapScene("error", "Error: No permission from Media Indexer", true);
 		}
 	}.bind(this), 30000);
 	

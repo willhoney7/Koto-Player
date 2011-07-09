@@ -13,11 +13,11 @@ HelpAssistant.prototype.setup = function() {
 		reorderable: false
 	};
 	this.listModel = {         
-		listTitle: $L("Learn"),
+		listTitle: "Learn",
         items: [
-			{"title": $L("Basics Guide")},
-			{"title": $L("Tips and Tricks")},
-			{"title": $L("FAQs")}
+			{"title": "Basics Guide"},
+			{"title": "Tips and Tricks"},
+			{"title": "FAQs"}
 		]
     };    
 	this.controller.setupWidget("results_list", this.listAttrs, this.listModel);
@@ -25,7 +25,7 @@ HelpAssistant.prototype.setup = function() {
 	this.controller.listen("results_list", Mojo.Event.listTap, this.listTapHandler);
 	
 	this.controller.listen("pushMediaIndexerError", Mojo.Event.tap, function(){
-		this.controller.stageController.pushScene("error", $L({value:"Error: No permission from Media Indexer", key:"error_indexer"}), true);
+		this.controller.stageController.pushScene("error", "Error: No permission from Media Indexer", true);
 	}.bind(this));
 };
 HelpAssistant.prototype.listTap = function(event) {

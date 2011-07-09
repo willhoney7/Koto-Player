@@ -398,7 +398,7 @@ StartupAssistant.prototype.setup = function() {
 			koto.preferences.obj.metrixToggle = event.value;
 			koto.preferences.store();
 		}.bind(this));
-		this.controller.setupWidget(Mojo.Menu.commandMenu, {menuClass: 'no-fade'}, this.commandMenuModel = {visible: false, items:[{},{label: $L"Continue"), command: "swapMain-fromStartUp"},{}]});	
+		this.controller.setupWidget(Mojo.Menu.commandMenu, {menuClass: 'no-fade'}, this.commandMenuModel = {visible: false, items:[{},{label: "Continue", command: "swapMain-fromStartUp"},{}]});	
 		
 	}
 	this.controller.get("changelog").innerHTML = html;

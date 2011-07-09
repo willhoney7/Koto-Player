@@ -5,10 +5,10 @@ PlayAssistant.prototype.setup = function () {
 	this.initViewMenu($L("Now Playing"));
 	this.setupCommon();
 	this.initAppMenu({items: [
-		{label: $L("Share via Email"), items: [
-			{label: $L("Now Playing List"), command: "share-playlist"},
-			{label: $L("Current Song"), command: "share-song"},
-			//{label: $L("All Music"), command: "share-json"}
+		{label: "Share via Email", items: [
+			{label: "Now Playing List", command: "share-playlist"},
+			{label: "Current Song", command: "share-song"},
+			//{label: "All Music", command: "share-json"}
 		]}
 	]});
 
@@ -862,8 +862,8 @@ PlayAssistant.prototype.handleCommand = function(event){
 					}.bind(this),
 					//placeNear: event.originalEvent.target,
 					items: [
-						{label: $L("Add This Song to Playlist"), command: "playlist-song"},
-						{label: $L("Add All to Playlist"), command: "playlist-all"}
+						{label: "Add This Song to Playlist", command: "playlist-song"},
+						{label: "Add All to Playlist", command: "playlist-all"}
 					]
 				});
 				break;

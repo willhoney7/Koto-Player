@@ -159,11 +159,11 @@ ArtistViewAssistant.prototype.listTap = function(event) {
 	} else if (event.originalEvent.target.className === "album-art-list-item"){
 		//if album art image
 		var items = [
-			{label: $L("Download New Album Art"), command: "download"},
-			{label: $L("Cancel"), command: "cancel"}	
+			{label: "Download New Album Art", command: "download"},
+			{label: "Cancel", command: "cancel"}	
 		];
 		if (koto.albumArt.has(event.item)){
-			items.splice(1, 0, {label: $L("Return to Default Album Art"), command: "remove"});
+			items.splice(1, 0, {label: "Return to Default Album Art", command: "remove"});
 		}
 		this.controller.popupSubmenu({
 			onChoose: function(value){

@@ -16,12 +16,12 @@ PrefsAssistant.prototype.setup = function() {
 			labelPlacement: Mojo.Widget.labelPlacementLeft,
 			multiline: true,
 			choices: [
-				{label: $L("Blue"), value: "blue"},
-				{label: $L("Black"), value: "black"},
-				{label: $L("Green"), value: "green"},
-				{label: $L("Red"), value: "red"},
-				{label: $L("Purple"), value: "purple"},
-				//{label: $L("Turquoise"), value: "turquoise"},
+				{label: "Blue", value: "blue"},
+				{label: "Black", value: "black"},
+				{label: "Green", value: "green"},
+				{label: "Red", value: "red"},
+				{label: "Purple", value: "purple"},
+				//{label: "Turquoise", value: "turquoise"},
 			]
 		},
 		{value: koto.preferences.obj.theme}
@@ -46,9 +46,9 @@ PrefsAssistant.prototype.setup = function() {
 			labelPlacement: Mojo.Widget.labelPlacementLeft,
 			multiline: true,
 			choices: [
-				{label: $L("No Repeat"), value: 0},
-				{label: $L("Repeat Once"), value: 1},
-				{label: $L("Repeat"), value: 2}
+				{label: "No Repeat", value: 0},
+				{label: "Repeat Once", value: 1},
+				{label: "Repeat", value: 2}
 			]
 		},
 		{value: koto.preferences.obj.defaultRepeat}
@@ -102,8 +102,8 @@ PrefsAssistant.prototype.setup = function() {
 			labelPlacement: Mojo.Widget.labelPlacementLeft,
 			multiline: true,
 			choices: [
-				{label: $L("Plays All Songs"), value: "all"},
-				{label: $L("Plays Filtered Songs"), value: "filtered"}
+				{label: "Plays All Songs", value: "all"},
+				{label: "Plays Filtered Songs", value: "filtered"}
 			]
 		},
 		{value: koto.preferences.obj.filterTap}
@@ -120,8 +120,8 @@ PrefsAssistant.prototype.setup = function() {
 			labelPlacement: Mojo.Widget.labelPlacementLeft,
 			multiline: true,
 			choices: [
-				{label: $L("Views Songs"), value: "view"},
-				{label: $L("Plays Songs"), value: "play"}
+				{label: "Views Songs", value: "view"},
+				{label: "Plays Songs", value: "play"}
 			]
 		},
 		{value: koto.preferences.obj.playlistTap}
@@ -137,8 +137,8 @@ PrefsAssistant.prototype.setup = function() {
 			labelPlacement: Mojo.Widget.labelPlacementLeft,
 			multiline: true,
 			choices: [
-				{label: $L("Views Songs"), value: "view"},
-				{label: $L("Plays Songs"), value: "play"}
+				{label: "Views Songs", value: "view"},
+				{label: "Plays Songs", value: "play"}
 			]
 		},
 		{value: koto.preferences.obj.favoriteTap}
@@ -162,7 +162,7 @@ PrefsAssistant.prototype.setup = function() {
 	}.bind(this));
 	
 	
-	this.controller.setupWidget("indexSongsByAlbum", {trueLabel: $L("Yes"), falseLabel: $L("No")}, {value: koto.preferences.obj.indexSongsByAlbum});
+	this.controller.setupWidget("indexSongsByAlbum", {trueLabel: "Yes", falseLabel: "No"}, {value: koto.preferences.obj.indexSongsByAlbum});
 	this.controller.listen("indexSongsByAlbum", Mojo.Event.propertyChange, this.handleMarqueeText = function(event){
 		koto.preferences.obj.indexSongsByAlbum = event.value;
 		koto.preferences.store();
@@ -198,8 +198,8 @@ PrefsAssistant.prototype.setup = function() {
 		koto.preferences.obj.lastfm.scrobble = event.value;
 		koto.preferences.store();
 	}.bind(this));
-	this.controller.setupWidget("lastfm-username", {hintText: $L("Username"), autoFocus: false, textCase: Mojo.Widget.steModeLowerCase}, {value: ""});
-	this.controller.setupWidget("lastfm-password", {hintText: $L("Password"), autoFocus: false}, {value: ""});
+	this.controller.setupWidget("lastfm-username", {hintText: "Username", autoFocus: false, textCase: Mojo.Widget.steModeLowerCase}, {value: ""});
+	this.controller.setupWidget("lastfm-password", {hintText: "Password", autoFocus: false}, {value: ""});
 	if (koto.preferences.obj.lastfm.sessionKey !== ""){
 		this.controller.get("not-logged-in").hide();
 		this.controller.get("username").innerHTML = koto.preferences.obj.lastfm.username;
@@ -227,8 +227,8 @@ PrefsAssistant.prototype.setup = function() {
 	/*
 	 *	Twitter
 	 */
-	this.controller.setupWidget("twitter-username", {hintText: $L("Username"), autoFocus: false, textCase: Mojo.Widget.steModeLowerCase}, {value: ""});
-	this.controller.setupWidget("twitter-password", {hintText: $L("Password"), autoFocus: false}, {value: ""});
+	this.controller.setupWidget("twitter-username", {hintText: "Username", autoFocus: false, textCase: Mojo.Widget.steModeLowerCase}, {value: ""});
+	this.controller.setupWidget("twitter-password", {hintText: "Password", autoFocus: false}, {value: ""});
 	if (koto.preferences.obj.twitter.authorized === true){
 		this.controller.get("twitter-not-logged-in").hide();
 		this.controller.get("twitter-logged-in-username").innerHTML = koto.preferences.obj.twitter.username;
@@ -288,8 +288,8 @@ PrefsAssistant.prototype.setup = function() {
 	/*
 	 *	Dropbox 
 	 */
-	/*this.controller.setupWidget("dropbox-username", {hintText: $L("Email/Username"), autoFocus: false}, {value: ""});
-	this.controller.setupWidget("dropbox-password", {hintText: $L("Password"), autoFocus: false}, {value: ""});
+	/*this.controller.setupWidget("dropbox-username", {hintText: "Email/Username", autoFocus: false}, {value: ""});
+	this.controller.setupWidget("dropbox-password", {hintText: "Password", autoFocus: false}, {value: ""});
 	if (koto.preferences.obj.dropbox.token !== ""){
 		this.controller.get("dropbox-not-logged-in").hide();
 		this.controller.get("dropbox-logged-in-username").innerHTML = koto.preferences.obj.dropbox.displayName;

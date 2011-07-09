@@ -6,12 +6,12 @@ function ContentAssistant(title) {
 ContentAssistant.prototype.setup = function(){
 	this.initViewMenu(this.title);
 	this.setupCommon();
-	if (this.title === "Basics Guide"){
+	if (this.title === $L("Basics Guide")){
 		this.controller.get("guide").show();
 	}
-	else if (this.title === "Tips and Tricks"){
+	else if (this.title === $L("Tips and Tricks")){
 		this.controller.get("tips").show();
-	}else if (this.title === "FAQs"){
+	}else if (this.title === $L("FAQs")){
 		this.controller.get("faqs").show();
 	}
 	

@@ -16,8 +16,8 @@ MainAssistant.prototype.setup = function() {
 		listTemplate:'list/empty-list', 
 		formatters: {
 			"info": function(value, model){
-				if (model.label && this.loadedBool && model.command !== "upgrade"){
-					var length = (koto.content[model.label.toLowerCase()]) ? koto.content[model.label.toLowerCase()].array.length : 0;
+				if (model.command && this.loadedBool && model.command !== "upgrade"){
+					var length = (koto.content[model.command]) ? koto.content[model.command].array.length : 0;
 					var label = (length === 1)?model.label.slice(0, model.label.length-1):model.label;
 					return length + " " + label;
 				}

@@ -34,7 +34,11 @@ StartupAssistant.prototype.setup = function() {
 			"log":
 				[
 					"<b>Improvement:</b> German Localization (Thanks hombresiniestro!)",
-					"<b>Improvement:</b> New Rounded Circle behind the icon. (Thanks hombresiniestro!)"
+					"<b>Improvement:</b> New Rounded Circle behind the icon. (Thanks hombresiniestro!)",
+					"<b>Bug Fix:</b> Launching Koto Player from the \"sticky\" dashboard. (Thanks @screwdestiny!)",
+					"<b>Bug Fix:</b> Auto-Playlist creation. (Thanks @screwdestiny!)",
+					"<b>Bug Fix:</b> Viewing an M3U Playlist from Just Type. (Thanks @screwdestiny!)",
+					"<b>Bug Fix:</b> Make sure the app doesn't auto resume when it shouldn't. (Thanks @screwdestiny!)"
 				]
 		},
 		{

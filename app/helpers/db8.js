@@ -4,8 +4,8 @@ var db8 = ({
 		//interface for interacting with DB8
 	domain: koto.appId,
 	
-	setup: function(){
-		this.putKinds();	
+	setup: function(callback){
+		this.putKinds(callback);	
 	},
 	kinds: [
 		{
@@ -44,7 +44,7 @@ var db8 = ({
 			]
 		},
 	],
-	putKinds: function() {
+	putKinds: function(callback) {
 		/*var quickCookie = new Mojo.Model.Cookie('quickCookie_mojoPlayer');
 		if (!quickCookie || (quickCookie && quickCookie.get() !== Mojo.Controller.appInfo.version)){
 			db8.DB.delKind(koto.appId + ".data:1").then(function(future) {
@@ -59,19 +59,21 @@ var db8 = ({
 			quickCookie.put(Mojo.Controller.appInfo.version);
 			//koto.justType.setupIndexingDashboard();
 		}*/
-		
-		for( var i = 0; i < this.kinds.length; i++ ) {
-			db8.DB.putKind(this.kinds[i].kindID, this.domain, this.kinds[i].indices).then(function(future){
+		function putKind(i){
+			db8.DB.putKind(db8.kinds[i].kindID, db8.domain, db8.kinds[i].indices).then(function(future){
 				if (future.result.returnValue === false) {
 				   console.log("putKind Failure.");
 				}
 				if (i === (db8.kinds.length-1)){
-					db8.putOrigObjs();
+					db8.putOrigObjs(callback);
 				}
 			});
 		}
+		for(var i = 0; i < this.kinds.length; i++ ) {
+			putKind(i);
+		} 
 	},
-	putOrigObjs: function(){
+	putOrigObjs: function(callback){
 		var query = {"select" : ["name"], "from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]};
 		this.exec(query, function(results){
 			if (results.length < 1){
@@ -108,7 +110,9 @@ var db8 = ({
 						type: "auto",
 						songsQuery: {"select" : ["id"], "from":koto.appId + ".data:1", "where":[{"prop":"lastPlayed","op":">","val":0}], "orderBy":"lastPlayed", "desc": true}
 					}				
-				]);
+				], callback);
+			} else {
+				callback();
 			}
 		});
 	},
@@ -145,13 +149,15 @@ var db8 = ({
 		db8.DB.put(array).then(function(future){
 			var result = future.result;
 			if (result.returnValue === true){
-				if (callback){
-					callback();
-				}
-					//console.log("put success, c.id="+result.results[0].id+", c.rev="+result.results[0].rev);			
+				//console.log("put success, c.id="+result.results[0].id+", c.rev="+result.results[0].rev);			
 			}
-			else
-				console.log("put failure: Err code=" + future.exception.errorCode + "Err message=" + future.exception.message); 
+			else {
+				console.error("put failure: Err code=" + future.exception.errorCode + "Err message=" + future.exception.message); 				
+			}
+
+			if(callback){
+				callback();
+			}
 	   });
 	},
 	mergeArray: function(array, callback){

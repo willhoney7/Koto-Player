@@ -1,5 +1,4 @@
 function StageAssistant() {
-	/* this is the creator function for your stage assistant object */
 }
 
 StageAssistant.prototype.setup = function() {
@@ -17,7 +16,6 @@ StageAssistant.prototype.setup = function() {
 	Mojo.Event.listen(this.controller.window.document, Mojo.Event.stageActivate, this.handleStageActivate);
 	Mojo.Event.listen(this.controller.window.document, Mojo.Event.stageDeactivate, this.handleStageDeactivate);
 
-	/* this function is for setup tasks that have to happen when the stage is first created */
 };
 
 StageAssistant.prototype.cleanup = function(){
@@ -26,7 +24,13 @@ StageAssistant.prototype.cleanup = function(){
 		koto.nowPlaying.currentInfo.audioObj.pause();
 		Mojo.Controller.getAppController().closeStage("dashboardStage");
 		
-		koto.nowPlaying.save();
+		koto.nowPlaying.save(function(){
+			koto.nowPlaying.currentInfo.songs = [];
+			koto.nowPlaying.currentInfo.unshuffledSongs = [];
+			koto.nowPlaying.currentInfo.index = 0;
+			koto.nowPlaying.currentInfo.playing = false;
+				
+		});
 	}
 
 	

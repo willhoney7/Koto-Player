@@ -17,28 +17,30 @@ var koto = {
 		if ((arg && arg.action === "setup") || !arg) {
 			try {	
 				//setup stuff
-				db8.setup();
-				koto.preferences.get();
+				db8.setup(function() {
 				
-					//set stylesheet
-					koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
+					koto.preferences.get();
 					
-					koto.albumArt.loadCustom(function () {
-						//if auto resume is on, resume this stuff
-						if(koto.preferences.obj.saveAndResume === true && (!arg || (arg && !arg.delayResume))){
-							koto.nowPlaying.load();
-						}
-						//getPermissions for media
-						koto.setupFunctions.getPermissions(function () {
-							//now load content
-							koto.content.load();
+						//set stylesheet
+						koto.cardController.loadStylesheet("stylesheets/" + koto.preferences.obj.theme + ".css");
+						
+						koto.albumArt.loadCustom(function () {
+							//if auto resume is on, resume this stuff
+							if(koto.preferences.obj.saveAndResume === true && (!arg || (arg && !arg.delayResume))){
+								koto.nowPlaying.load();
+							}
+							//getPermissions for media
+							koto.setupFunctions.getPermissions(function () {
+								//now load content
+								koto.content.load();
 
+							});
 						});
-					});
-				
-				koto.justType.setup();
-				koto.setupFunctions.setupAudioObj();
-				koto.setupFunctions.setupControlListeners();
+					
+					koto.justType.setup();
+					koto.setupFunctions.setupAudioObj();
+					koto.setupFunctions.setupControlListeners();
+				});
 			} catch(e){
 				koto.cardController.swapScene("error", e, false);
 			}
@@ -636,8 +638,8 @@ var koto = {
 				}
 			},
 			getSongsOfOne: function(playlist, callback, dontSort){
-				if (playlist.songs){
-					db8.getObjsById(playlist.songs, function(songs){
+				if (playlist.songs || playlist.songIds){
+					db8.getObjsById(playlist.songs || playlist.songIds, function(songs){
 						if (playlist.sort && playlist.sort !== "custom" && !dontSort){
 							//console.log("playlist.sort is " + playlist.sort);
 							songs = songs.sortBy(function(s){
@@ -1083,16 +1085,20 @@ var koto = {
 		 * * * Save/Resume Now Playing * * *
 		 * * * * * * * * * * * * * * * * * */
 		hasSaved: false,
-		save: function(){
+		save: function(callback){
 			db8.merge({"from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, {
 				time: koto.nowPlaying.currentInfo.audioObj.currentTime,
 				songs: koto.nowPlaying.currentInfo.songs,
 				unshuffledSongs: koto.nowPlaying.currentInfo.unshuffledSongs,
 				index: koto.nowPlaying.currentInfo.index
-			});
+			}, callback);
 		},
 		deferSave: function(){
-			var time = koto.nowPlaying.currentInfo.audioObj.currentTime, songs = koto.nowPlaying.currentInfo.songs.clone(), unshuffledSongs = koto.nowPlaying.currentInfo.unshuffledSongs.clone(), index = koto.nowPlaying.currentInfo.index;
+			var time = koto.nowPlaying.currentInfo.audioObj.currentTime, 
+				songs = koto.nowPlaying.currentInfo.songs.clone(), 
+				unshuffledSongs = koto.nowPlaying.currentInfo.unshuffledSongs.clone(), 
+				index = koto.nowPlaying.currentInfo.index;
+
 			db8.merge.defer({"from":koto.appId + ".playlists:1", "where":[{"prop":"name","op":"=","val":"_now_playing"}]}, {
 				time: time,
 				songs: songs,
@@ -1779,7 +1785,7 @@ var koto = {
 		},
 		sortRegex: /^(the\s|an\s|a\s)(.*)/i,
 		sortContentList: function(array){
-			if (array.length > 0){
+			if (array.length > 1){
 				var sortBy = array[0].title ? "title" : "name";
 				function sortFunction(a,b) {
 					var x = a[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase()

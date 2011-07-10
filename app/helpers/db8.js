@@ -94,19 +94,19 @@ var db8 = ({
 				db8.putArray([
 					{
 						_kind: koto.appId + ".playlists:1",
-						name: "Top Rated",
+						name: $L("Top Rated"),
 						type: "auto",
 						songsQuery: {"select" : ["id"], "from":koto.appId + ".data:1", "where":[{"prop":"rating","op":">","val":0}], "orderBy":"rating", "desc": true}
 					},
 					{
 						_kind: koto.appId + ".playlists:1",
-						name: "Most Played",
+						name: $L("Most Played"),
 						type: "auto",
 						songsQuery: {"select" : ["id"], "from":koto.appId + ".data:1", "where":[{"prop":"playCount","op":">","val":0}], "orderBy":"playCount", "desc": true}
 					},
 					{
 						_kind: koto.appId + ".playlists:1",
-						name: "Recently Played",
+						name: $L("Recently Played"),
 						type: "auto",
 						songsQuery: {"select" : ["id"], "from":koto.appId + ".data:1", "where":[{"prop":"lastPlayed","op":">","val":0}], "orderBy":"lastPlayed", "desc": true}
 					}				

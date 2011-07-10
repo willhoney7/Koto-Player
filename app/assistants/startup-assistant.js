@@ -8,8 +8,8 @@ function StartupAssistant(arg) {
 	}
 	this.arg = arg;
 	var versionCookie = new Mojo.Model.Cookie('appVersion_mojoPlayer');
-	//versionCookie.put("0.5.6");
-	versionCookie.put(Mojo.Controller.appInfo.version);
+	versionCookie.put("0.5.6");
+	//versionCookie.put(Mojo.Controller.appInfo.version);
 	scene_helpers.addCommonSceneMethods(this, "startup");
 	
 	if (arg !== "changelog"){
@@ -38,7 +38,8 @@ StartupAssistant.prototype.setup = function() {
 					"<b>Bug Fix:</b> Launching Koto Player from the \"sticky\" dashboard. (Thanks @screwdestiny!)",
 					"<b>Bug Fix:</b> Auto-Playlist creation. (Thanks @screwdestiny!)",
 					"<b>Bug Fix:</b> Viewing an M3U Playlist from Just Type. (Thanks @screwdestiny!)",
-					"<b>Bug Fix:</b> Make sure the app doesn't auto resume when it shouldn't. (Thanks @screwdestiny!)"
+					"<b>Bug Fix:</b> Make sure the app doesn't auto resume when it shouldn't. (Thanks @screwdestiny!)",
+					"<b>Bug Fix:</b> Actually sort albums alphabetically in artist view."
 				]
 		},
 		{

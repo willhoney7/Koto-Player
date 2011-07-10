@@ -780,8 +780,11 @@ table tr {
 /*
  * Toggle Button Styles courtesy of More Solutions (http://webos101.com/ToggleButton#Styling)
  */
+.palm-row-wrapper.toggle-section {
+	min-height: 52px;
+}
  .toggle-section .toggle-label {
-  max-width: 70%;
+  max-width: 60%;
   min-height: 52px;
   line-height: 50px;
   padding-left: 15px;

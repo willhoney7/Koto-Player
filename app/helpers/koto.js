@@ -185,6 +185,7 @@ var koto = {
 					this.array = this.array.concat(artists);
 					if (done){
 						koto.utilities.sortContentList(this.array);
+
 						if(callback){
 							callback();
 						}
@@ -342,7 +343,14 @@ var koto = {
 										if (albums.length === 1){
 											albums[i].open = true;
 										}
-										callback(albums, songs);
+										_.sortBy(albums, function(album){
+											return album.name;
+										});
+										var artistSongs = [];
+										for(var i = 0; i < albums.length; i++){
+											artistSongs = artistSongs.concat(albums[i].songs);
+										}
+										callback(albums, artistSongs);
 									}
 								}
 								
@@ -357,9 +365,9 @@ var koto = {
 			getAlbumsOfOne: function(artist, callback){
 				var query = {"select" : ["name", "artist", "total.tracks", "_id", "_kind", "thumbnails"], "where" : [{"prop":"artist","op":"=","val":artist}], "from":"com.palm.media.audio.album:1" };
 				db8.exec(query, function(albums){
-					albums.sort(function(a, b){
-						return a.name - b.name;
-					});
+					albums = _.sortBy(albums, function(album){
+						return album.name;
+					})
 					callback(albums);
 				}.bind(this));
 			},
@@ -1785,17 +1793,12 @@ var koto = {
 		},
 		sortRegex: /^(the\s|an\s|a\s)(.*)/i,
 		sortContentList: function(array){
+			console.error(Object.toJSON(array));
 			if (array.length > 1){
-				var sortBy = array[0].title ? "title" : "name";
-				function sortFunction(a,b) {
-					var x = a[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase()
-					var y = b[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase();
-					return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-				}
-				/*array = array.sortBy(function(obj){
-					return obj[sortBy].replace(regex, "");
-				}, this);*/
-				array.sort(sortFunction);
+				var sortBy = (array[0].title !== undefined) ? "title" : "name";
+				array = _.sortBy(array, function(item){
+					return item[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase();
+				});
 				uniqArray(array);
 			}
 		},

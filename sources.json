@@ -1,10 +1,13 @@
 [
     {"source": "app/helpers/com.tibfib.app.koto.api_keys.js"},
-    {"source": "app/models/asyncWrappers.js"},
-    {"source": "app/models/metrix.js"},
-    {"source": "app/models/xTwitter/oAuth.js"},
-    {"source": "app/models/xTwitter/sha1.js"},
-    {"source": "app/models/xTwitter/xTwitter.js"},
+    
+    {"source": "vendors/underscore-min.js"},
+    {"source": "vendors/Metrix/asyncWrappers.js"},
+    {"source": "vendors/Metrix/metrix.js"},
+    {"source": "vendors/xTwitter/oAuth.js"},
+    {"source": "vendors/xTwitter/sha1.js"},
+    {"source": "vendors/xTwitter/xTwitter.js"},
+
     {"source": "app/helpers/utilities.js"},
     {"source": "app/assistants/app-assistant.js"},
     {"source": "app/helpers/koto.js"},

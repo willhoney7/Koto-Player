@@ -8,8 +8,8 @@ function StartupAssistant(arg) {
 	}
 	this.arg = arg;
 	var versionCookie = new Mojo.Model.Cookie('appVersion_mojoPlayer');
-	versionCookie.put("0.5.6");
-	//versionCookie.put(Mojo.Controller.appInfo.version);
+	//versionCookie.put("0.5.6");
+	versionCookie.put(Mojo.Controller.appInfo.version);
 	scene_helpers.addCommonSceneMethods(this, "startup");
 	
 	if (arg !== "changelog"){

@@ -67,7 +67,7 @@ ViewAssistant.prototype.setupTitle = function(event){
 		this.subTitleDiv = this.controller.get("title-secondary");
 	}
 	
-	var title = (this.data.length === 1) ? "Track" : "Tracks"
+	var title = (this.data.length === 1) ? $L("Track") : $L("Tracks")
 	this.subTitleDiv.innerHTML = this.data.length + " " + title.capitalize();
 	title = null;
 	

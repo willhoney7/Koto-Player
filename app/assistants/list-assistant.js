@@ -30,10 +30,10 @@ ListAssistant.prototype.setup = function() {
 				var objType = koto.utilities.getObjType(model);
 				if (this.data === "favorites" || this.data === "playlists" || objType === "genre"){
 					if (model.total && model.total.tracks){
-						var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
+						var tracks = (model.total.tracks > 1)?model.total.tracks + $L(" Tracks"): model.total.tracks + $L(" Track");
 						return tracks;
 					}else if (model.songs){
-						var tracks = (model.songs.length > 1)?model.songs.length + " Tracks": model.songs.length + " Track";
+						var tracks = (model.songs.length > 1)?model.songs.length + $L(" Tracks"): model.songs.length + $L(" Track");
 						return tracks;
 					}/*else if (model.query){
 						return "";
@@ -44,12 +44,12 @@ ListAssistant.prototype.setup = function() {
 						return model.artist + " - " + model.album;
 						break;
 					case "album":
-						var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
+						var tracks = (model.total.tracks > 1)?model.total.tracks + $L(" Tracks"): model.total.tracks + $L(" Track");
 						return model.artist + " - " + tracks;
 						break;
 					case "artist":
-						var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
-						var albums = (model.total.albums > 1)?model.total.albums + " Albums": model.total.albums + " Album";
+						var tracks = (model.total.tracks > 1)?model.total.tracks + $L(" Tracks"): model.total.tracks + $L(" Track");
+						var albums = (model.total.albums > 1)?model.total.albums + $L(" Albums"): model.total.albums + $L(" Album");
 						return albums + " - " + tracks;
 						break;				
 				}

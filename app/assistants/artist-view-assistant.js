@@ -19,7 +19,7 @@ ArtistViewAssistant.prototype.setup = function() {
 			},
 			"tracks": function(value, model){
 				if (model.total && model.total.tracks){
-					var tracks = (model.total.tracks > 1)?model.total.tracks + " Tracks": model.total.tracks + " Track";
+					var tracks = (model.total.tracks > 1)?model.total.tracks + $L(" Tracks"): model.total.tracks + $L(" Track");
 					return tracks;
 				}
 			},

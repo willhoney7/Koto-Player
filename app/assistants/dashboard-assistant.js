@@ -71,6 +71,12 @@ DashboardAssistant.prototype.cleanup = function (event) {
 	
 	if (!koto.preferences.obj.closeDashboard && !koto.cardController){
 		koto.nowPlaying.currentInfo.audioObj.pause();		
-		koto.nowPlaying.save();
+
+		koto.nowPlaying.save(function(){
+			koto.nowPlaying.currentInfo.songs = [];
+			koto.nowPlaying.currentInfo.unshuffledSongs = [];
+			koto.nowPlaying.currentInfo.index = 0;
+			koto.nowPlaying.currentInfo.playing = false;
+		});
 	}
 };

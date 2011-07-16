@@ -2,6 +2,7 @@
     {"source": "app/helpers/com.tibfib.app.koto.api_keys.js"},
     
     {"source": "vendors/underscore-min.js"},
+    {"source": "vendors/underscore.string.min.js"},
     {"source": "vendors/Metrix/asyncWrappers.js"},
     {"source": "vendors/Metrix/metrix.js"},
     {"source": "vendors/xTwitter/oAuth.js"},

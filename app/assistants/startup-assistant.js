@@ -39,7 +39,8 @@ StartupAssistant.prototype.setup = function() {
 					"<b>Bug Fix:</b> Auto-Playlist creation. (Thanks @screwdestiny!)",
 					"<b>Bug Fix:</b> Viewing an M3U Playlist from Just Type. (Thanks @screwdestiny!)",
 					"<b>Bug Fix:</b> Make sure the app doesn't auto resume when it shouldn't. (Thanks @screwdestiny!)",
-					"<b>Bug Fix:</b> Actually sort albums alphabetically in artist view."
+					"<b>Bug Fix:</b> Actually sort albums alphabetically in artist view.",
+					"<b>Bug Fix:</b> Sort album tracks by position in case the media indexer reports them out of order"
 				]
 		},
 		{

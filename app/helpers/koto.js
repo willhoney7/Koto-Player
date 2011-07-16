@@ -88,7 +88,7 @@ var koto = {
 		},
 		setupAudioObj: function (eventHandler){
 			eventHandler = /*eventHandler ||*/ function(event){
-				console.log("event sent: " + event.type);
+				//console.log("event sent: " + event.type);
 				switch(event.type){
 					case "pause":
 						koto.nowPlaying.handlePause();
@@ -444,7 +444,10 @@ var koto = {
 						console.log("artist provided : " + artist);
 						query.where.push({"prop":"artist","op":"=","val":artist});
 					}
-					db8.exec(query, function(songs){	
+					db8.exec(query, function(songs){
+						songs = _.sortBy(songs, function(song){
+							return parseInt(song.track.position, 10);
+						});
 						callback(songs);
 					}.bind(this));		
 				/*} else {
@@ -472,7 +475,7 @@ var koto = {
 		},
 		songs: {
 			array: [],
-			propertiesArray: ["_id", "title", "artist", "album", "albumArtist", "genre", "path", "thumbnails", "duration"],
+			propertiesArray: ["_id", "title", "artist", "album", "albumArtist", "genre", "path", "thumbnails", "duration", "track.position"],
 			load: function (callback) {
 				var _milliseconds = new Date().getTime();
 				this.array = [];
@@ -1793,7 +1796,7 @@ var koto = {
 		},
 		sortRegex: /^(the\s|an\s|a\s)(.*)/i,
 		sortContentList: function(array){
-			console.error(Object.toJSON(array));
+			//console.error(Object.toJSON(array));
 			if (array.length > 1){
 				var sortBy = (array[0].title !== undefined) ? "title" : "name";
 				array = _.sortBy(array, function(item){

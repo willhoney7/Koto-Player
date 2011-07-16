@@ -29,7 +29,6 @@ StageAssistant.prototype.cleanup = function(){
 			koto.nowPlaying.currentInfo.unshuffledSongs = [];
 			koto.nowPlaying.currentInfo.index = 0;
 			koto.nowPlaying.currentInfo.playing = false;
-				
 		});
 	}
 

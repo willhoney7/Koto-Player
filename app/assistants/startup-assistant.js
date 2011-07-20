@@ -30,7 +30,7 @@ StartupAssistant.prototype.setup = function() {
 	
 	var changelog = [
 		{
-			"version": "0.8.1",
+			"version": "0.8.2",
 			"log":
 				[
 					"<b>Improvement:</b> German Localization (Thanks hombresiniestro!)",

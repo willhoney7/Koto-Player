@@ -19,7 +19,7 @@ MainAssistant.prototype.setup = function() {
 				if (model.command && this.loadedBool && model.command !== "upgrade"){
 					var length = (koto.content[model.command]) ? koto.content[model.command].array.length : 0;
 					var label = (length === 1)?model.command.slice(0, model.command.length-1):model.command;
-					return length + " " + _.capitalize($L(label));
+					return length + " " + $L(_.capitalize(label));
 				}
 			}.bind(this)
 		},

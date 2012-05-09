@@ -119,7 +119,6 @@ PlayAssistant.prototype.setup = function () {
 					this.albumArtScrollerContent.style.top = "-2.7%";
 					this.nowPlayingItem.style.top = "-1.4%";
 				} else {
-					//this.albumArtImage.style.padding = "5px; 0px;";
 					this.nowPlayingItem.style.top = "1.8%";
 					this.albumArtScrollerContent.style.top = "1.8%";
 				}
@@ -132,13 +131,14 @@ PlayAssistant.prototype.setup = function () {
 					this.nowPlayingItem.style.top = "1.9%";
 					this.albumArtScrollerContent.style.top = "1.9%";
 				}
-			}else if (Mojo.Environment.DeviceInfo.screenHeight === 800){
-				if (this.controller.window.innerHeight < 772){	
-					this.albumArtScrollerContent.style.top = "12%";
-					this.nowPlayingItem.style.top = "12%";
+			}
+			else if (Mojo.Environment.DeviceInfo.screenHeight === 800){
+				if (this.controller.window.innerHeight < 505){	
+					this.albumArtScrollerContent.style.top = "0%";
+					this.nowPlayingItem.style.top = "0%";
 				} else {
-					this.nowPlayingItem.style.top = "13.8%";
-					this.albumArtScrollerContent.style.top = "13.8%";
+					this.nowPlayingItem.style.top = "3.2%";
+					this.albumArtScrollerContent.style.top = "3.2%";
 				}
 			}
 		}
@@ -252,7 +252,7 @@ PlayAssistant.prototype.renderNowPlayingItem = function(){
 			template: "play/now-playing-item",
 			formatters: {
 				"dimension": function(value, model){
-					var length = (Mojo.Environment.DeviceInfo.screenHeight === 400) ? "195" : (Mojo.Environment.DeviceInfo.screenHeight === 800) ? "406" : "275";
+					var length = (Mojo.Environment.DeviceInfo.screenHeight === 400) ? "195" : (Mojo.Environment.DeviceInfo.screenHeight === 800) ? "300" : "275";
 					return length + "px";
 				}
 			}
@@ -289,8 +289,9 @@ PlayAssistant.prototype.getItemWidth = function(event){
 		return 220;
 	}
 	if (Mojo.Environment.DeviceInfo.screenWidth === 480){
-		return 320;
+		return 280;
 	}
+	return 220;
 }
 PlayAssistant.prototype.albumArtHold = function(event){
 	//scroller hold
@@ -335,7 +336,7 @@ PlayAssistant.prototype.renderAlbumArtScrollerItems = function(){
 				return "125px";
 			}
 			if (Mojo.Environment.DeviceInfo.screenHeight === 800){
-				return "300px";
+				return "260px";
 			}	
 		},
 		"width": function(value, model){
@@ -346,7 +347,7 @@ PlayAssistant.prototype.renderAlbumArtScrollerItems = function(){
 				return "125px";
 			}
 			if (Mojo.Environment.DeviceInfo.screenHeight === 800){
-				return "300px";
+				return "260px";
 			}	
 		},
 		"background": function(value, model, index){
@@ -360,7 +361,8 @@ PlayAssistant.prototype.renderAlbumArtScrollerItems = function(){
 			return start + index; //add start to offset the limited amount of items
 		}
 	}});
-	this.albumArtScrollerContent.innerHTML =  "<td><div style='width: 50px'></div></td>" + content + "<td><div style='width: 50px'></div></td>";
+	var tds =  (Mojo.Environment.DeviceInfo.screenWidth === 320) ? "<td><div style='width: 50px'></div></td>" : "<td><div style='width: 20px'></div></td>";
+	this.albumArtScrollerContent.innerHTML =  tds + content + tds;
 	
 	//elements = this.controller.sceneElement.select('.item');
 	//this.scrollerModel.snapElements = {x: elements};

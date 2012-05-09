@@ -29,6 +29,15 @@ StartupAssistant.prototype.setup = function() {
 	
 	
 	var changelog = [
+		
+		{
+			"version": "1.0.0",
+			"log":
+				[
+					"Some minor bug fixes and improvements",
+					"Pre 3 support"
+				]
+		},
 		{
 			"version": "0.8.2",
 			"log":

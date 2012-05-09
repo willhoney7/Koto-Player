@@ -88,6 +88,11 @@ var koto = {
 		},
 		setupAudioObj: function (eventHandler){
 			eventHandler = /*eventHandler ||*/ function(event){
+
+				var throttledProgressUpdate = _.throttle(function(){
+					koto.utilities.delegate("_updateProgress");						
+				}, 300);
+
 				//console.log("event sent: " + event.type);
 				switch(event.type){
 					case "pause":
@@ -97,7 +102,7 @@ var koto = {
 						koto.nowPlaying.handlePlay();
 						break;
 					case "timeupdate":
-						koto.utilities.delegate("_updateProgress");
+						throttledProgressUpdate();
 						break;
 					case "ended":
 						var currentId = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index]._id, currentObj = koto.nowPlaying.currentInfo.songs[koto.nowPlaying.currentInfo.index];
@@ -110,7 +115,7 @@ var koto = {
 			};
 			var libs = MojoLoader.require({ name: "mediaextension", version: "1.0"});
 			var extObj = libs.mediaextension.MediaExtension.getInstance(koto.nowPlaying.currentInfo.audioObj);
-			extObj.audioClass = "media";
+			extObj.audioClass = "media";	
 	  
 			// Listen for pause and play events
 			koto.nowPlaying.currentInfo.audioObj.addEventListener("pause", eventHandler, true);
@@ -184,7 +189,7 @@ var koto = {
 				function handleArtists(artists, done){
 					this.array = this.array.concat(artists);
 					if (done){
-						koto.utilities.sortContentList(this.array);
+						this.array = koto.utilities.sortContentList(this.array);
 
 						if(callback){
 							callback();
@@ -266,9 +271,15 @@ var koto = {
 								if (albums.length === 1 || (album_ && album_ === albums[i].name)){
 									albums[i].open = true;
 								}
+								albums[i].songs = [];
+								_(songs).each(function(song){
+									if(song.artist === artist){
+										albums[i].songs.push(song);
+									}
+								});
 								//add songs 
-								albums[i].songs = songs;
-								artistSongs = [].concat(artistSongs, songs);
+
+								artistSongs = [].concat(artistSongs, albums[i].songs);
 								i++;
 								if (i < albums.length){
 									getAlbumSongs(albums[i]);
@@ -343,7 +354,7 @@ var koto = {
 										if (albums.length === 1){
 											albums[i].open = true;
 										}
-										_.sortBy(albums, function(album){
+										albums = _.sortBy(albums, function(album){
 											return album.name;
 										});
 										var artistSongs = [];
@@ -390,7 +401,7 @@ var koto = {
 				function handleAlbums(albums, done){
 					this.array = this.array.concat(albums);
 					if (done){
-						koto.utilities.sortContentList(this.array);
+						this.array = koto.utilities.sortContentList(this.array);
 						if(callback){
 							callback();
 						}
@@ -482,11 +493,10 @@ var koto = {
 				var query = {"select" : koto.content.songs.propertiesArray, "from":"com.palm.media.audio.file:1", "where":[{"prop":"isRingtone","op":"=","val":false}], "orderBy":"title"};
 				//console.log("------------- GETTING SONGS --------------");
 				koto.content.songs.get("title", function(songs){
-					koto.content.songs.array = songs;
 					
 					var d = new Date();
 					console.log("Got songs. Took " + (parseInt(d.getTime(), 10) - parseInt(_milliseconds, 10)) + " milliseconds");
-					koto.utilities.sortContentList(koto.content.songs.array);
+					koto.content.songs.array = koto.utilities.sortContentList(songs);
 					
 					d = new Date();
 					console.log("AFTER SORTING: " + (parseInt(d.getTime(), 10) - parseInt(_milliseconds, 10)) + " milliseconds");
@@ -1796,13 +1806,16 @@ var koto = {
 		},
 		sortRegex: /^(the\s|an\s|a\s)(.*)/i,
 		sortContentList: function(array){
+			koto.utilities.sortRegex = /^(the\s|an\s|a\s)(.*)/i;
 			//console.error(Object.toJSON(array));
 			if (array.length > 1){
 				var sortBy = (array[0].title !== undefined) ? "title" : "name";
-				array = _.sortBy(array, function(item){
-					return item[sortBy].replace(koto.utilities.sortRegex, "$2").toLowerCase();
+				var sortedArray = _.sortBy(array, function(item){
+					return item[sortBy].replace(koto.utilities.sortRegex, "$2, $1").toLowerCase();
 				});
-				uniqArray(array);
+				return uniqArray(sortedArray);
+			} else {
+				return array;
 			}
 		},
 		setupHandleLaunchStage: function(arg){

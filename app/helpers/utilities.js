@@ -29,6 +29,7 @@ function uniqArray(array){
 			array.splice(i--, 1);
 		}
 	}
+	return array;
 }
 
 /*var by = function (name, minor) {

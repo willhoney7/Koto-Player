@@ -1,4 +1,4 @@
-api_keys = {
+var api_keys = {
 	lyrics_api_key: "", //api key to musiXmatch.com
 	
 	lastfm_api_key: "", //api key to lastfm

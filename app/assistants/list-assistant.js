@@ -175,6 +175,14 @@ ListAssistant.prototype.setup = function() {
 ListAssistant.prototype.setupAlphaScroller = function(event) {
 	//create items
 	var objHeading = (this.data === "songs")? "title" : "name", alphaListItems = [];
+	var i = 0;
+	while(i < this.items.length){
+		if(_(this.items[i][objHeading]).isBlank()){
+			this.items.splice(i, 1);
+			continue;
+		}
+		i++;
+	}
 	for(var i = 0; i < this.items.length; i++){
 		var specialCharRegex = /(['"!@#$%^&*\(\)_ \\\/-;:<>\{\}\[\]])/;
 		if (!isNaN(parseInt(this.items[i][objHeading].charAt(0), 10))){
@@ -187,8 +195,9 @@ ListAssistant.prototype.setupAlphaScroller = function(event) {
 				alphaListItems.push({letter: "&", index: i});
 			}
 		} else {
-			if (!this.items[i-1] || (this.items[i-1][objHeading] && this.items[i-1][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase() !== this.items[i][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase())){
-				alphaListItems.push({letter: this.items[i][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase(), index: i});
+			if (!this.items[i-1] || ((this.items[i-1][objHeading] && this.items[i-1][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase() !== this.items[i][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase()))){
+				alphaListItems.push({letter: this.items[i][objHeading].replace(koto.utilities.sortRegex, "$2").charAt(0).toUpperCase(), index: i});				
+				
 			}
 		}
 	}

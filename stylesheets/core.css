@@ -184,7 +184,7 @@ dd {
 }
 .pre3 .album-list-item .text,
 .pre3 .album-list-item .text .truncating-text {
-	width: 335px;
+	width: 200px;
 }
 
 .album-list-item .text .truncating-text.artist{
@@ -444,6 +444,8 @@ dd {
 }
 .pre3 .album-art-container {
 	left: -480px;
+	width: 1440px;
+	max-height: 400px;
 }
 
 .album-art-container.previous  {
@@ -452,7 +454,7 @@ dd {
 .album-art-container.next  {
 	left: -640px;
 }
-.pre3  .album-art-container.next{
+.pre3 .album-art-container.next {
 	left: -960px;
 }
 
@@ -461,9 +463,10 @@ dd {
 	width: 320px;
 	text-align: center;
 }
-.pre3 .album-art-img-container{
+.pre3 .album-art-img-container {
 	width: 480px;
 }
+
 .album-art {
 	text-align: center;
 	position: relative;
@@ -471,6 +474,17 @@ dd {
 	width: 100%;
 	padding: 5px 0px;
 }
+.pre3 .album-art-img {
+	text-align: left;
+	width: 300px;
+	padding: 5px 0px;
+	max-height: 350px;
+	position: relative;
+	right: 0px;
+	left: -80px;
+
+}
+
 .now-playing-item .name{
 	padding: 1px 0px 0px 0px;
 }
@@ -485,8 +499,7 @@ dd {
 }
 
 .pre3 .album-art-scroller {
-	max-height: 600px;
-	height: 500px;
+	max-height: 330px;
 }
 /*.album-art-scroller .albumArt {
 	text-align: center;
@@ -507,9 +520,9 @@ dd {
 	-webkit-border-radius: 5px;
 }
 .pre3 .album-art-scroller .item {
-	max-height: 600px;
-	height: 600px;
-	width: 300px;
+	/*max-height: 330px;
+	height: 330px;*/
+	width: 260px;
 }
 .album-art-scroller.download .item {
 	width: auto;

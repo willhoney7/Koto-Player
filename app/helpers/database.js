@@ -1,5 +1,5 @@
 //Not used
-var sqlDb =  new Database('KotoPlayer_db', '1');
+//var sqlDb =  new Database('KotoPlayer_db', '1');
 /*
  * Database Class 
  * 

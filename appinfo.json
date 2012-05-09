@@ -1,6 +1,6 @@
 {
 	"id": "com.tibfib.app.koto",
-	"version": "0.8.2",
+	"version": "1.0.0",
 	"vendor": "Will Honey (Tibfib)",
 	"type": "web",
 	"main": "index.html",
@@ -10,6 +10,7 @@
 	"icon": "icon.png",
 	"splashBackground": "images/splash-background.png",
 	"keywords": ["music player", "mp3", "media"],
+	"uiRevision": 2,
 	"universalSearch":{
 		"dbsearch" : {
 			"displayName":"Koto Player",

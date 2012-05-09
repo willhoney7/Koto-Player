@@ -127,6 +127,8 @@ Mojo.Widget.NowPlayingPanel = Class.create({
 		this.updateSong(true);
 		this.controller.element.show();//todo animate
 		this.controller.scene.assistant.checkCmdMenu();
+
+		this.updateProgress();
 	},
 	hide: function(){
 		this.controller.element.hide();		
@@ -141,7 +143,7 @@ Mojo.Widget.NowPlayingPanel = Class.create({
 	},
 	
 	_clickHandler : function(e) {
-		var percent = ((parseInt(e.down.clientX)-10)/300);
+		var percent = ((parseInt(e.down.clientX, 10)-10)/300);
 		if (percent < 0)
 			percent = 0;
 		else if (percent > 1)

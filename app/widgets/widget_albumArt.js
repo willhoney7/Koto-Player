@@ -28,10 +28,10 @@ Mojo.Widget.AlbumArtDownloader = Class.create({
 	
 	},	
 	getItemWidth: function(event){
-		if (Mojo.Environment.DeviceInfo.screenWidth === 320){
+		if (Mojo.Environment.DeviceInfo.screenWidth === 320) {
 			return 210;
 		}
-		if (Mojo.Environment.DeviceInfo.screenWidth === 480){
+		if (Mojo.Environment.DeviceInfo.screenWidth === 480) {
 			return 310;
 		}
 	},
